@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
+import SchoolSearch from "@/components/SchoolSearch";
 
 interface WeatherData {
   temp: string;
@@ -180,6 +181,19 @@ export default function HomePage() {
             <div style={{ fontSize: "0.8rem", color: text2, marginTop: "0.2rem" }}>{card.sub}</div>
           </button>
         ))}
+      </div>
+
+      {/* School Search */}
+      <div style={{ marginBottom: "1.5rem" }}>
+        <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "0.6rem", fontSize: "1rem" }}>
+            🏫 Tìm kiếm trường học
+          </h3>
+          <p style={{ fontSize: "0.82rem", color: text2, marginBottom: "1rem" }}>
+            Tìm thông tin các trường đại học Hàn Quốc, Việt Nam và hơn thế nữa
+          </p>
+          <SchoolSearch />
+        </div>
       </div>
 
       {/* Info section */}
