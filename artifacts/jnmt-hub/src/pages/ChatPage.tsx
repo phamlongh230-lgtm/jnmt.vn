@@ -27,7 +27,7 @@ export default function ChatPage() {
 
   const { data: messages, isLoading } = useGetMessages(
     { limit: 100 },
-    { query: { refetchInterval: 5000 } }
+    { query: { queryKey: getGetMessagesQueryKey({ limit: 100 }), refetchInterval: 5000 } }
   );
 
   const createMessageMutation = useCreateMessage({
