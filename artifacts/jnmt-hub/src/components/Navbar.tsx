@@ -5,14 +5,14 @@ import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
 
 const TOOLS = [
-  { page: "subtitle", icon: "📝", label: "Phụ đề trực tiếp" },
-  { page: "conversation", icon: "🎙️", label: "Hội thoại dịch" },
-  { page: "vocab", icon: "🧠", label: "Từ vựng" },
-  { page: "timer", icon: "⏱️", label: "Pomodoro" },
-  { page: "dday", icon: "📆", label: "D-Day" },
-  { page: "menu", icon: "🍱", label: "Thực đơn" },
-  { page: "transport", icon: "🚌", label: "Bus Gangjin" },
-  { page: "health", icon: "🏥", label: "Y tế" },
+  { page: "subtitle", icon: "📝", key: "subtitle" },
+  { page: "conversation", icon: "🎙️", key: "conversation" },
+  { page: "vocab", icon: "🧠", key: "vocab" },
+  { page: "timer", icon: "⏱️", key: "timer" },
+  { page: "dday", icon: "📆", key: "dday" },
+  { page: "menu", icon: "🍱", key: "menu" },
+  { page: "transport", icon: "🚌", key: "transport" },
+  { page: "health", icon: "🏥", key: "health" },
 ];
 
 export default function Navbar() {
@@ -115,7 +115,7 @@ export default function Navbar() {
                 }}
               >
                 <span>🛠️</span>
-                <span>Công cụ ▾</span>
+                <span>{t(lang, "tools")} ▾</span>
               </button>
               {toolsOpen && (
                 <>
@@ -158,7 +158,7 @@ export default function Navbar() {
                         }}
                       >
                         <span>{tool.icon}</span>
-                        <span>{tool.label}</span>
+                        <span>{t(lang, tool.key)}</span>
                       </button>
                     ))}
                   </div>
