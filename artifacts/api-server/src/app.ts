@@ -3,6 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import path from "path";
 import { existsSync } from "fs";
+import rateLimit from "express-rate-limit";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
@@ -32,7 +33,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Rate limiting cho auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 phút
+  max: 20,
+  message: { error: "Quá nhiều yêu cầu, vui lòng thử lại sau 15 phút!" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // API routes
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
 app.use("/api", router);
 
 // Serve frontend static files (production only)

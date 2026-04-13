@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function RegisterModal({ onClose, onLogin }: Props) {
-  const { lang, login, isDark } = useApp();
+  const { lang, login, isDark, showToast } = useApp();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +19,7 @@ export default function RegisterModal({ onClose, onLogin }: Props) {
     mutation: {
       onSuccess: (data) => {
         login(data.user, data.token);
+        showToast("Đăng ký thành công! Chào mừng bạn 🎉", "success");
         onClose();
       },
       onError: (err: unknown) => {
