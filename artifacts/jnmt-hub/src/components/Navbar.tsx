@@ -13,6 +13,7 @@ const TOOLS = [
   { page: "menu", icon: "🍱", key: "menu" },
   { page: "transport", icon: "🚌", key: "transport" },
   { page: "health", icon: "🏥", key: "health" },
+  { page: "ai", icon: "🤖", key: "ai" },
 ];
 
 // Thông tin hỗ trợ bằng 6 ngôn ngữ

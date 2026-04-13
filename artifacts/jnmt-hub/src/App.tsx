@@ -15,6 +15,7 @@ import DdayPage from "@/pages/DdayPage";
 import MenuPage from "@/pages/MenuPage";
 import TransportPage from "@/pages/TransportPage";
 import HealthPage from "@/pages/HealthPage";
+import AIChatPage from "@/pages/AIChatPage";
 import { getToken } from "@/lib/auth";
 
 setAuthTokenGetter(() => getToken());
@@ -48,6 +49,7 @@ function AppContent() {
         {activePage === "menu" && <MenuPage />}
         {activePage === "transport" && <TransportPage />}
         {activePage === "health" && <HealthPage />}
+        {activePage === "ai" && <AIChatPage />}
       </main>
     </div>
   );
