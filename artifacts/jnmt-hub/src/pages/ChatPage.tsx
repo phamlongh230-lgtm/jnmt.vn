@@ -3,6 +3,8 @@ import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
 import { useGetMessages, useCreateMessage, getGetMessagesQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { ChatSkeleton } from "@/components/Skeleton";
+import { getToken } from "@/lib/auth";
 
 interface MessageItem {
   id: number;
@@ -13,11 +15,31 @@ interface MessageItem {
 }
 
 export default function ChatPage() {
-  const { lang, currentUser, token, isDark } = useApp();
+  const { lang, currentUser, token, isDark, showToast } = useApp();
   const [messageText, setMessageText] = useState("");
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+
+  const isMod = currentUser?.role === "moderator" || currentUser?.role === "admin";
+
+  const handleDelete = async (messageId: number) => {
+    if (!confirm("Xóa tin nhắn này?")) return;
+    setDeletingId(messageId);
+    try {
+      await fetch(`/api/messages/${messageId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+      queryClient.invalidateQueries({ queryKey: getGetMessagesQueryKey() });
+      showToast("Đã xóa tin nhắn!", "success");
+    } catch {
+      showToast("Không thể xóa tin nhắn!", "error");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
@@ -78,6 +100,7 @@ export default function ChatPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem", display: "flex", flexDirection: "column", height: "calc(100vh - 100px)" }} className="animate-fade-in">
+      <style>{`.delete-btn:hover { opacity: 1 !important; } .msg-wrap:hover .delete-btn { opacity: 1 !important; }`}</style>
       <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
         {/* Header */}
         <div style={{ padding: "1rem 1.25rem", borderBottom: `1px solid ${border}` }}>
@@ -90,16 +113,14 @@ export default function ChatPage() {
         {/* Messages */}
         <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
           {isLoading ? (
-            <div style={{ textAlign: "center", color: text2, padding: "2rem" }}>
-              <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>💬</div>
-              {t(lang, "loading")}
-            </div>
+            <ChatSkeleton />
           ) : messages && messages.length > 0 ? (
             (messages as MessageItem[]).map((msg) => {
               const isOwn = currentUser && msg.userId === currentUser.id;
+              const canDelete = isOwn || isMod;
               const color = getColor(msg.username);
               return (
-                <div key={msg.id} style={{ display: "flex", flexDirection: isOwn ? "row-reverse" : "row", gap: "0.5rem", alignItems: "flex-end" }}>
+                <div key={msg.id} className="msg-wrap" style={{ display: "flex", flexDirection: isOwn ? "row-reverse" : "row", gap: "0.5rem", alignItems: "flex-end" }}>
                   {!isOwn && (
                     <div style={{ width: 32, height: 32, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.85rem", flexShrink: 0 }}>
                       {msg.username.charAt(0).toUpperCase()}
@@ -109,16 +130,34 @@ export default function ChatPage() {
                     {!isOwn && (
                       <div style={{ fontSize: "0.72rem", color: text2, marginBottom: "0.15rem", fontWeight: 600 }}>{msg.username}</div>
                     )}
-                    <div style={{
-                      background: isOwn ? "#2563eb" : isDark ? "#0f172a" : "#f8fafc",
-                      color: isOwn ? "white" : textCol,
-                      padding: "0.55rem 0.85rem",
-                      borderRadius: isOwn ? "12px 12px 4px 12px" : "12px 12px 12px 4px",
-                      fontSize: "0.9rem",
-                      border: isOwn ? "none" : `1px solid ${border}`,
-                      wordBreak: "break-word",
-                    }}>
-                      {msg.content}
+                    <div style={{ position: "relative" }}>
+                      <div style={{
+                        background: isOwn ? "#2563eb" : isDark ? "#0f172a" : "#f8fafc",
+                        color: isOwn ? "white" : textCol,
+                        padding: "0.55rem 0.85rem",
+                        borderRadius: isOwn ? "12px 12px 4px 12px" : "12px 12px 12px 4px",
+                        fontSize: "0.9rem",
+                        border: isOwn ? "none" : `1px solid ${border}`,
+                        wordBreak: "break-word",
+                      }}>
+                        {msg.content}
+                      </div>
+                      {canDelete && (
+                        <button
+                          onClick={() => handleDelete(msg.id)}
+                          disabled={deletingId === msg.id}
+                          style={{
+                            position: "absolute", top: -6, right: isOwn ? "auto" : -6, left: isOwn ? -6 : "auto",
+                            width: 18, height: 18, borderRadius: "50%", background: "#ef4444",
+                            border: "none", color: "white", fontSize: "0.6rem", cursor: "pointer",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            opacity: deletingId === msg.id ? 0.5 : 0,
+                            transition: "opacity 0.15s",
+                          }}
+                          className="delete-btn"
+                          title="Xóa tin nhắn"
+                        >✕</button>
+                      )}
                     </div>
                     <div style={{ fontSize: "0.7rem", color: text2, marginTop: "0.15rem", textAlign: isOwn ? "right" : "left" }}>
                       {formatTime(msg.createdAt)}
@@ -146,7 +185,7 @@ export default function ChatPage() {
           ) : (
             <>
               {error && (
-                <div style={{ background: "#fef2f2", color: "#ef4444", padding: "0.5rem 0.75rem", borderRadius: 8, marginBottom: "0.5rem", fontSize: "0.85rem" }}>
+                <div style={{ background: isDark ? "#450a0a" : "#fef2f2", color: "#ef4444", padding: "0.5rem 0.75rem", borderRadius: 8, marginBottom: "0.5rem", fontSize: "0.85rem", border: `1px solid ${isDark ? "#7f1d1d" : "#fecaca"}` }}>
                   ❌ {error}
                 </div>
               )}

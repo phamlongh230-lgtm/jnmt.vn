@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { db, messagesTable } from "@workspace/db";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { CreateMessageBody, GetMessagesQueryParams } from "@workspace/api-zod";
 import { verifyToken } from "./auth";
 
@@ -69,6 +69,50 @@ router.post("/messages", async (req, res): Promise<void> => {
   } catch (err) {
     req.log.error({ err }, "Create message error");
     res.status(500).json({ error: "Không thể gửi tin nhắn!" });
+  }
+});
+
+router.delete("/messages/:id", async (req, res): Promise<void> => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ error: "Cần đăng nhập!" });
+      return;
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      res.status(401).json({ error: "Token không hợp lệ!" });
+      return;
+    }
+
+    const messageId = Number(req.params.id);
+    if (isNaN(messageId)) {
+      res.status(400).json({ error: "ID không hợp lệ!" });
+      return;
+    }
+
+    const [message] = await db.select().from(messagesTable).where(eq(messagesTable.id, messageId)).limit(1);
+    if (!message) {
+      res.status(404).json({ error: "Tin nhắn không tồn tại!" });
+      return;
+    }
+
+    const isOwner = message.userId === decoded.id;
+    const isMod = decoded.role === "moderator" || decoded.role === "admin";
+
+    if (!isOwner && !isMod) {
+      res.status(403).json({ error: "Không có quyền xóa tin nhắn này!" });
+      return;
+    }
+
+    await db.delete(messagesTable).where(eq(messagesTable.id, messageId));
+    req.log.info({ messageId, userId: decoded.id }, "Message deleted");
+    res.status(204).end();
+  } catch (err) {
+    req.log.error({ err }, "Delete message error");
+    res.status(500).json({ error: "Không thể xóa tin nhắn!" });
   }
 });
 

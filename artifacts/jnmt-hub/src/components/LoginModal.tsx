@@ -75,7 +75,7 @@ export default function LoginModal({ onClose, onRegister }: Props) {
           </div>
 
           {error && (
-            <div style={{ background: "#fef2f2", color: "#ef4444", padding: "0.7rem", borderRadius: 8, marginBottom: "1rem", fontSize: "0.9rem" }}>
+            <div style={{ background: isDark ? "#450a0a" : "#fef2f2", color: "#ef4444", padding: "0.7rem", borderRadius: 8, marginBottom: "1rem", fontSize: "0.9rem", border: `1px solid ${isDark ? "#7f1d1d" : "#fecaca"}` }}>
               ❌ {error}
             </div>
           )}
