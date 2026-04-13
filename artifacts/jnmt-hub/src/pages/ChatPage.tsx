@@ -91,6 +91,13 @@ export default function ChatPage() {
     resetChatUnread();
   }, [resetChatUnread]);
 
+  // Request notification permission once
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
   // WebSocket: realtime messages, deletes, edits, reactions, typing
   useEffect(() => {
     const handleNew = (e: Event) => {
@@ -103,7 +110,22 @@ export default function ChatPage() {
           return [...old, msg];
         }
       );
-      if (msg.userId !== currentUser?.id) playPing();
+      if (msg.userId !== currentUser?.id) {
+        playPing();
+        // Browser notification on @mention
+        if (
+          currentUser?.username &&
+          msg.content.toLowerCase().includes(`@${currentUser.username.toLowerCase()}`) &&
+          "Notification" in window && Notification.permission === "granted" &&
+          document.visibilityState === "hidden"
+        ) {
+          new Notification(`${msg.username} nhắc đến bạn`, {
+            body: msg.content.slice(0, 100),
+            icon: "/favicon.svg",
+            tag: `mention-${msg.id}`,
+          });
+        }
+      }
     };
 
     const handleDelete = (e: Event) => {
@@ -143,17 +165,28 @@ export default function ChatPage() {
       typingTimers.current.set(username, timer);
     };
 
+    const handleAvatarUpdate = (e: Event) => {
+      const user = (e as CustomEvent<{ id: number; avatarColor?: string }>).detail;
+      queryClient.setQueryData(
+        getGetMessagesQueryKey({ limit: 100 }),
+        (old: MessageItem[] | undefined) =>
+          old ? old.map((m) => m.userId === user.id ? { ...m, avatarColor: user.avatarColor } : m) : old
+      );
+    };
+
     window.addEventListener("chat:new_message", handleNew);
     window.addEventListener("chat:delete_message", handleDelete);
     window.addEventListener("chat:edit_message", handleEdit);
     window.addEventListener("chat:reaction_update", handleReaction);
     window.addEventListener("chat:typing", handleTyping);
+    window.addEventListener("user:updated", handleAvatarUpdate);
     return () => {
       window.removeEventListener("chat:new_message", handleNew);
       window.removeEventListener("chat:delete_message", handleDelete);
       window.removeEventListener("chat:edit_message", handleEdit);
       window.removeEventListener("chat:reaction_update", handleReaction);
       window.removeEventListener("chat:typing", handleTyping);
+      window.removeEventListener("user:updated", handleAvatarUpdate);
     };
   }, [currentUser, queryClient]);
 

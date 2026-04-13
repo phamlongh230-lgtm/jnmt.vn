@@ -125,6 +125,35 @@ function WeatherWidget({ lang }: { lang: string }) {
   );
 }
 
+interface Announcement { id: number; title: string; content: string; authorUsername: string; isPinned: boolean; createdAt: string; }
+
+function AnnouncementsPreview({ isDark, border, text, text2, setActivePage }: { isDark: boolean; border: string; text: string; text2: string; setActivePage: (p: string) => void }) {
+  const [items, setItems] = useState<Announcement[]>([]);
+  useEffect(() => {
+    fetch("/api/announcements").then((r) => r.json()).then((d) => setItems(Array.isArray(d) ? d.slice(0, 3) : [])).catch(() => {});
+  }, []);
+  if (items.length === 0) return null;
+  return (
+    <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
+        <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>📢 Thông báo mới nhất</h3>
+        <button onClick={() => setActivePage("announcements")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>Xem tất cả →</button>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        {items.map((item) => (
+          <div key={item.id} onClick={() => setActivePage("announcements")} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", padding: "0.6rem 0.75rem", background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 8, cursor: "pointer", borderLeft: item.isPinned ? "3px solid #2563eb" : `3px solid transparent` }}>
+            {item.isPinned && <span style={{ fontSize: "0.7rem", background: "#2563eb", color: "white", padding: "0.1rem 0.35rem", borderRadius: 4, fontWeight: 700, flexShrink: 0, marginTop: 2 }}>📌</span>}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 600, color: text, fontSize: "0.88rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</div>
+              <div style={{ fontSize: "0.72rem", color: text2 }}>{item.authorUsername} · {new Date(item.createdAt).toLocaleDateString("vi-VN")}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const { lang, setActivePage, currentUser, isDark } = useApp();
   const bg2 = isDark ? "#1e293b" : "#f8fafc";
@@ -182,6 +211,9 @@ export default function HomePage() {
           </button>
         ))}
       </div>
+
+      {/* Announcements preview */}
+      <AnnouncementsPreview isDark={isDark} border={border} text={text} text2={text2} setActivePage={setActivePage} />
 
       {/* School Search */}
       <div style={{ marginBottom: "1.5rem" }}>

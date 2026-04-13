@@ -55,6 +55,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const updateUser = useCallback((user: User) => {
     setCurrentUser(user);
     setStoredUser(user);
+    // Notify chat to refresh avatar colors
+    window.dispatchEvent(new CustomEvent("user:updated", { detail: user }));
   }, []);
 
   const sendWsMessage = useCallback((data: unknown) => {

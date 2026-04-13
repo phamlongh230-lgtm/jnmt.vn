@@ -57,7 +57,8 @@ function AppContent() {
   return (
     <div style={{ minHeight: "100vh", background: isDark ? "#0f172a" : "#f8fafc", color: "var(--text)" }}>
       <Navbar />
-      <main>
+      <main style={{ paddingBottom: "env(safe-area-inset-bottom)" }} className="main-content">
+        <style>{`@media (max-width: 639px) { .main-content { padding-bottom: 64px !important; } }`}</style>
         {activePage === "home"          && <HomePage />}
         {activePage === "chat"          && <ChatPage />}
         <Suspense fallback={<PageLoader />}>

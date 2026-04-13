@@ -404,6 +404,35 @@ export default function Navbar() {
         </>
       )}
 
+      {/* ─── MOBILE BOTTOM NAV ─────────────────────────── */}
+      <style>{`
+        @media (min-width: 640px) { .mobile-bottom-nav { display: none !important; } }
+        @media (max-width: 639px) { .mobile-bottom-nav { display: flex !important; } }
+      `}</style>
+      <nav className="mobile-bottom-nav" style={{ display: "none", position: "fixed", bottom: 0, left: 0, right: 0, background: bg, borderTop: `1px solid ${border}`, zIndex: 200, justifyContent: "space-around", alignItems: "center", padding: "0.3rem 0 calc(0.3rem + env(safe-area-inset-bottom))", boxShadow: "0 -2px 12px rgba(0,0,0,0.08)" }}>
+        {[
+          { page: "home",   icon: "🏠", label: "Trang chủ" },
+          { page: "chat",   icon: "💬", label: "Chat",      badge: chatUnread },
+          { page: "dictionary", icon: "📖", label: "Từ điển" },
+          { page: "tools",  icon: "🛠️", label: "Công cụ" },
+          { page: "user",   icon: "👤", label: "Tôi" },
+        ].map((item) => {
+          const isActive = item.page === "tools" ? isToolPage : activePage === item.page;
+          return (
+            <button key={item.page} onClick={() => {
+              if (item.page === "tools") { setToolsOpen((v) => !v); }
+              else if (item.page === "user") { setUserMenuOpen((v) => !v); }
+              else { setActivePage(item.page); if (item.page === "chat") resetChatUnread(); }
+            }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.1rem", padding: "0.25rem 0.6rem", position: "relative", minWidth: 52 }}>
+              <span style={{ fontSize: "1.3rem" }}>{item.icon}</span>
+              <span style={{ fontSize: "0.6rem", color: isActive ? "#2563eb" : text2, fontWeight: isActive ? 700 : 400 }}>{item.label}</span>
+              {isActive && <span style={{ position: "absolute", top: -1, left: "50%", transform: "translateX(-50%)", width: 24, height: 3, background: "#2563eb", borderRadius: 2 }} />}
+              {(item.badge as number) > 0 && <span style={{ position: "absolute", top: 2, right: 8, background: "#ef4444", color: "white", borderRadius: "50%", width: 16, height: 16, fontSize: "0.55rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{(item.badge as number) > 9 ? "9+" : item.badge}</span>}
+            </button>
+          );
+        })}
+      </nav>
+
       {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} onRegister={() => { setLoginOpen(false); setRegisterOpen(true); }} />}
       {registerOpen && <RegisterModal onClose={() => setRegisterOpen(false)} onLogin={() => { setRegisterOpen(false); setLoginOpen(true); }} />}
 
