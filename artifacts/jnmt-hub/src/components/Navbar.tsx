@@ -154,10 +154,10 @@ export default function Navbar() {
             </button>
             <a href="#" onClick={(e) => { e.preventDefault(); setActivePage("home"); }}
               style={{ color: "white", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <img src="/favicon.svg" alt="JNMT.kr-학새" width={36} height={36} style={{ borderRadius: 9, boxShadow: "0 1px 6px rgba(0,0,0,0.3)", flexShrink: 0 }} />
+              <img src="/favicon.svg" alt="JNMT.kr" width={36} height={36} style={{ borderRadius: 9, boxShadow: "0 1px 6px rgba(0,0,0,0.3)", flexShrink: 0 }} />
               <div>
                 <div style={{ fontWeight: 900, fontSize: "1.05rem", lineHeight: 1 }}>JNMT.kr</div>
-                <div style={{ fontSize: "0.62rem", opacity: 0.85, lineHeight: 1.3 }}>학새</div>
+                <div style={{ fontSize: "0.62rem", opacity: 0.85, lineHeight: 1.3 }}>학생</div>
               </div>
             </a>
           </div>
@@ -303,7 +303,7 @@ export default function Navbar() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
                   <img src="/favicon.svg" alt="logo" width={44} height={44} style={{ borderRadius: 11, marginBottom: "0.3rem", boxShadow: "0 2px 8px rgba(0,0,0,0.25)" }} />
-                  <div style={{ fontWeight: 900, fontSize: "1.1rem" }}>JNMT.kr-학새</div>
+                  <div style={{ fontWeight: 900, fontSize: "1.1rem" }}>JNMT.kr</div>
                   <div style={{ fontSize: "0.75rem", opacity: 0.85, marginTop: "0.1rem" }}>전남미래국제고등학교</div>
                 </div>
                 <button onClick={() => setSidebarOpen(false)}
@@ -331,7 +331,7 @@ export default function Navbar() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 700, color: textCol, fontSize: "0.95rem" }}>Vũ Văn Tâm</div>
-                    <div style={{ fontSize: "0.75rem", color: text2 }}>Admin · JNMT.kr-학새</div>
+                    <div style={{ fontSize: "0.75rem", color: text2 }}>Admin · JNMT.kr</div>
 
                   </div>
                 </div>
@@ -398,7 +398,7 @@ export default function Navbar() {
 
             {/* Version */}
             <div style={{ marginTop: "auto", padding: "1rem 1.25rem", borderTop: `1px solid ${border}`, fontSize: "0.72rem", color: text2, textAlign: "center" }}>
-              {support.version} 1.3.0 · JNMT.kr-학새 · 2026
+              {support.version} 1.3.0 · JNMT.kr · 2026
             </div>
           </div>
         </>
