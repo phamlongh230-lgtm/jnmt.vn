@@ -118,7 +118,7 @@ export default function Navbar() {
               <span style={{ fontSize: "1.5rem" }}>🎓</span>
               <div>
                 <div style={{ fontWeight: 900, fontSize: "1.1rem", lineHeight: 1 }}>JNMT</div>
-                <div style={{ fontSize: "0.65rem", opacity: 0.85, lineHeight: 1 }}>Student Hub</div>
+                <div style={{ fontSize: "0.65rem", opacity: 0.85, lineHeight: 1 }}>학새</div>
               </div>
             </a>
           </div>
@@ -226,7 +226,7 @@ export default function Navbar() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
                   <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>🎓</div>
-                  <div style={{ fontWeight: 900, fontSize: "1.1rem" }}>JNMT Student Hub</div>
+                  <div style={{ fontWeight: 900, fontSize: "1.1rem" }}>JNMT.kr-학새</div>
                   <div style={{ fontSize: "0.75rem", opacity: 0.85, marginTop: "0.1rem" }}>전남미래국제고등학교</div>
                 </div>
                 <button onClick={() => setSidebarOpen(false)}
@@ -254,7 +254,8 @@ export default function Navbar() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 700, color: textCol, fontSize: "0.95rem" }}>Vũ Văn Tâm</div>
-                    <div style={{ fontSize: "0.75rem", color: text2 }}>Admin · JNMT Student Hub</div>
+                    <div style={{ fontSize: "0.75rem", color: text2 }}>Admin · JNMT.kr-학새</div>
+
                   </div>
                 </div>
 
@@ -320,7 +321,7 @@ export default function Navbar() {
 
             {/* Version */}
             <div style={{ marginTop: "auto", padding: "1rem 1.25rem", borderTop: `1px solid ${border}`, fontSize: "0.72rem", color: text2, textAlign: "center" }}>
-              {support.version} 1.2.0 · JNMT Student Hub · 2026
+              {support.version} 1.3.0 · JNMT.kr-학새 · 2026
             </div>
           </div>
         </>
