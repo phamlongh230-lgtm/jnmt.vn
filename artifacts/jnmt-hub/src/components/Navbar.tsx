@@ -14,6 +14,7 @@ const TOOLS = [
   { page: "transport", icon: "🚌", key: "transport" },
   { page: "health", icon: "🏥", key: "health" },
   { page: "ai", icon: "🤖", key: "ai" },
+  { page: "tinkercad", icon: "🔧", key: "tinkercad" },
 ];
 
 // Thông tin hỗ trợ bằng 6 ngôn ngữ
@@ -114,11 +115,11 @@ export default function Navbar() {
               ☰
             </button>
             <a href="#" onClick={(e) => { e.preventDefault(); setActivePage("home"); }}
-              style={{ color: "white", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.4rem" }}>
-              <span style={{ fontSize: "1.5rem" }}>🎓</span>
+              style={{ color: "white", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <img src="/favicon.svg" alt="JNMT.kr-학새" width={36} height={36} style={{ borderRadius: 9, boxShadow: "0 1px 6px rgba(0,0,0,0.3)", flexShrink: 0 }} />
               <div>
-                <div style={{ fontWeight: 900, fontSize: "1.1rem", lineHeight: 1 }}>JNMT</div>
-                <div style={{ fontSize: "0.65rem", opacity: 0.85, lineHeight: 1 }}>학새</div>
+                <div style={{ fontWeight: 900, fontSize: "1.05rem", lineHeight: 1 }}>JNMT.kr</div>
+                <div style={{ fontSize: "0.62rem", opacity: 0.85, lineHeight: 1.3 }}>학새</div>
               </div>
             </a>
           </div>
@@ -225,7 +226,7 @@ export default function Navbar() {
             <div style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)", color: "white", padding: "1.5rem 1.25rem 1.25rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>🎓</div>
+                  <img src="/favicon.svg" alt="logo" width={44} height={44} style={{ borderRadius: 11, marginBottom: "0.3rem", boxShadow: "0 2px 8px rgba(0,0,0,0.25)" }} />
                   <div style={{ fontWeight: 900, fontSize: "1.1rem" }}>JNMT.kr-학새</div>
                   <div style={{ fontSize: "0.75rem", opacity: 0.85, marginTop: "0.1rem" }}>전남미래국제고등학교</div>
                 </div>

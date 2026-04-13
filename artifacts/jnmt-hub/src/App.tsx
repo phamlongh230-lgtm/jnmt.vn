@@ -16,6 +16,7 @@ import MenuPage from "@/pages/MenuPage";
 import TransportPage from "@/pages/TransportPage";
 import HealthPage from "@/pages/HealthPage";
 import AIChatPage from "@/pages/AIChatPage";
+import TinkercadPage from "@/pages/TinkercadPage";
 import { getToken } from "@/lib/auth";
 
 setAuthTokenGetter(() => getToken());
@@ -50,6 +51,7 @@ function AppContent() {
         {activePage === "transport" && <TransportPage />}
         {activePage === "health" && <HealthPage />}
         {activePage === "ai" && <AIChatPage />}
+        {activePage === "tinkercad" && <TinkercadPage />}
       </main>
     </div>
   );
