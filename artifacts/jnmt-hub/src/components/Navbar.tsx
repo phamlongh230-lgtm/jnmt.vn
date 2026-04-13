@@ -5,26 +5,44 @@ import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
 import { getToken } from "@/lib/auth";
 
-const TOOLS = [
-  { page: "subtitle", icon: "📝", key: "subtitle" },
-  { page: "conversation", icon: "🎙️", key: "conversation" },
-  { page: "vocab", icon: "🧠", key: "vocab" },
-  { page: "timer", icon: "⏱️", key: "timer" },
-  { page: "dday", icon: "📆", key: "dday" },
-  { page: "menu", icon: "🍱", key: "menu" },
-  { page: "transport", icon: "🚌", key: "transport" },
-  { page: "health", icon: "🏥", key: "health" },
-  { page: "ai", icon: "🤖", key: "ai" },
-  { page: "tinkercad", icon: "🔧", key: "tinkercad" },
-  { page: "weather", icon: "🌤️", key: "weather_tool" },
-  { page: "currency", icon: "💱", key: "currency" },
-  { page: "gpa", icon: "📊", key: "gpa" },
-  { page: "koreanword", icon: "🇰🇷", key: "koreanword" },
-  { page: "qrcode", icon: "📱", key: "qrcode" },
-  { page: "timezone", icon: "🌍", key: "timezone_tool" },
-  { page: "announcements", icon: "📢", key: "announcements" },
-  { page: "admin", icon: "⚙️", key: "admin_page" },
+const TOOL_GROUPS = [
+  {
+    label: "Học tập",
+    tools: [
+      { page: "subtitle",     icon: "📝", key: "subtitle" },
+      { page: "conversation", icon: "🎙️", key: "conversation" },
+      { page: "vocab",        icon: "🧠", key: "vocab" },
+      { page: "timer",        icon: "⏱️", key: "timer" },
+      { page: "dday",         icon: "📆", key: "dday" },
+      { page: "gpa",          icon: "📊", key: "gpa" },
+      { page: "koreanword",   icon: "🇰🇷", key: "koreanword" },
+      { page: "ai",           icon: "🤖", key: "ai" },
+      { page: "tinkercad",    icon: "🔧", key: "tinkercad" },
+    ],
+  },
+  {
+    label: "Tiện ích",
+    tools: [
+      { page: "menu",         icon: "🍱", key: "menu" },
+      { page: "transport",    icon: "🚌", key: "transport" },
+      { page: "health",       icon: "🏥", key: "health" },
+      { page: "weather",      icon: "🌤️", key: "weather_tool" },
+      { page: "currency",     icon: "💱", key: "currency" },
+      { page: "qrcode",       icon: "📱", key: "qrcode" },
+      { page: "timezone",     icon: "🌍", key: "timezone_tool" },
+    ],
+  },
+  {
+    label: "Cộng đồng",
+    tools: [
+      { page: "announcements",icon: "📢", key: "announcements" },
+      { page: "admin",        icon: "⚙️", key: "admin_page" },
+    ],
+  },
 ];
+
+// flat list for sidebar + active detection
+const TOOLS = TOOL_GROUPS.flatMap((g) => g.tools);
 
 const AVATAR_COLORS = ["#2563eb","#7c3aed","#059669","#d97706","#dc2626","#0891b2","#db2777","#65a30d"];
 const ROLE_BADGE: Record<string, { label: string; color: string }> = {
@@ -170,13 +188,20 @@ export default function Navbar() {
               {toolsOpen && (
                 <>
                   <div onClick={() => setToolsOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
-                  <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 210, boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 200, overflow: "hidden" }}>
-                    {TOOLS.map((tool) => (
-                      <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); }}
-                        style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.65rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
-                        <span>{tool.icon}</span>
-                        <span>{t(lang, tool.key)}</span>
-                      </button>
+                  <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 230, maxHeight: "80vh", overflowY: "auto", boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 200 }}>
+                    {TOOL_GROUPS.map((group, gi) => (
+                      <div key={group.label}>
+                        <div style={{ padding: "0.45rem 1rem 0.25rem", fontSize: "0.65rem", fontWeight: 800, color: text2, textTransform: "uppercase", letterSpacing: 1, borderTop: gi > 0 ? `1px solid ${border}` : undefined }}>
+                          {group.label}
+                        </div>
+                        {group.tools.map((tool) => (
+                          <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); }}
+                            style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
+                            <span>{tool.icon}</span>
+                            <span>{t(lang, tool.key)}</span>
+                          </button>
+                        ))}
+                      </div>
                     ))}
                   </div>
                 </>
