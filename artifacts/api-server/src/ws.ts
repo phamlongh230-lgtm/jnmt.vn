@@ -4,6 +4,18 @@ import { logger } from "./lib/logger";
 
 const rooms = new Map<string, Set<WebSocket>>();
 
+/** Push a message to every connected client in a room (called from REST routes). */
+export function broadcast(roomId: string, data: unknown) {
+  const roomClients = rooms.get(roomId);
+  if (!roomClients) return;
+  const payload = JSON.stringify(data);
+  for (const client of roomClients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(payload);
+    }
+  }
+}
+
 export function createWsServer(server: Server) {
   const wss = new WebSocketServer({ server, path: "/ws/room" });
 
@@ -27,6 +39,7 @@ export function createWsServer(server: Server) {
     ws.on("message", (data) => {
       try {
         const msg = JSON.parse(data.toString());
+        // Relay client→client messages (typing events, etc.) to all OTHER clients
         const roomClients = rooms.get(roomId);
         if (roomClients) {
           for (const client of roomClients) {

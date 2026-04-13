@@ -76,7 +76,7 @@ const SUPPORT_INFO: Record<string, {
 };
 
 export default function Navbar() {
-  const { lang, setLang, isDark, toggleDark, currentUser, logout, activePage, setActivePage } = useApp();
+  const { lang, setLang, isDark, toggleDark, currentUser, logout, activePage, setActivePage, chatUnread, resetChatUnread } = useApp();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -127,10 +127,15 @@ export default function Navbar() {
           <nav style={{ display: "flex", gap: 0, flexWrap: "wrap" }}>
             {navItems.map((item) => (
               <a key={item.page} href={`#${item.page}`}
-                onClick={(e) => { e.preventDefault(); setActivePage(item.page); setToolsOpen(false); }}
-                style={{ color: "white", textDecoration: "none", padding: "0.6rem 0.85rem", fontWeight: 500, fontSize: "0.9rem", borderBottom: activePage === item.page ? "3px solid white" : "3px solid transparent", transition: "border-color 0.2s", display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                onClick={(e) => { e.preventDefault(); setActivePage(item.page); setToolsOpen(false); if (item.page === "chat") resetChatUnread(); }}
+                style={{ color: "white", textDecoration: "none", padding: "0.6rem 0.85rem", fontWeight: 500, fontSize: "0.9rem", borderBottom: activePage === item.page ? "3px solid white" : "3px solid transparent", transition: "border-color 0.2s", display: "flex", alignItems: "center", gap: "0.35rem", position: "relative" }}>
                 <span>{item.icon}</span>
                 <span>{t(lang, item.key)}</span>
+                {item.page === "chat" && chatUnread > 0 && (
+                  <span style={{ position: "absolute", top: 6, right: 2, background: "#ef4444", color: "white", borderRadius: "50%", width: 18, height: 18, fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>
+                    {chatUnread > 9 ? "9+" : chatUnread}
+                  </span>
+                )}
               </a>
             ))}
 

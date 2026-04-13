@@ -3,6 +3,7 @@ import { db, messagesTable } from "@workspace/db";
 import { desc, eq } from "drizzle-orm";
 import { CreateMessageBody, GetMessagesQueryParams } from "@workspace/api-zod";
 import { verifyToken } from "./auth";
+import { broadcast } from "../ws";
 
 const router: IRouter = Router();
 
@@ -59,13 +60,17 @@ router.post("/messages", async (req, res): Promise<void> => {
 
     req.log.info({ messageId: message.id, userId: decoded.id }, "Message created");
 
-    res.status(201).json({
+    const payload = {
       id: message.id,
       content: message.content,
       username: message.username,
       userId: message.userId,
       createdAt: message.createdAt,
-    });
+    };
+
+    broadcast("chat", { type: "new_message", message: payload });
+
+    res.status(201).json(payload);
   } catch (err) {
     req.log.error({ err }, "Create message error");
     res.status(500).json({ error: "Không thể gửi tin nhắn!" });
@@ -109,6 +114,7 @@ router.delete("/messages/:id", async (req, res): Promise<void> => {
 
     await db.delete(messagesTable).where(eq(messagesTable.id, messageId));
     req.log.info({ messageId, userId: decoded.id }, "Message deleted");
+    broadcast("chat", { type: "delete_message", messageId });
     res.status(204).end();
   } catch (err) {
     req.log.error({ err }, "Delete message error");
