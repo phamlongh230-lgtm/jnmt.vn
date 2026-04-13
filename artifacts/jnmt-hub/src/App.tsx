@@ -17,6 +17,14 @@ import TransportPage from "@/pages/TransportPage";
 import HealthPage from "@/pages/HealthPage";
 import AIChatPage from "@/pages/AIChatPage";
 import TinkercadPage from "@/pages/TinkercadPage";
+import WeatherPage from "@/pages/WeatherPage";
+import CurrencyPage from "@/pages/CurrencyPage";
+import GPAPage from "@/pages/GPAPage";
+import KoreanWordPage from "@/pages/KoreanWordPage";
+import QRCodePage from "@/pages/QRCodePage";
+import TimezonePage from "@/pages/TimezonePage";
+import AnnouncementsPage from "@/pages/AnnouncementsPage";
+import AdminPage from "@/pages/AdminPage";
 import { getToken } from "@/lib/auth";
 
 setAuthTokenGetter(() => getToken());
@@ -52,6 +60,14 @@ function AppContent() {
         {activePage === "health" && <HealthPage />}
         {activePage === "ai" && <AIChatPage />}
         {activePage === "tinkercad" && <TinkercadPage />}
+        {activePage === "weather" && <WeatherPage />}
+        {activePage === "currency" && <CurrencyPage />}
+        {activePage === "gpa" && <GPAPage />}
+        {activePage === "koreanword" && <KoreanWordPage />}
+        {activePage === "qrcode" && <QRCodePage />}
+        {activePage === "timezone" && <TimezonePage />}
+        {activePage === "announcements" && <AnnouncementsPage />}
+        {activePage === "admin" && <AdminPage />}
       </main>
     </div>
   );

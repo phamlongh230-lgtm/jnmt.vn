@@ -11,6 +11,7 @@ export const usersTable = pgTable("users", {
   password: text("password").notNull(),
   role: roleEnum("role").notNull().default("user"),
   isActive: boolean("is_active").notNull().default(true),
+  avatarColor: text("avatar_color").notNull().default("#2563eb"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   lastLogin: timestamp("last_login"),
 });

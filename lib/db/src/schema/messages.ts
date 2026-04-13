@@ -8,6 +8,29 @@ export const messagesTable = pgTable("messages", {
   userId: integer("user_id").notNull(),
   username: text("username").notNull(),
   isEdited: boolean("is_edited").notNull().default(false),
+  replyToId: integer("reply_to_id"),
+  replyToContent: text("reply_to_content"),
+  replyToUsername: text("reply_to_username"),
+  editedAt: timestamp("edited_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const reactionsTable = pgTable("message_reactions", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").notNull(),
+  userId: integer("user_id").notNull(),
+  username: text("username").notNull(),
+  emoji: text("emoji").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const announcementsTable = pgTable("announcements", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  authorId: integer("author_id").notNull(),
+  authorUsername: text("author_username").notNull(),
+  isPinned: boolean("is_pinned").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

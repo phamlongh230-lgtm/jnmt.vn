@@ -20,6 +20,8 @@ interface AppContextType {
   chatUnread: number;
   resetChatUnread: () => void;
   sendWsMessage: (data: unknown) => void;
+  onlineUsers: string[];
+  updateUser: (user: User) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -36,16 +38,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [activePage, setActivePage] = useState("home");
   const [toast, setToast] = useState<ToastState | null>(null);
   const [chatUnread, setChatUnread] = useState(0);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const activePageRef = useRef(activePage);
   const wsRef = useRef<WebSocket | null>(null);
+  const currentUserRef = useRef(currentUser);
 
   useEffect(() => { activePageRef.current = activePage; }, [activePage]);
+  useEffect(() => { currentUserRef.current = currentUser; }, [currentUser]);
 
   const showToast = useCallback((message: string, type: ToastType = "success") => {
     setToast({ message, type, id: Date.now() });
   }, []);
 
   const resetChatUnread = useCallback(() => setChatUnread(0), []);
+
+  const updateUser = useCallback((user: User) => {
+    setCurrentUser(user);
+    setStoredUser(user);
+  }, []);
 
   const sendWsMessage = useCallback((data: unknown) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
@@ -63,21 +73,32 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.type === "new_message") {
+          if (data.type === "online_users") {
+            setOnlineUsers(data.users || []);
+          } else if (data.type === "new_message") {
             window.dispatchEvent(new CustomEvent("chat:new_message", { detail: data.message }));
             if (activePageRef.current !== "chat") {
               setChatUnread((n) => n + 1);
             }
           } else if (data.type === "delete_message") {
             window.dispatchEvent(new CustomEvent("chat:delete_message", { detail: { messageId: data.messageId } }));
+          } else if (data.type === "edit_message") {
+            window.dispatchEvent(new CustomEvent("chat:edit_message", { detail: data }));
+          } else if (data.type === "reaction_update") {
+            window.dispatchEvent(new CustomEvent("chat:reaction_update", { detail: data }));
           } else if (data.type === "typing") {
             window.dispatchEvent(new CustomEvent("chat:typing", { detail: { username: data.username } }));
           }
         } catch { /* ignore */ }
       };
 
+      ws.onopen = () => {
+        if (currentUserRef.current) {
+          ws.send(JSON.stringify({ type: "join", username: currentUserRef.current.username }));
+        }
+      };
+
       ws.onclose = () => {
-        // Reconnect after 3s
         setTimeout(connect, 3000);
       };
     };
@@ -124,7 +145,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider
-      value={{ lang, setLang, isDark, toggleDark, currentUser, token, login, logout, activePage, setActivePage, showToast, chatUnread, resetChatUnread, sendWsMessage }}
+      value={{ lang, setLang, isDark, toggleDark, currentUser, token, login, logout, activePage, setActivePage, showToast, chatUnread, resetChatUnread, sendWsMessage, onlineUsers, updateUser }}
     >
       {children}
       {toast && (

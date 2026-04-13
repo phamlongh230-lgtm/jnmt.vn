@@ -3,6 +3,7 @@ import { useApp } from "@/context/AppContext";
 import { t, LANGUAGES, LangCode } from "@/lib/i18n";
 import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
+import { getToken } from "@/lib/auth";
 
 const TOOLS = [
   { page: "subtitle", icon: "📝", key: "subtitle" },
@@ -15,7 +16,21 @@ const TOOLS = [
   { page: "health", icon: "🏥", key: "health" },
   { page: "ai", icon: "🤖", key: "ai" },
   { page: "tinkercad", icon: "🔧", key: "tinkercad" },
+  { page: "weather", icon: "🌤️", key: "weather_tool" },
+  { page: "currency", icon: "💱", key: "currency" },
+  { page: "gpa", icon: "📊", key: "gpa" },
+  { page: "koreanword", icon: "🇰🇷", key: "koreanword" },
+  { page: "qrcode", icon: "📱", key: "qrcode" },
+  { page: "timezone", icon: "🌍", key: "timezone_tool" },
+  { page: "announcements", icon: "📢", key: "announcements" },
+  { page: "admin", icon: "⚙️", key: "admin_page" },
 ];
+
+const AVATAR_COLORS = ["#2563eb","#7c3aed","#059669","#d97706","#dc2626","#0891b2","#db2777","#65a30d"];
+const ROLE_BADGE: Record<string, { label: string; color: string }> = {
+  admin: { label: "Admin", color: "#7c3aed" },
+  moderator: { label: "Mod", color: "#2563eb" },
+};
 
 // Thông tin hỗ trợ bằng 6 ngôn ngữ
 const SUPPORT_INFO: Record<string, {
@@ -77,12 +92,17 @@ const SUPPORT_INFO: Record<string, {
 };
 
 export default function Navbar() {
-  const { lang, setLang, isDark, toggleDark, currentUser, logout, activePage, setActivePage, chatUnread, resetChatUnread } = useApp();
+  const { lang, setLang, isDark, toggleDark, currentUser, logout, activePage, setActivePage, chatUnread, resetChatUnread, showToast, updateUser } = useApp();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [pwOpen, setPwOpen] = useState(false);
+  const [oldPw, setOldPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [pwSaving, setPwSaving] = useState(false);
+  const [colorOpen, setColorOpen] = useState(false);
 
   const navItems = [
     { page: "home", icon: "🏠", key: "home" },
@@ -183,29 +203,60 @@ export default function Navbar() {
                 {currentUser ? currentUser.username.charAt(0).toUpperCase() : "👤"}
               </button>
               {userMenuOpen && (
-                <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 200, boxShadow: "0 4px 16px rgba(0,0,0,0.15)", zIndex: 200 }}
-                  onClick={() => setUserMenuOpen(false)}>
-                  {currentUser ? (
-                    <>
-                      <div style={{ padding: "0.75rem 1rem", borderBottom: `1px solid ${border}` }}>
-                        <div style={{ fontWeight: 700, color: textCol }}>{currentUser.username}</div>
-                        <div style={{ fontSize: "0.8rem", color: text2, marginTop: 2 }}>{currentUser.email}</div>
-                      </div>
-                      <button onClick={logout} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#ef4444", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.9rem" }}>
-                        🚪 {t(lang, "logout")}
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => setLoginOpen(true)} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#2563eb", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, borderBottom: `1px solid ${border}` }}>
-                        🔑 {t(lang, "login")}
-                      </button>
-                      <button onClick={() => setRegisterOpen(true)} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#2563eb", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500 }}>
-                        ✨ {t(lang, "register")}
-                      </button>
-                    </>
-                  )}
-                </div>
+                <>
+                  <div onClick={() => setUserMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
+                  <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 220, boxShadow: "0 4px 16px rgba(0,0,0,0.15)", zIndex: 200 }}>
+                    {currentUser ? (
+                      <>
+                        <div style={{ padding: "0.75rem 1rem", borderBottom: `1px solid ${border}` }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                            <div style={{ width: 32, height: 32, borderRadius: "50%", background: currentUser.avatarColor || "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0 }}>
+                              {currentUser.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+                                <span style={{ fontWeight: 700, color: textCol, fontSize: "0.9rem" }}>{currentUser.username}</span>
+                                {ROLE_BADGE[currentUser.role || ""] && (
+                                  <span style={{ fontSize: "0.6rem", background: ROLE_BADGE[currentUser.role!].color + "20", color: ROLE_BADGE[currentUser.role!].color, padding: "0.1rem 0.35rem", borderRadius: 4, fontWeight: 700 }}>
+                                    {ROLE_BADGE[currentUser.role!].label}
+                                  </span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: "0.75rem", color: text2, marginTop: 1 }}>{currentUser.email}</div>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Avatar color picker */}
+                        <div style={{ padding: "0.6rem 1rem", borderBottom: `1px solid ${border}` }}>
+                          <div style={{ fontSize: "0.75rem", color: text2, marginBottom: "0.4rem", fontWeight: 600 }}>🎨 Màu avatar</div>
+                          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+                            {AVATAR_COLORS.map((c) => (
+                              <button key={c} onClick={async () => {
+                                const r = await fetch("/api/auth/profile", { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ avatarColor: c }) });
+                                if (r.ok) { const u = await r.json(); updateUser(u); showToast("Đã cập nhật màu!", "success"); }
+                              }} style={{ width: 22, height: 22, borderRadius: "50%", background: c, border: currentUser.avatarColor === c ? "2px solid white" : "2px solid transparent", outline: currentUser.avatarColor === c ? `2px solid ${c}` : "none", cursor: "pointer", padding: 0 }} />
+                            ))}
+                          </div>
+                        </div>
+                        <button onClick={() => { setUserMenuOpen(false); setPwOpen(true); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: textCol, background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem", borderBottom: `1px solid ${border}` }}>
+                          🔒 Đổi mật khẩu
+                        </button>
+                        <button onClick={logout} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: "#ef4444", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem" }}>
+                          🚪 {t(lang, "logout")}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={() => { setLoginOpen(true); setUserMenuOpen(false); }} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#2563eb", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, borderBottom: `1px solid ${border}` }}>
+                          🔑 {t(lang, "login")}
+                        </button>
+                        <button onClick={() => { setRegisterOpen(true); setUserMenuOpen(false); }} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#2563eb", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500 }}>
+                          ✨ {t(lang, "register")}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -330,6 +381,31 @@ export default function Navbar() {
 
       {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} onRegister={() => { setLoginOpen(false); setRegisterOpen(true); }} />}
       {registerOpen && <RegisterModal onClose={() => setRegisterOpen(false)} onLogin={() => { setRegisterOpen(false); setLoginOpen(true); }} />}
+
+      {/* Change password modal */}
+      {pwOpen && (
+        <>
+          <div onClick={() => { setPwOpen(false); setOldPw(""); setNewPw(""); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 500, backdropFilter: "blur(2px)" }} />
+          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", background: bg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem", width: "min(400px, 90vw)", zIndex: 600, boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: textCol, marginBottom: "1rem" }}>🔒 Đổi mật khẩu</h2>
+            <input type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} placeholder="Mật khẩu hiện tại" style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "0.75rem", outline: "none", boxSizing: "border-box" }} />
+            <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="Mật khẩu mới (tối thiểu 6 ký tự)" style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "1rem", outline: "none", boxSizing: "border-box" }} />
+            <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+              <button onClick={() => { setPwOpen(false); setOldPw(""); setNewPw(""); }} style={{ padding: "0.6rem 1rem", background: "none", border: `1px solid ${border}`, borderRadius: 8, color: text2, cursor: "pointer", fontSize: "0.9rem" }}>Hủy</button>
+              <button disabled={pwSaving || !oldPw || newPw.length < 6} onClick={async () => {
+                setPwSaving(true);
+                try {
+                  const r = await fetch("/api/auth/password", { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw }) });
+                  if (r.ok) { showToast("Đã đổi mật khẩu!", "success"); setPwOpen(false); setOldPw(""); setNewPw(""); }
+                  else { const e = await r.json(); showToast(e.error || "Lỗi!", "error"); }
+                } finally { setPwSaving(false); }
+              }} style={{ padding: "0.6rem 1.25rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: "0.9rem", opacity: (pwSaving || !oldPw || newPw.length < 6) ? 0.6 : 1 }}>
+                {pwSaving ? "..." : "Lưu"}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
