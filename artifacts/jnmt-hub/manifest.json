@@ -1,0 +1,20 @@
+{
+  "name": "전남미래국제고등학교 학생 허브",
+  "short_name": "JNMT Hub",
+  "description": "전남미래국제고등학교 학생 포털 - Portal học sinh JNMT",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"]
+}
