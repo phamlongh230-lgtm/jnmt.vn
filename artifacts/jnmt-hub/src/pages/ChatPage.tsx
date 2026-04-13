@@ -5,6 +5,7 @@ import { useGetMessages, useCreateMessage, getGetMessagesQueryKey } from "@works
 import { useQueryClient } from "@tanstack/react-query";
 import { ChatSkeleton } from "@/components/Skeleton";
 import { getToken } from "@/lib/auth";
+import GifPicker from "@/components/GifPicker";
 
 interface MessageItem {
   id: number;
@@ -19,7 +20,9 @@ export default function ChatPage() {
   const [messageText, setMessageText] = useState("");
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [showGif, setShowGif] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputAreaRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
   const isMod = currentUser?.role === "moderator" || currentUser?.role === "admin";
@@ -91,6 +94,18 @@ export default function ChatPage() {
     return d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
   };
 
+  const isGifUrl = (content: string) => {
+    try {
+      const url = new URL(content.trim());
+      return (url.hostname.includes("tenor.com") || url.hostname.includes("giphy.com") || content.trim().endsWith(".gif")) && url.protocol === "https:";
+    } catch { return false; }
+  };
+
+  const sendGif = (url: string) => {
+    if (!currentUser || !token) return;
+    createMessageMutation.mutate({ data: { content: url } });
+  };
+
   const getColor = (username: string) => {
     const colors = ["#2563eb", "#7c3aed", "#0891b2", "#059669", "#d97706", "#dc2626"];
     let hash = 0;
@@ -131,17 +146,23 @@ export default function ChatPage() {
                       <div style={{ fontSize: "0.72rem", color: text2, marginBottom: "0.15rem", fontWeight: 600 }}>{msg.username}</div>
                     )}
                     <div style={{ position: "relative" }}>
-                      <div style={{
-                        background: isOwn ? "#2563eb" : isDark ? "#0f172a" : "#f8fafc",
-                        color: isOwn ? "white" : textCol,
-                        padding: "0.55rem 0.85rem",
-                        borderRadius: isOwn ? "12px 12px 4px 12px" : "12px 12px 12px 4px",
-                        fontSize: "0.9rem",
-                        border: isOwn ? "none" : `1px solid ${border}`,
-                        wordBreak: "break-word",
-                      }}>
-                        {msg.content}
-                      </div>
+                      {isGifUrl(msg.content) ? (
+                        <div style={{ borderRadius: isOwn ? "12px 12px 4px 12px" : "12px 12px 12px 4px", overflow: "hidden", maxWidth: 220, border: `1px solid ${border}` }}>
+                          <img src={msg.content} alt="GIF" style={{ display: "block", width: "100%", maxHeight: 180, objectFit: "cover" }} loading="lazy" />
+                        </div>
+                      ) : (
+                        <div style={{
+                          background: isOwn ? "#2563eb" : isDark ? "#0f172a" : "#f8fafc",
+                          color: isOwn ? "white" : textCol,
+                          padding: "0.55rem 0.85rem",
+                          borderRadius: isOwn ? "12px 12px 4px 12px" : "12px 12px 12px 4px",
+                          fontSize: "0.9rem",
+                          border: isOwn ? "none" : `1px solid ${border}`,
+                          wordBreak: "break-word",
+                        }}>
+                          {msg.content}
+                        </div>
+                      )}
                       {canDelete && (
                         <button
                           onClick={() => handleDelete(msg.id)}
@@ -189,7 +210,24 @@ export default function ChatPage() {
                   ❌ {error}
                 </div>
               )}
-              <div style={{ display: "flex", gap: "0.6rem", alignItems: "flex-end" }}>
+              <div ref={inputAreaRef} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-end", position: "relative" }}>
+                {showGif && (
+                  <GifPicker
+                    onSelect={(url) => sendGif(url)}
+                    onClose={() => setShowGif(false)}
+                  />
+                )}
+                <button
+                  onClick={() => setShowGif((v) => !v)}
+                  title="Gửi GIF"
+                  style={{
+                    padding: "0.65rem 0.7rem", background: showGif ? (isDark ? "#334155" : "#e2e8f0") : "transparent",
+                    border: `1px solid ${border}`, borderRadius: 10, cursor: "pointer", fontSize: "0.85rem",
+                    color: text2, flexShrink: 0, fontWeight: 700,
+                  }}
+                >
+                  GIF
+                </button>
                 <textarea
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
