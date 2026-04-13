@@ -395,7 +395,7 @@ export default function Navbar() {
               <button disabled={pwSaving || !oldPw || newPw.length < 6} onClick={async () => {
                 setPwSaving(true);
                 try {
-                  const r = await fetch("/api/auth/password", { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ oldPassword: oldPw, newPassword: newPw }) });
+                  const r = await fetch("/api/auth/password", { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ currentPassword: oldPw, newPassword: newPw }) });
                   if (r.ok) { showToast("Đã đổi mật khẩu!", "success"); setPwOpen(false); setOldPw(""); setNewPw(""); }
                   else { const e = await r.json(); showToast(e.error || "Lỗi!", "error"); }
                 } finally { setPwSaving(false); }
