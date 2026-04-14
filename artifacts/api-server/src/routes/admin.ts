@@ -18,7 +18,7 @@ router.get("/admin/users", async (req, res): Promise<void> => {
   try {
     if (!requireAdmin(req, res)) return;
     const users = await db
-      .select({ id: usersTable.id, username: usersTable.username, email: usersTable.email, role: usersTable.role, isActive: usersTable.isActive, avatarColor: usersTable.avatarColor, createdAt: usersTable.createdAt, lastLogin: usersTable.lastLogin })
+      .select({ id: usersTable.id, username: usersTable.username, email: usersTable.email, role: usersTable.role, isActive: usersTable.isActive, avatarColor: usersTable.avatarColor, classGroup: usersTable.classGroup, createdAt: usersTable.createdAt, lastLogin: usersTable.lastLogin })
       .from(usersTable)
       .orderBy(desc(usersTable.createdAt));
     res.json(users);
@@ -37,12 +37,14 @@ router.put("/admin/users/:id", async (req, res): Promise<void> => {
     const body = z.object({
       role: z.enum(["user", "moderator", "admin"]).optional(),
       isActive: z.boolean().optional(),
+      classGroup: z.string().nullable().optional(),
     }).safeParse(req.body);
     if (!body.success) { res.status(400).json({ error: "Dữ liệu không hợp lệ!" }); return; }
 
     const updates: Record<string, unknown> = {};
     if (body.data.role !== undefined) updates.role = body.data.role;
     if (body.data.isActive !== undefined) updates.isActive = body.data.isActive;
+    if (body.data.classGroup !== undefined) updates.classGroup = body.data.classGroup;
 
     const [updated] = await db.update(usersTable).set(updates).where(eq(usersTable.id, userId)).returning({ id: usersTable.id, username: usersTable.username, role: usersTable.role, isActive: usersTable.isActive });
     if (!updated) { res.status(404).json({ error: "Người dùng không tồn tại!" }); return; }

@@ -7,6 +7,7 @@ import schoolsRouter from "./schools";
 import aiRouter from "./ai";
 import announcementsRouter from "./announcements";
 import adminRouter from "./admin";
+import tinkercadRouter from "./tinkercad";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(schoolsRouter);
 router.use(aiRouter);
 router.use(announcementsRouter);
 router.use(adminRouter);
+router.use(tinkercadRouter);
 
 export default router;

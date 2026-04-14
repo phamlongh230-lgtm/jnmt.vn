@@ -3,6 +3,7 @@ import { AppProvider, useApp } from "@/context/AppContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
+import LoginPage from "@/pages/LoginPage";
 import { getToken } from "@/lib/auth";
 
 // Always-loaded (core pages, small)
@@ -52,7 +53,9 @@ function PageLoader() {
 }
 
 function AppContent() {
-  const { activePage, isDark } = useApp();
+  const { activePage, isDark, currentUser } = useApp();
+
+  if (!currentUser) return <LoginPage />;
 
   return (
     <div style={{ minHeight: "100vh", background: isDark ? "#0f172a" : "#f8fafc", color: "var(--text)" }}>
