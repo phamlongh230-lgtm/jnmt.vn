@@ -14,6 +14,20 @@ interface School {
   description: string | null;
 }
 
+// Pinned suggestion — always shown at top when input is empty & focused
+const PINNED: School = {
+  id: -1,
+  name: "전남미래국제고등학교",
+  nameKo: "전남미래국제고등학교",
+  nameEn: "Jeonnam Future International High School",
+  slug: "jnmt",
+  link: "https://www.jnmt.kr",
+  type: "high_school",
+  city: "Gangjin-gun, Jeollanam-do",
+  country: "KR",
+  description: "Trường của bạn · 학생 포털",
+};
+
 const TYPE_LABELS: Record<string, string> = {
   university: "Đại học",
   college: "Cao đẳng",
@@ -66,7 +80,6 @@ export default function SchoolSearch() {
   const fetchSchools = useCallback(async (q: string) => {
     if (!q.trim()) {
       setResults([]);
-      setOpen(false);
       return;
     }
     setLoading(true);
@@ -179,7 +192,7 @@ export default function SchoolSearch() {
               setSelectedSchool(null);
             }}
             onKeyDown={handleKeyDown}
-            onFocus={() => { if (results.length > 0) setOpen(true); }}
+            onFocus={() => setOpen(true)}
             placeholder="Tìm kiếm trường học... (ví dụ: Seoul, Bách Khoa, KAIST)"
             style={{
               flex: 1,
@@ -233,68 +246,98 @@ export default function SchoolSearch() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
             }}
           >
-            {results.length === 0 ? (
+            {!query.trim() ? (
+              /* Empty state: show pinned school as suggestion */
+              <>
+                <li style={{ padding: "0.3rem 1rem 0.15rem", fontSize: "0.65rem", fontWeight: 800, color: text2, textTransform: "uppercase", letterSpacing: 1 }}>
+                  ⭐ Trường của bạn
+                </li>
+                <li
+                  onMouseDown={() => handleSelect(PINNED)}
+                  style={{ padding: "0.75rem 1rem", cursor: "pointer", background: isDark ? "#1e3a5f" : "#eff6ff", display: "flex", alignItems: "center", gap: "0.75rem", borderLeft: "3px solid #2563eb" }}
+                >
+                  <div style={{ flexShrink: 0, textAlign: "center" }}>
+                    <div style={{ fontSize: "1.3rem" }}>🇰🇷</div>
+                    <div style={{ fontSize: "0.6rem", fontWeight: 700, color: TYPE_COLORS.high_school, background: TYPE_COLORS.high_school + "18", padding: "0.05rem 0.3rem", borderRadius: 4, marginTop: "0.1rem", whiteSpace: "nowrap" }}>THPT</div>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 800, color: "#2563eb", fontSize: "0.95rem", marginBottom: "0.1rem" }}>{PINNED.name}</div>
+                    <div style={{ fontSize: "0.78rem", color: text2, marginBottom: "0.1rem", fontStyle: "italic" }}>{PINNED.nameEn}</div>
+                    <div style={{ fontSize: "0.75rem", color: text2 }}>📍 {PINNED.city} · {PINNED.description}</div>
+                  </div>
+                  <span style={{ fontSize: "0.8rem", color: "#2563eb", flexShrink: 0 }}>→</span>
+                </li>
+                <li style={{ padding: "0.5rem 1rem", fontSize: "0.78rem", color: text2, textAlign: "center" }}>
+                  Gõ để tìm kiếm trường khác...
+                </li>
+              </>
+            ) : results.length === 0 ? (
               <li style={{ padding: "1rem", color: text2, textAlign: "center", fontSize: "0.9rem" }}>
                 😕 Không tìm thấy trường nào khớp với "{query}"
               </li>
             ) : (
-              results.map((school, idx) => (
-                <li
-                  key={school.id}
-                  onMouseDown={() => handleSelect(school)}
-                  onMouseEnter={() => setActiveIdx(idx)}
-                  style={{
-                    padding: "0.75rem 1rem",
-                    cursor: "pointer",
-                    background: idx === activeIdx ? hoverBg : "transparent",
-                    transition: "background 0.1s",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    borderBottom: idx < results.length - 1 ? `1px solid ${border}` : "none",
-                  }}
-                >
-                  {/* Flag + type badge */}
-                  <div style={{ flexShrink: 0, textAlign: "center" }}>
-                    <div style={{ fontSize: "1.3rem" }}>{COUNTRY_FLAGS[school.country] ?? "🌐"}</div>
-                    <div style={{
-                      fontSize: "0.6rem",
-                      fontWeight: 700,
-                      color: TYPE_COLORS[school.type] ?? "#64748b",
-                      background: `${TYPE_COLORS[school.type]}18`,
-                      padding: "0.05rem 0.3rem",
-                      borderRadius: 4,
-                      marginTop: "0.1rem",
-                      whiteSpace: "nowrap",
-                    }}>
-                      {TYPE_LABELS[school.type] ?? school.type}
+              <>
+                {/* Always prepend pinned if query matches */}
+                {(PINNED.name.toLowerCase().includes(query.toLowerCase()) || (PINNED.nameEn ?? "").toLowerCase().includes(query.toLowerCase())) &&
+                  !results.find((r) => r.id === PINNED.id) && (
+                  <li
+                    onMouseDown={() => handleSelect(PINNED)}
+                    style={{ padding: "0.75rem 1rem", cursor: "pointer", background: isDark ? "#1e3a5f" : "#eff6ff", display: "flex", alignItems: "center", gap: "0.75rem", borderLeft: "3px solid #2563eb", borderBottom: `1px solid ${border}` }}
+                  >
+                    <div style={{ flexShrink: 0, textAlign: "center" }}>
+                      <div style={{ fontSize: "1.3rem" }}>🇰🇷</div>
+                      <div style={{ fontSize: "0.6rem", fontWeight: 700, color: TYPE_COLORS.high_school, background: TYPE_COLORS.high_school + "18", padding: "0.05rem 0.3rem", borderRadius: 4, marginTop: "0.1rem" }}>THPT</div>
                     </div>
-                  </div>
-
-                  {/* Text info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, color: textCol, fontSize: "0.95rem", marginBottom: "0.1rem" }}>
-                      {school.name}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                        <span style={{ fontWeight: 800, color: "#2563eb", fontSize: "0.95rem" }}>{PINNED.name}</span>
+                        <span style={{ fontSize: "0.6rem", background: "#2563eb", color: "white", padding: "0.1rem 0.35rem", borderRadius: 4, fontWeight: 700 }}>⭐ Trường bạn</span>
+                      </div>
+                      <div style={{ fontSize: "0.75rem", color: text2 }}>📍 {PINNED.city}</div>
                     </div>
-                    {(school.nameKo || school.nameEn) && (
-                      <div style={{ fontSize: "0.78rem", color: text2, marginBottom: "0.1rem" }}>
-                        {school.nameKo && <span style={{ marginRight: "0.5rem" }}>{school.nameKo}</span>}
-                        {school.nameEn && <span style={{ fontStyle: "italic" }}>{school.nameEn}</span>}
+                    <span style={{ fontSize: "0.8rem", color: "#2563eb", flexShrink: 0 }}>→</span>
+                  </li>
+                )}
+                {results.map((school, idx) => (
+                  <li
+                    key={school.id}
+                    onMouseDown={() => handleSelect(school)}
+                    onMouseEnter={() => setActiveIdx(idx)}
+                    style={{
+                      padding: "0.75rem 1rem",
+                      cursor: "pointer",
+                      background: idx === activeIdx ? hoverBg : "transparent",
+                      transition: "background 0.1s",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      borderBottom: idx < results.length - 1 ? `1px solid ${border}` : "none",
+                    }}
+                  >
+                    <div style={{ flexShrink: 0, textAlign: "center" }}>
+                      <div style={{ fontSize: "1.3rem" }}>{COUNTRY_FLAGS[school.country] ?? "🌐"}</div>
+                      <div style={{ fontSize: "0.6rem", fontWeight: 700, color: TYPE_COLORS[school.type] ?? "#64748b", background: `${TYPE_COLORS[school.type]}18`, padding: "0.05rem 0.3rem", borderRadius: 4, marginTop: "0.1rem", whiteSpace: "nowrap" }}>
+                        {TYPE_LABELS[school.type] ?? school.type}
                       </div>
-                    )}
-                    {school.city && (
-                      <div style={{ fontSize: "0.75rem", color: text2 }}>
-                        📍 {school.city}
-                        {school.description && (
-                          <span style={{ marginLeft: "0.4rem" }}>· {school.description}</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  <span style={{ fontSize: "0.8rem", color: "#2563eb", flexShrink: 0 }}>→</span>
-                </li>
-              ))
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, color: textCol, fontSize: "0.95rem", marginBottom: "0.1rem" }}>{school.name}</div>
+                      {(school.nameKo || school.nameEn) && (
+                        <div style={{ fontSize: "0.78rem", color: text2, marginBottom: "0.1rem" }}>
+                          {school.nameKo && <span style={{ marginRight: "0.5rem" }}>{school.nameKo}</span>}
+                          {school.nameEn && <span style={{ fontStyle: "italic" }}>{school.nameEn}</span>}
+                        </div>
+                      )}
+                      {school.city && (
+                        <div style={{ fontSize: "0.75rem", color: text2 }}>
+                          📍 {school.city}{school.description && <span style={{ marginLeft: "0.4rem" }}>· {school.description}</span>}
+                        </div>
+                      )}
+                    </div>
+                    <span style={{ fontSize: "0.8rem", color: "#2563eb", flexShrink: 0 }}>→</span>
+                  </li>
+                ))}
+              </>
             )}
           </ul>
         )}
