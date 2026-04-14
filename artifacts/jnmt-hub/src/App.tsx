@@ -31,6 +31,7 @@ const KoreanWordPage   = lazy(() => import("@/pages/KoreanWordPage"));
 const QRCodePage       = lazy(() => import("@/pages/QRCodePage"));
 const TimezonePage     = lazy(() => import("@/pages/TimezonePage"));
 const AnnouncementsPage = lazy(() => import("@/pages/AnnouncementsPage"));
+const LinksPage        = lazy(() => import("@/pages/LinksPage"));
 const AdminPage        = lazy(() => import("@/pages/AdminPage"));
 
 setAuthTokenGetter(() => getToken());
@@ -85,6 +86,7 @@ function AppContent() {
           {activePage === "qrcode"      && <QRCodePage />}
           {activePage === "timezone"    && <TimezonePage />}
           {activePage === "announcements"&&<AnnouncementsPage />}
+          {activePage === "links"       && <LinksPage />}
           {activePage === "admin"       && <AdminPage />}
         </Suspense>
       </main>

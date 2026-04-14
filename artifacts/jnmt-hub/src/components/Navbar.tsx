@@ -36,6 +36,7 @@ const TOOL_GROUPS = [
     label: "Cộng đồng",
     tools: [
       { page: "announcements",icon: "📢", key: "announcements" },
+      { page: "links",        icon: "🔗", key: "links_page" },
       { page: "admin",        icon: "⚙️", key: "admin_page" },
     ],
   },
@@ -113,6 +114,7 @@ export default function Navbar() {
   const { lang, setLang, isDark, toggleDark, currentUser, logout, activePage, setActivePage, chatUnread, resetChatUnread, showToast, updateUser } = useApp();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [toolSearch, setToolSearch] = useState("");
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -187,22 +189,51 @@ export default function Navbar() {
               </button>
               {toolsOpen && (
                 <>
-                  <div onClick={() => setToolsOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
-                  <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 230, maxHeight: "80vh", overflowY: "auto", boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 200 }}>
-                    {TOOL_GROUPS.map((group, gi) => (
-                      <div key={group.label}>
-                        <div style={{ padding: "0.45rem 1rem 0.25rem", fontSize: "0.65rem", fontWeight: 800, color: text2, textTransform: "uppercase", letterSpacing: 1, borderTop: gi > 0 ? `1px solid ${border}` : undefined }}>
-                          {group.label}
-                        </div>
-                        {group.tools.map((tool) => (
-                          <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); }}
-                            style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
-                            <span>{tool.icon}</span>
-                            <span>{t(lang, tool.key)}</span>
-                          </button>
-                        ))}
+                  <div onClick={() => { setToolsOpen(false); setToolSearch(""); }} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
+                  <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 240, maxHeight: "80vh", overflowY: "auto", boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 200 }}>
+                    {/* Search box */}
+                    <div style={{ padding: "0.6rem 0.75rem", borderBottom: `1px solid ${border}`, position: "sticky", top: 0, background: bg, zIndex: 1 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: isDark ? "#0f172a" : "#f1f5f9", borderRadius: 8, padding: "0.4rem 0.65rem" }}>
+                        <span style={{ fontSize: "0.85rem" }}>🔍</span>
+                        <input
+                          value={toolSearch}
+                          onChange={(e) => setToolSearch(e.target.value)}
+                          placeholder="Tìm công cụ..."
+                          style={{ border: "none", background: "none", outline: "none", color: textCol, fontSize: "0.85rem", width: "100%" }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        {toolSearch && <button onClick={(e) => { e.stopPropagation(); setToolSearch(""); }} style={{ background: "none", border: "none", cursor: "pointer", color: text2, fontSize: "0.8rem", padding: 0, lineHeight: 1 }}>✕</button>}
                       </div>
-                    ))}
+                    </div>
+                    {(() => {
+                      const q = toolSearch.toLowerCase();
+                      if (q) {
+                        const flat = TOOL_GROUPS.flatMap((g) => g.tools).filter((tool) => t(lang, tool.key).toLowerCase().includes(q) || tool.page.includes(q));
+                        return flat.length === 0
+                          ? <div style={{ padding: "1rem", fontSize: "0.83rem", color: text2, textAlign: "center" }}>Không tìm thấy</div>
+                          : flat.map((tool) => (
+                            <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
+                              style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
+                              <span>{tool.icon}</span>
+                              <span>{t(lang, tool.key)}</span>
+                            </button>
+                          ));
+                      }
+                      return TOOL_GROUPS.map((group, gi) => (
+                        <div key={group.label}>
+                          <div style={{ padding: "0.45rem 1rem 0.25rem", fontSize: "0.65rem", fontWeight: 800, color: text2, textTransform: "uppercase", letterSpacing: 1, borderTop: gi > 0 ? `1px solid ${border}` : undefined }}>
+                            {group.label}
+                          </div>
+                          {group.tools.map((tool) => (
+                            <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
+                              style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
+                              <span>{tool.icon}</span>
+                              <span>{t(lang, tool.key)}</span>
+                            </button>
+                          ))}
+                        </div>
+                      ));
+                    })()}
                   </div>
                 </>
               )}
