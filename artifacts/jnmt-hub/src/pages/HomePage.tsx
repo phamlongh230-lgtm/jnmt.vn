@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
 import SchoolSearch from "@/components/SchoolSearch";
+import MultiSearch from "@/components/MultiSearch";
 
 interface WeatherData {
   temp: string;
@@ -188,6 +189,16 @@ export default function HomePage() {
             <WeatherWidget lang={lang} />
           </div>
         </div>
+      </div>
+
+      {/* Multi-engine search bar */}
+      <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.5rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.85rem" }}>
+          <span style={{ fontSize: "1.1rem" }}>🔍</span>
+          <h3 style={{ fontSize: "1rem", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", margin: 0 }}>Tìm kiếm đa nguồn</h3>
+          <span style={{ fontSize: "0.75rem", color: isDark ? "#64748b" : "#94a3b8", marginLeft: "0.2rem" }}>Google · YouTube · Naver · Scholar · AI...</span>
+        </div>
+        <MultiSearch />
       </div>
 
       {/* Quick access cards */}
