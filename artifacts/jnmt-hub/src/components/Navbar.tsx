@@ -7,7 +7,7 @@ import { getToken } from "@/lib/auth";
 
 const TOOL_GROUPS = [
   {
-    label: "Học tập",
+    labelKey: "tool_group_study",
     tools: [
       { page: "subtitle",     icon: "📝", key: "subtitle" },
       { page: "conversation", icon: "🎙️", key: "conversation" },
@@ -21,7 +21,7 @@ const TOOL_GROUPS = [
     ],
   },
   {
-    label: "Tiện ích",
+    labelKey: "tool_group_utility",
     tools: [
       { page: "menu",         icon: "🍱", key: "menu" },
       { page: "transport",    icon: "🚌", key: "transport" },
@@ -33,7 +33,7 @@ const TOOL_GROUPS = [
     ],
   },
   {
-    label: "Cộng đồng",
+    labelKey: "tool_group_community",
     tools: [
       { page: "announcements",icon: "📢", key: "announcements" },
       { page: "links",        icon: "🔗", key: "links_page" },
@@ -198,7 +198,7 @@ export default function Navbar() {
                         <input
                           value={toolSearch}
                           onChange={(e) => setToolSearch(e.target.value)}
-                          placeholder="Tìm công cụ..."
+                          placeholder={t(lang, "search_tool_ph")}
                           style={{ border: "none", background: "none", outline: "none", color: textCol, fontSize: "0.85rem", width: "100%" }}
                           onClick={(e) => e.stopPropagation()}
                         />
@@ -210,7 +210,7 @@ export default function Navbar() {
                       if (q) {
                         const flat = TOOL_GROUPS.flatMap((g) => g.tools).filter((tool) => t(lang, tool.key).toLowerCase().includes(q) || tool.page.includes(q));
                         return flat.length === 0
-                          ? <div style={{ padding: "1rem", fontSize: "0.83rem", color: text2, textAlign: "center" }}>Không tìm thấy</div>
+                          ? <div style={{ padding: "1rem", fontSize: "0.83rem", color: text2, textAlign: "center" }}>{t(lang, "no_results")}</div>
                           : flat.map((tool) => (
                             <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
                               style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
@@ -220,9 +220,9 @@ export default function Navbar() {
                           ));
                       }
                       return TOOL_GROUPS.map((group, gi) => (
-                        <div key={group.label}>
+                        <div key={group.labelKey}>
                           <div style={{ padding: "0.45rem 1rem 0.25rem", fontSize: "0.65rem", fontWeight: 800, color: text2, textTransform: "uppercase", letterSpacing: 1, borderTop: gi > 0 ? `1px solid ${border}` : undefined }}>
-                            {group.label}
+                            {t(lang, group.labelKey)}
                           </div>
                           {group.tools.map((tool) => (
                             <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
@@ -284,18 +284,18 @@ export default function Navbar() {
                         </div>
                         {/* Avatar color picker */}
                         <div style={{ padding: "0.6rem 1rem", borderBottom: `1px solid ${border}` }}>
-                          <div style={{ fontSize: "0.75rem", color: text2, marginBottom: "0.4rem", fontWeight: 600 }}>🎨 Màu avatar</div>
+                          <div style={{ fontSize: "0.75rem", color: text2, marginBottom: "0.4rem", fontWeight: 600 }}>🎨 {t(lang, "avatar_color")}</div>
                           <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
                             {AVATAR_COLORS.map((c) => (
                               <button key={c} onClick={async () => {
                                 const r = await fetch("/api/auth/profile", { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ avatarColor: c }) });
-                                if (r.ok) { const u = await r.json(); updateUser(u); showToast("Đã cập nhật màu!", "success"); }
+                                if (r.ok) { const u = await r.json(); updateUser(u); showToast(t(lang, "avatar_updated"), "success"); }
                               }} style={{ width: 22, height: 22, borderRadius: "50%", background: c, border: currentUser.avatarColor === c ? "2px solid white" : "2px solid transparent", outline: currentUser.avatarColor === c ? `2px solid ${c}` : "none", cursor: "pointer", padding: 0 }} />
                             ))}
                           </div>
                         </div>
                         <button onClick={() => { setUserMenuOpen(false); setPwOpen(true); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: textCol, background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem", borderBottom: `1px solid ${border}` }}>
-                          🔒 Đổi mật khẩu
+                          🔒 {t(lang, "change_password")}
                         </button>
                         <button onClick={logout} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: "#ef4444", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem" }}>
                           🚪 {t(lang, "logout")}
@@ -413,15 +413,15 @@ export default function Navbar() {
             {/* Nav shortcuts */}
             <div style={{ padding: "0 1.25rem", marginBottom: "0.5rem" }}>
               <div style={{ fontSize: "0.72rem", color: text2, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: "0.5rem" }}>
-                {lang === "ko" ? "빠른 이동" : lang === "en" ? "Quick Nav" : lang === "mn" ? "Хурдан навигац" : lang === "kk" ? "Жылдам навигация" : lang === "ru" ? "Быстрая навигация" : "Điều hướng nhanh"}
+                {t(lang, "quick_nav")}
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 {[...navItems, ...TOOLS].map((item) => (
                   <button key={item.page}
                     onClick={() => { setActivePage(item.page); setSidebarOpen(false); }}
                     style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.5rem 0.75rem", background: activePage === item.page ? "#eff6ff" : (isDark ? "#0f172a" : "#f8fafc"), border: `1px solid ${activePage === item.page ? "#bfdbfe" : border}`, borderRadius: 8, cursor: "pointer", color: activePage === item.page ? "#2563eb" : textCol, fontSize: "0.82rem", fontWeight: activePage === item.page ? 700 : 400, textAlign: "left" }}>
-                    <span>{"icon" in item ? item.icon : "🏠"}</span>
-                    <span>{t(lang, "key" in item ? item.key : item.page)}</span>
+                    <span>{item.icon}</span>
+                    <span>{t(lang, item.key)}</span>
                   </button>
                 ))}
               </div>
@@ -442,11 +442,11 @@ export default function Navbar() {
       `}</style>
       <nav className="mobile-bottom-nav" style={{ display: "none", position: "fixed", bottom: 0, left: 0, right: 0, background: bg, borderTop: `1px solid ${border}`, zIndex: 200, justifyContent: "space-around", alignItems: "center", padding: "0.3rem 0 calc(0.3rem + env(safe-area-inset-bottom))", boxShadow: "0 -2px 12px rgba(0,0,0,0.08)" }}>
         {[
-          { page: "home",   icon: "🏠", label: "Trang chủ" },
-          { page: "chat",   icon: "💬", label: "Chat",      badge: chatUnread },
-          { page: "dictionary", icon: "📖", label: "Từ điển" },
-          { page: "tools",  icon: "🛠️", label: "Công cụ" },
-          { page: "user",   icon: "👤", label: "Tôi" },
+          { page: "home",       icon: "🏠", labelKey: "home",       badge: 0 },
+          { page: "chat",       icon: "💬", labelKey: "chat",       badge: chatUnread },
+          { page: "dictionary", icon: "📖", labelKey: "dictionary", badge: 0 },
+          { page: "tools",      icon: "🛠️", labelKey: "tools",      badge: 0 },
+          { page: "user",       icon: "👤", labelKey: "nav_me",     badge: 0 },
         ].map((item) => {
           const isActive = item.page === "tools" ? isToolPage : activePage === item.page;
           return (
@@ -456,9 +456,9 @@ export default function Navbar() {
               else { setActivePage(item.page); if (item.page === "chat") resetChatUnread(); }
             }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.1rem", padding: "0.25rem 0.6rem", position: "relative", minWidth: 52 }}>
               <span style={{ fontSize: "1.3rem" }}>{item.icon}</span>
-              <span style={{ fontSize: "0.6rem", color: isActive ? "#2563eb" : text2, fontWeight: isActive ? 700 : 400 }}>{item.label}</span>
+              <span style={{ fontSize: "0.6rem", color: isActive ? "#2563eb" : text2, fontWeight: isActive ? 700 : 400 }}>{t(lang, item.labelKey)}</span>
               {isActive && <span style={{ position: "absolute", top: -1, left: "50%", transform: "translateX(-50%)", width: 24, height: 3, background: "#2563eb", borderRadius: 2 }} />}
-              {(item.badge as number) > 0 && <span style={{ position: "absolute", top: 2, right: 8, background: "#ef4444", color: "white", borderRadius: "50%", width: 16, height: 16, fontSize: "0.55rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{(item.badge as number) > 9 ? "9+" : item.badge}</span>}
+              {item.badge > 0 && <span style={{ position: "absolute", top: 2, right: 8, background: "#ef4444", color: "white", borderRadius: "50%", width: 16, height: 16, fontSize: "0.55rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.badge > 9 ? "9+" : item.badge}</span>}
             </button>
           );
         })}
@@ -472,20 +472,20 @@ export default function Navbar() {
         <>
           <div onClick={() => { setPwOpen(false); setOldPw(""); setNewPw(""); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 500, backdropFilter: "blur(2px)" }} />
           <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", background: bg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem", width: "min(400px, 90vw)", zIndex: 600, boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: textCol, marginBottom: "1rem" }}>🔒 Đổi mật khẩu</h2>
-            <input type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} placeholder="Mật khẩu hiện tại" style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "0.75rem", outline: "none", boxSizing: "border-box" }} />
-            <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="Mật khẩu mới (tối thiểu 6 ký tự)" style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "1rem", outline: "none", boxSizing: "border-box" }} />
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: textCol, marginBottom: "1rem" }}>🔒 {t(lang, "change_password")}</h2>
+            <input type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} placeholder={t(lang, "current_password_ph")} style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "0.75rem", outline: "none", boxSizing: "border-box" }} />
+            <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder={t(lang, "new_password_ph")} style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "1rem", outline: "none", boxSizing: "border-box" }} />
             <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
-              <button onClick={() => { setPwOpen(false); setOldPw(""); setNewPw(""); }} style={{ padding: "0.6rem 1rem", background: "none", border: `1px solid ${border}`, borderRadius: 8, color: text2, cursor: "pointer", fontSize: "0.9rem" }}>Hủy</button>
+              <button onClick={() => { setPwOpen(false); setOldPw(""); setNewPw(""); }} style={{ padding: "0.6rem 1rem", background: "none", border: `1px solid ${border}`, borderRadius: 8, color: text2, cursor: "pointer", fontSize: "0.9rem" }}>{t(lang, "cancel")}</button>
               <button disabled={pwSaving || !oldPw || newPw.length < 6} onClick={async () => {
                 setPwSaving(true);
                 try {
                   const r = await fetch("/api/auth/password", { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ currentPassword: oldPw, newPassword: newPw }) });
-                  if (r.ok) { showToast("Đã đổi mật khẩu!", "success"); setPwOpen(false); setOldPw(""); setNewPw(""); }
-                  else { const e = await r.json(); showToast(e.error || "Lỗi!", "error"); }
+                  if (r.ok) { showToast(t(lang, "password_changed"), "success"); setPwOpen(false); setOldPw(""); setNewPw(""); }
+                  else { const e = await r.json(); showToast(e.error || t(lang, "error_generic"), "error"); }
                 } finally { setPwSaving(false); }
               }} style={{ padding: "0.6rem 1.25rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: "0.9rem", opacity: (pwSaving || !oldPw || newPw.length < 6) ? 0.6 : 1 }}>
-                {pwSaving ? "..." : "Lưu"}
+                {pwSaving ? "..." : t(lang, "save")}
               </button>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
-import { LangCode } from "@/lib/i18n";
+import { LangCode, t } from "@/lib/i18n";
 import { User, getStoredUser, setStoredUser, getToken, setToken, removeToken } from "@/lib/auth";
 import Toast, { ToastType } from "@/components/Toast";
 
@@ -142,7 +142,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCurrentUser(null);
     setTokenState(null);
     removeToken();
-    showToast("Đã đăng xuất!", "success");
+    showToast(t(lang, "logout_success"), "success");
   }
 
   return (

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useApp } from "@/context/AppContext";
-import { t } from "@/lib/i18n";
+import { t, LangCode } from "@/lib/i18n";
 import MultiSearch from "@/components/MultiSearch";
 
 interface WeatherData {
@@ -12,16 +12,20 @@ interface WeatherData {
   location: string;
 }
 
-function Clock() {
+const LANG_LOCALE: Record<LangCode, string> = {
+  vi: "vi-VN", ko: "ko-KR", en: "en-US", mn: "mn-MN", kk: "kk-KZ", ru: "ru-RU",
+};
+
+const Clock = memo(function Clock({ lang }: { lang: LangCode }) {
   const [time, setTime] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const days = ["Chủ nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-  const timeStr = time.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-  const dateStr = `${days[time.getDay()]}, ${time.toLocaleDateString("vi-VN")}`;
+  const locale = LANG_LOCALE[lang] || "vi-VN";
+  const timeStr = time.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const dateStr = time.toLocaleDateString(locale, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
   return (
     <div style={{ textAlign: "center", marginTop: "0.5rem" }}>
@@ -29,7 +33,7 @@ function Clock() {
       <div style={{ fontSize: "0.9rem", opacity: 0.85 }}>{dateStr}</div>
     </div>
   );
-}
+});
 
 function WeatherWidget() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -127,17 +131,22 @@ function WeatherWidget() {
 
 interface Announcement { id: number; title: string; content: string; authorUsername: string; isPinned: boolean; createdAt: string; }
 
-function AnnouncementsPreview({ isDark, border, text, text2, setActivePage }: { isDark: boolean; border: string; text: string; text2: string; setActivePage: (p: string) => void }) {
+function AnnouncementsPreview({ isDark, border, text, text2, lang, setActivePage }: { isDark: boolean; border: string; text: string; text2: string; lang: LangCode; setActivePage: (p: string) => void }) {
   const [items, setItems] = useState<Announcement[]>([]);
   useEffect(() => {
-    fetch("/api/announcements").then((r) => r.json()).then((d) => setItems(Array.isArray(d) ? d.slice(0, 3) : [])).catch(() => {});
+    const ctrl = new AbortController();
+    fetch("/api/announcements", { signal: ctrl.signal })
+      .then((r) => r.json())
+      .then((d) => setItems(Array.isArray(d) ? d.slice(0, 3) : []))
+      .catch(() => {});
+    return () => ctrl.abort();
   }, []);
   if (items.length === 0) return null;
   return (
     <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem", marginBottom: "1.5rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
-        <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>📢 Thông báo mới nhất</h3>
-        <button onClick={() => setActivePage("announcements")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>Xem tất cả →</button>
+        <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>📢 {t(lang, "latest_announcements")}</h3>
+        <button onClick={() => setActivePage("announcements")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>{t(lang, "see_all")}</button>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {items.map((item) => (
@@ -169,7 +178,7 @@ export default function HomePage() {
           <div style={{ flex: 1, minWidth: 220 }}>
             <h1 style={{ fontSize: "1.4rem", fontWeight: 900, marginBottom: "0.25rem" }}>전남미래국제고등학교</h1>
             <p style={{ opacity: 0.85, marginBottom: "1rem", fontSize: "0.9rem" }}>Jeonnam Future International High School</p>
-            <Clock />
+            <Clock lang={lang} />
             <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", marginTop: "1rem" }}>
               <a href="https://www.jnmt.kr" target="_blank" rel="noopener noreferrer"
                 style={{ background: "rgba(255,255,255,0.2)", color: "white", border: "1px solid rgba(255,255,255,0.35)", padding: "0.5rem 1rem", borderRadius: 8, textDecoration: "none", fontSize: "0.85rem", fontWeight: 600 }}>
@@ -203,10 +212,10 @@ export default function HomePage() {
       {/* Quick access cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
         {[
-          { icon: "📖", label: t(lang, "dictionary"), sub: "6 ngôn ngữ", page: "dictionary", color: "#7c3aed" },
-          { icon: "📅", label: t(lang, "schedule"), sub: "Lịch học", page: "schedule", color: "#0891b2" },
+          { icon: "📖", label: t(lang, "dictionary"), sub: t(lang, "six_languages"), page: "dictionary", color: "#7c3aed" },
+          { icon: "📅", label: t(lang, "schedule"), sub: t(lang, "class_schedule_sub"), page: "schedule", color: "#0891b2" },
           { icon: "💬", label: t(lang, "chat"), sub: t(lang, "community_chat"), page: "chat", color: "#059669" },
-          { icon: "🗺️", label: t(lang, "map"), sub: "Bản đồ trường", page: "map", color: "#d97706" },
+          { icon: "🗺️", label: t(lang, "map"), sub: t(lang, "school_map_sub"), page: "map", color: "#d97706" },
         ].map((card) => (
           <button
             key={card.page}
@@ -223,7 +232,7 @@ export default function HomePage() {
       </div>
 
       {/* Announcements preview */}
-      <AnnouncementsPreview isDark={isDark} border={border} text={text} text2={text2} setActivePage={setActivePage} />
+      <AnnouncementsPreview isDark={isDark} border={border} text={text} text2={text2} lang={lang} setActivePage={setActivePage} />
 
       {/* Info section */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
