@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
-import SchoolSearch from "@/components/SchoolSearch";
 import MultiSearch from "@/components/MultiSearch";
 
 interface WeatherData {
@@ -32,7 +31,7 @@ function Clock() {
   );
 }
 
-function WeatherWidget({ lang }: { lang: string }) {
+function WeatherWidget() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -186,7 +185,7 @@ export default function HomePage() {
             <div style={{ fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.5rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>
               {t(lang, "weather")} 🌡️
             </div>
-            <WeatherWidget lang={lang} />
+            <WeatherWidget />
           </div>
         </div>
       </div>
@@ -225,19 +224,6 @@ export default function HomePage() {
 
       {/* Announcements preview */}
       <AnnouncementsPreview isDark={isDark} border={border} text={text} text2={text2} setActivePage={setActivePage} />
-
-      {/* School Search */}
-      <div style={{ marginBottom: "1.5rem" }}>
-        <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "0.6rem", fontSize: "1rem" }}>
-            🏫 Tìm kiếm trường học
-          </h3>
-          <p style={{ fontSize: "0.82rem", color: text2, marginBottom: "1rem" }}>
-            Tìm thông tin các trường đại học Hàn Quốc, Việt Nam và hơn thế nữa
-          </p>
-          <SchoolSearch />
-        </div>
-      </div>
 
       {/* Info section */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>

@@ -1,5 +1,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 import { getToken } from "@/lib/auth";
 
 interface AdminUser {
@@ -26,16 +27,14 @@ const ROLE_COLORS: Record<string, string> = { admin: "#7c3aed", moderator: "#256
 const ROLE_LABELS: Record<string, string> = { admin: "Admin", moderator: "Mod", user: "User" };
 
 export default function AdminPage() {
-  const { isDark, currentUser, showToast } = useApp();
+  const { isDark, currentUser, showToast, lang } = useApp();
   const [activeTab, setActiveTab] = useState<"users" | "tinkercad">("users");
 
-  // Users
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [saving, setSaving] = useState<number | null>(null);
   const [search, setSearch] = useState("");
 
-  // Tinkercad
   const [classes, setClasses] = useState<TinkercadClass[]>([]);
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [editingClass, setEditingClass] = useState<TinkercadClass | null>(null);
@@ -55,7 +54,7 @@ export default function AdminPage() {
   if (currentUser?.role !== "admin") return (
     <div style={{ textAlign: "center", padding: "4rem 1rem", color: text2 }}>
       <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔒</div>
-      <p style={{ fontWeight: 700 }}>Chỉ Admin mới có quyền truy cập</p>
+      <p style={{ fontWeight: 700 }}>{t(lang, "admin_only")}</p>
     </div>
   );
 
@@ -73,7 +72,6 @@ export default function AdminPage() {
 
   useEffect(() => { loadUsers(); loadClasses(); }, []);
 
-  // ── User controls ──────────────────────────────────────────────────────────
   const updateUser = async (id: number, updates: Record<string, unknown>) => {
     setSaving(id);
     try {
@@ -84,10 +82,10 @@ export default function AdminPage() {
       });
       if (r.ok) {
         setUsers((prev) => prev.map((u) => u.id === id ? { ...u, ...updates } : u));
-        showToast("Đã cập nhật!", "success");
+        showToast(t(lang, "updated_ok"), "success");
       } else {
         const e = await r.json();
-        showToast(e.error || "Lỗi!", "error");
+        showToast(e.error || t(lang, "error_generic"), "error");
       }
     } finally { setSaving(null); }
   };
@@ -99,7 +97,6 @@ export default function AdminPage() {
 
   const formatDate = (d: string | null) => d ? new Date(d).toLocaleDateString("vi-VN") : "—";
 
-  // ── Tinkercad controls ─────────────────────────────────────────────────────
   const createClass = async (e: FormEvent) => {
     e.preventDefault();
     setClassErr("");
@@ -111,10 +108,10 @@ export default function AdminPage() {
         body: JSON.stringify({ name: newName, classCode: newCode, tinkercadUrl: newUrl }),
       });
       const d = await r.json();
-      if (!r.ok) { setClassErr(d.error || "Lỗi!"); return; }
+      if (!r.ok) { setClassErr(d.error || t(lang, "error_generic")); return; }
       setClasses((prev) => [d, ...prev]);
       setShowNewClass(false); setNewName(""); setNewCode(""); setNewUrl("");
-      showToast("Đã tạo lớp!", "success");
+      showToast(t(lang, "class_created_ok"), "success");
     } finally { setClassSaving(false); }
   };
 
@@ -129,59 +126,53 @@ export default function AdminPage() {
         body: JSON.stringify({ name: editingClass.name, tinkercadUrl: editingClass.tinkercadUrl }),
       });
       const d = await r.json();
-      if (!r.ok) { showToast(d.error || "Lỗi!", "error"); return; }
+      if (!r.ok) { showToast(d.error || t(lang, "error_generic"), "error"); return; }
       setClasses((prev) => prev.map((c) => c.id === d.id ? d : c));
       setEditingClass(null);
-      showToast("Đã cập nhật lớp!", "success");
+      showToast(t(lang, "class_updated_ok"), "success");
     } finally { setClassSaving(false); }
   };
 
   const deleteClass = async (id: number, name: string) => {
-    if (!confirm(`Xóa lớp "${name}"?`)) return;
+    if (!confirm(`${t(lang, "confirm_delete_class")} "${name}"`)) return;
     const r = await fetch(`/api/tinkercad/classes/${id}`, { method: "DELETE", headers: authHeaders });
-    if (r.ok) { setClasses((prev) => prev.filter((c) => c.id !== id)); showToast("Đã xóa!", "success"); }
+    if (r.ok) { setClasses((prev) => prev.filter((c) => c.id !== id)); showToast(t(lang, "deleted_ok"), "success"); }
   };
 
   const inputStyle: React.CSSProperties = { width: "100%", padding: "0.6rem 0.85rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.88rem", outline: "none", boxSizing: "border-box" };
 
   return (
     <div style={{ maxWidth: 960, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-
-      {/* Header */}
       <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
-        <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>⚙️ Quản trị</h1>
-        <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>{users.length} tài khoản · {classes.length} lớp Tinkercad</p>
+        <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>⚙️ {t(lang, "admin_page")}</h1>
+        <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>{users.length} {t(lang, "username")} · {classes.length} {t(lang, "tinkercad_class_list")}</p>
       </div>
 
-      {/* Tabs */}
       <div style={{ display: "flex", borderBottom: `2px solid ${border}`, marginBottom: "1.25rem", gap: "0.25rem" }}>
-        {([["users", "👥 Người dùng"], ["tinkercad", "🔧 Tinkercad"]] as const).map(([t, label]) => (
-          <button key={t} onClick={() => setActiveTab(t)}
-            style={{ padding: "0.6rem 1.25rem", background: "none", border: "none", cursor: "pointer", fontWeight: activeTab === t ? 700 : 400, fontSize: "0.9rem", color: activeTab === t ? "#7c3aed" : text2, borderBottom: activeTab === t ? "2px solid #7c3aed" : "2px solid transparent", marginBottom: -2, transition: "all 0.15s" }}>
+        {([["users", `👥 ${t(lang, "users_tab")}`], ["tinkercad", "🔧 Tinkercad"]] as const).map(([tab, label]) => (
+          <button key={tab} onClick={() => setActiveTab(tab)}
+            style={{ padding: "0.6rem 1.25rem", background: "none", border: "none", cursor: "pointer", fontWeight: activeTab === tab ? 700 : 400, fontSize: "0.9rem", color: activeTab === tab ? "#7c3aed" : text2, borderBottom: activeTab === tab ? "2px solid #7c3aed" : "2px solid transparent", marginBottom: -2, transition: "all 0.15s" }}>
             {label}
           </button>
         ))}
       </div>
 
-      {/* ── USERS TAB ── */}
       {activeTab === "users" && (
         <>
           <div style={{ marginBottom: "1rem" }}>
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="🔍 Tìm theo tên hoặc email..."
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={`🔍 ${t(lang, "search_users")}`}
               style={{ width: "100%", padding: "0.7rem 1rem", border: `1px solid ${border}`, borderRadius: 10, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none", boxSizing: "border-box" }} />
           </div>
 
           {loadingUsers ? (
-            <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>Đang tải...</div>
+            <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>{t(lang, "loading")}</div>
           ) : (
             <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
               {filtered.map((user, i) => (
                 <div key={user.id} style={{ padding: "0.9rem 1rem", borderBottom: i < filtered.length - 1 ? `1px solid ${border}` : undefined, display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
-                  {/* Avatar */}
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: user.avatarColor || "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0 }}>
                     {user.username.charAt(0).toUpperCase()}
                   </div>
-                  {/* Info */}
                   <div style={{ flex: 1, minWidth: 140 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
                       <span style={{ fontWeight: 700, color: textCol, fontSize: "0.9rem" }}>{user.username}</span>
@@ -190,15 +181,13 @@ export default function AdminPage() {
                       {user.classGroup && <span style={{ fontSize: "0.65rem", background: "#fff7ed", color: "#f97316", padding: "0.1rem 0.4rem", borderRadius: 4, fontWeight: 700 }}>🔧 {user.classGroup}</span>}
                     </div>
                     <div style={{ fontSize: "0.72rem", color: text2 }}>{user.email}</div>
-                    <div style={{ fontSize: "0.68rem", color: text2 }}>Tham gia: {formatDate(user.createdAt)} · Login: {formatDate(user.lastLogin)}</div>
+                    <div style={{ fontSize: "0.68rem", color: text2 }}>{t(lang, "joined_date")}: {formatDate(user.createdAt)} · {t(lang, "last_login_label")}: {formatDate(user.lastLogin)}</div>
                   </div>
-                  {/* Controls */}
                   {user.id !== currentUser?.id && (
                     <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexShrink: 0, flexWrap: "wrap" }}>
-                      {/* classGroup selector */}
                       <select value={user.classGroup || ""} onChange={(e) => updateUser(user.id, { classGroup: e.target.value || null })} disabled={saving === user.id}
                         style={{ padding: "0.4rem 0.5rem", border: `1px solid ${border}`, borderRadius: 6, background: inputBg, color: textCol, fontSize: "0.8rem", cursor: "pointer", maxWidth: 110 }}>
-                        <option value="">Chưa có lớp</option>
+                        <option value="">{t(lang, "no_class_assigned")}</option>
                         {classes.map((c) => <option key={c.id} value={c.classCode}>{c.classCode}</option>)}
                       </select>
                       <select value={user.role} onChange={(e) => updateUser(user.id, { role: e.target.value })} disabled={saving === user.id}
@@ -220,45 +209,43 @@ export default function AdminPage() {
         </>
       )}
 
-      {/* ── TINKERCAD TAB ── */}
       {activeTab === "tinkercad" && (
         <>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-            <h2 style={{ fontSize: "1rem", fontWeight: 700, color: textCol, margin: 0 }}>Danh sách lớp Tinkercad</h2>
+            <h2 style={{ fontSize: "1rem", fontWeight: 700, color: textCol, margin: 0 }}>{t(lang, "tinkercad_class_list")}</h2>
             <button onClick={() => { setShowNewClass(true); setClassErr(""); }}
               style={{ padding: "0.5rem 1rem", background: "#f97316", color: "white", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}>
-              + Thêm lớp
+              + {t(lang, "add_class")}
             </button>
           </div>
 
-          {/* New class form */}
           {showNewClass && (
             <div style={{ background: isDark ? "#0c2a1e" : "#f0fdf4", border: "1px solid #86efac", borderRadius: 12, padding: "1.25rem", marginBottom: "1rem" }}>
-              <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: isDark ? "#86efac" : "#166534", margin: "0 0 1rem" }}>Tạo lớp mới</h3>
+              <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: isDark ? "#86efac" : "#166534", margin: "0 0 1rem" }}>{t(lang, "create_new_class")}</h3>
               <form onSubmit={createClass} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
                   <div>
-                    <label style={{ fontSize: "0.78rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.3rem" }}>Tên lớp</label>
+                    <label style={{ fontSize: "0.78rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.3rem" }}>{t(lang, "class_name")}</label>
                     <input required value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="VD: Lớp 10A1" style={inputStyle} />
                   </div>
                   <div>
-                    <label style={{ fontSize: "0.78rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.3rem" }}>Mã lớp (classCode)</label>
+                    <label style={{ fontSize: "0.78rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.3rem" }}>{t(lang, "class_code_label")}</label>
                     <input required value={newCode} onChange={(e) => setNewCode(e.target.value)} placeholder="VD: 10A1" style={inputStyle} />
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontSize: "0.78rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.3rem" }}>Link Tinkercad Classroom</label>
+                  <label style={{ fontSize: "0.78rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.3rem" }}>{t(lang, "tinkercad_link_label")}</label>
                   <input required type="url" value={newUrl} onChange={(e) => setNewUrl(e.target.value)} placeholder="https://www.tinkercad.com/joinclass/..." style={inputStyle} />
                 </div>
                 {classErr && <div style={{ fontSize: "0.83rem", color: "#ef4444" }}>{classErr}</div>}
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button type="submit" disabled={classSaving}
                     style={{ padding: "0.55rem 1.25rem", background: "#16a34a", color: "white", border: "none", borderRadius: 8, fontWeight: 700, cursor: "pointer", fontSize: "0.85rem" }}>
-                    {classSaving ? "Đang lưu..." : "Tạo lớp"}
+                    {classSaving ? t(lang, "saving") : t(lang, "create_class_btn")}
                   </button>
                   <button type="button" onClick={() => { setShowNewClass(false); setClassErr(""); }}
                     style={{ padding: "0.55rem 1rem", background: "none", color: text2, border: `1px solid ${border}`, borderRadius: 8, cursor: "pointer", fontSize: "0.85rem" }}>
-                    Hủy
+                    {t(lang, "cancel")}
                   </button>
                 </div>
               </form>
@@ -266,11 +253,11 @@ export default function AdminPage() {
           )}
 
           {loadingClasses ? (
-            <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>Đang tải...</div>
+            <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>{t(lang, "loading")}</div>
           ) : classes.length === 0 ? (
             <div style={{ textAlign: "center", color: text2, padding: "3rem", background: cardBg, border: `1px solid ${border}`, borderRadius: 12 }}>
               <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔧</div>
-              <div>Chưa có lớp nào. Nhấn "Thêm lớp" để bắt đầu.</div>
+              <div>{t(lang, "no_classes_yet")}</div>
             </div>
           ) : (
             <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
@@ -280,7 +267,7 @@ export default function AdminPage() {
                     <form onSubmit={saveEditClass} style={{ padding: "1rem", borderBottom: i < classes.length - 1 ? `1px solid ${border}` : undefined, display: "flex", flexDirection: "column", gap: "0.7rem", background: isDark ? "#0f1d2e" : "#f8fafc" }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "0.75rem", alignItems: "end" }}>
                         <div>
-                          <label style={{ fontSize: "0.75rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.25rem" }}>Tên lớp</label>
+                          <label style={{ fontSize: "0.75rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.25rem" }}>{t(lang, "class_name")}</label>
                           <input required value={editingClass.name} onChange={(e) => setEditingClass({ ...editingClass, name: e.target.value })} style={inputStyle} />
                         </div>
                         <div style={{ fontSize: "0.8rem", color: text2, paddingBottom: "0.6rem" }}>
@@ -288,17 +275,17 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div>
-                        <label style={{ fontSize: "0.75rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.25rem" }}>Link Tinkercad</label>
+                        <label style={{ fontSize: "0.75rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.25rem" }}>{t(lang, "tinkercad_link_label")}</label>
                         <input required type="url" value={editingClass.tinkercadUrl} onChange={(e) => setEditingClass({ ...editingClass, tinkercadUrl: e.target.value })} style={inputStyle} />
                       </div>
                       <div style={{ display: "flex", gap: "0.5rem" }}>
                         <button type="submit" disabled={classSaving}
                           style={{ padding: "0.45rem 1rem", background: "#2563eb", color: "white", border: "none", borderRadius: 7, fontWeight: 700, cursor: "pointer", fontSize: "0.82rem" }}>
-                          {classSaving ? "Lưu..." : "Lưu"}
+                          {classSaving ? t(lang, "saving") : t(lang, "save")}
                         </button>
                         <button type="button" onClick={() => setEditingClass(null)}
                           style={{ padding: "0.45rem 0.85rem", background: "none", color: text2, border: `1px solid ${border}`, borderRadius: 7, cursor: "pointer", fontSize: "0.82rem" }}>
-                          Hủy
+                          {t(lang, "cancel")}
                         </button>
                       </div>
                     </form>
@@ -313,11 +300,11 @@ export default function AdminPage() {
                       <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0 }}>
                         <button onClick={() => setEditingClass(cls)}
                           style={{ padding: "0.4rem 0.75rem", background: inputBg, color: textCol, border: `1px solid ${border}`, borderRadius: 7, cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>
-                          ✏️ Sửa
+                          ✏️ {t(lang, "edit")}
                         </button>
                         <button onClick={() => deleteClass(cls.id, cls.name)}
                           style={{ padding: "0.4rem 0.75rem", background: "#fef2f2", color: "#ef4444", border: "1px solid #fecaca", borderRadius: 7, cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>
-                          🗑️ Xóa
+                          🗑️ {t(lang, "delete")}
                         </button>
                       </div>
                     </div>
@@ -328,7 +315,7 @@ export default function AdminPage() {
           )}
 
           <div style={{ marginTop: "1rem", padding: "0.85rem 1rem", background: isDark ? "#1e293b" : "#fffbeb", border: `1px solid ${isDark ? "#334155" : "#fde68a"}`, borderRadius: 10, fontSize: "0.82rem", color: isDark ? "#fbbf24" : "#92400e" }}>
-            💡 Gán lớp cho học sinh trong tab "Người dùng" → cột "Lớp Tinkercad"
+            💡 {t(lang, "tinkercad_assign_hint")}
           </div>
         </>
       )}

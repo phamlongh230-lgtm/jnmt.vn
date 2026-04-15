@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
+
+function tN(template: string, n: number): string {
+  return template.replace("{n}", String(n));
+}
 
 interface DdayItem {
   id: string;
@@ -19,7 +24,7 @@ function diffDays(dateStr: string) {
 }
 
 export default function DdayPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [items, setItems] = useState<DdayItem[]>([]);
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -61,16 +66,16 @@ export default function DdayPage() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
           <h2 style={{ color: text, fontSize: 20, fontWeight: 700, margin: 0 }}>⏳ D-Day</h2>
           <button onClick={() => setShowAdd(s => !s)} style={{ padding: "8px 14px", background: accent, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
-            + Thêm
+            {t(lang, "add_dday_btn")}
           </button>
         </div>
-        <p style={{ color: sub, fontSize: 13, marginBottom: 16 }}>Đếm ngược các sự kiện quan trọng</p>
+        <p style={{ color: sub, fontSize: 13, marginBottom: 16 }}>{t(lang, "dday_subtitle")}</p>
 
         {showAdd && (
           <div style={{ background: card, borderRadius: 16, padding: 16, marginBottom: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="Tên sự kiện" style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, color: text, fontSize: 14, outline: "none", boxSizing: "border-box", marginBottom: 8 }} />
+            <input value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, "event_name")} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, color: text, fontSize: 14, outline: "none", boxSizing: "border-box", marginBottom: 8 }} />
             <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, color: text, fontSize: 14, outline: "none", boxSizing: "border-box", marginBottom: 12 }} />
-            <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>Chọn icon:</p>
+            <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>{t(lang, "choose_icon")}</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
               {ICONS.map(ic => (
                 <button key={ic} onClick={() => setIcon(ic)} style={{ fontSize: 24, background: icon === ic ? accent : "transparent", border: icon === ic ? "none" : `1px solid ${border}`, borderRadius: 8, padding: "4px 8px", cursor: "pointer" }}>
@@ -79,7 +84,7 @@ export default function DdayPage() {
               ))}
             </div>
             <button onClick={addItem} style={{ width: "100%", padding: "11px", background: accent, color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-              Thêm sự kiện
+              {t(lang, "add_event_btn")}
             </button>
           </div>
         )}
@@ -87,7 +92,7 @@ export default function DdayPage() {
         {items.length === 0 ? (
           <div style={{ textAlign: "center", paddingTop: 60, color: sub }}>
             <div style={{ fontSize: 40 }}>📅</div>
-            <p style={{ marginTop: 8 }}>Chưa có sự kiện nào</p>
+            <p style={{ marginTop: 8 }}>{t(lang, "no_events")}</p>
           </div>
         ) : (
           items.map(item => {
@@ -103,7 +108,7 @@ export default function DdayPage() {
                   <p style={{ color: text, fontWeight: 700, fontSize: 16, margin: "0 0 2px" }}>{item.name}</p>
                   <p style={{ color: sub, fontSize: 12, margin: 0 }}>{item.date}</p>
                   <p style={{ color, fontSize: 18, fontWeight: 800, margin: "4px 0 0" }}>
-                    {isToday ? "HÔM NAY" : isPast ? `Đã ${Math.abs(diff)} ngày` : `Còn ${diff} ngày`}
+                    {isToday ? t(lang, "today") : isPast ? tN(t(lang, "days_ago"), Math.abs(diff)) : tN(t(lang, "days_left"), diff)}
                   </p>
                 </div>
                 <button onClick={() => deleteItem(item.id)} style={{ background: "none", border: "none", color: "#e53e3e", cursor: "pointer", fontSize: 20 }}>×</button>
