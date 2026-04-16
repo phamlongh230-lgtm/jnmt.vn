@@ -3,6 +3,49 @@ import { useApp } from "@/context/AppContext";
 import { t, LangCode } from "@/lib/i18n";
 import MultiSearch from "@/components/MultiSearch";
 
+// ─── All available tools for pinning ───────────────────────
+const ALL_PINNABLE = [
+  { page: "dictionary",    icon: "📖", key: "dictionary",    color: "#7c3aed" },
+  { page: "schedule",      icon: "📅", key: "schedule",      color: "#0891b2" },
+  { page: "chat",          icon: "💬", key: "chat",          color: "#059669" },
+  { page: "map",           icon: "🗺️", key: "map",           color: "#d97706" },
+  { page: "notes",         icon: "📓", key: "notes_page",    color: "#2563eb" },
+  { page: "vocab",         icon: "🧠", key: "vocab",         color: "#059669" },
+  { page: "timer",         icon: "⏱️", key: "timer",         color: "#d97706" },
+  { page: "dday",          icon: "📆", key: "dday",          color: "#dc2626" },
+  { page: "gpa",           icon: "📊", key: "gpa",           color: "#2563eb" },
+  { page: "koreanword",    icon: "🇰🇷", key: "koreanword",    color: "#dc2626" },
+  { page: "ai",            icon: "🤖", key: "ai",            color: "#7c3aed" },
+  { page: "menu",          icon: "🍱", key: "menu",          color: "#059669" },
+  { page: "transport",     icon: "🚌", key: "transport",     color: "#0891b2" },
+  { page: "weather",       icon: "🌤️", key: "weather_tool",  color: "#0891b2" },
+  { page: "currency",      icon: "💱", key: "currency",      color: "#059669" },
+  { page: "qrcode",        icon: "📱", key: "qrcode",        color: "#7c3aed" },
+  { page: "subtitle",      icon: "📝", key: "subtitle",      color: "#7c3aed" },
+  { page: "health",        icon: "🏥", key: "health",        color: "#dc2626" },
+  { page: "timezone",      icon: "🌍", key: "timezone_tool", color: "#0891b2" },
+  { page: "announcements", icon: "📢", key: "announcements", color: "#2563eb" },
+  { page: "links",         icon: "🔗", key: "links_page",    color: "#7c3aed" },
+];
+
+const DEFAULT_PINNED = ["dictionary", "schedule", "chat", "map", "notes"];
+const LS_PINNED = "jnmt_pinned";
+
+function loadPinned(): string[] {
+  try {
+    const s = localStorage.getItem(LS_PINNED);
+    if (s) {
+      const arr = JSON.parse(s);
+      if (Array.isArray(arr) && arr.length > 0) return arr;
+    }
+  } catch { /* ignore */ }
+  return DEFAULT_PINNED;
+}
+
+function savePinned(p: string[]) {
+  localStorage.setItem(LS_PINNED, JSON.stringify(p));
+}
+
 interface WeatherData {
   temp: string;
   desc: string;
@@ -165,9 +208,23 @@ function AnnouncementsPreview({ isDark, text, text2, lang, setActivePage }: { is
 
 export default function HomePage() {
   const { lang, setActivePage, currentUser, isDark } = useApp();
+  const [pinned, setPinned] = useState<string[]>(loadPinned);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
+
   const bg2 = isDark ? "#1e293b" : "#f8fafc";
   const text = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
+  const border = isDark ? "#334155" : "#e2e8f0";
+
+  function togglePin(page: string) {
+    const next = pinned.includes(page)
+      ? pinned.filter((p) => p !== page)
+      : [...pinned, page];
+    setPinned(next);
+    savePinned(next);
+  }
+
+  const pinnedTools = ALL_PINNABLE.filter((t) => pinned.includes(t.page));
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
@@ -208,27 +265,57 @@ export default function HomePage() {
         <MultiSearch />
       </div>
 
-      {/* Quick access cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
-        {[
-          { icon: "📖", label: t(lang, "dictionary"), sub: t(lang, "six_languages"), page: "dictionary", color: "#7c3aed" },
-          { icon: "📅", label: t(lang, "schedule"), sub: t(lang, "class_schedule_sub"), page: "schedule", color: "#0891b2" },
-          { icon: "💬", label: t(lang, "chat"), sub: t(lang, "community_chat"), page: "chat", color: "#059669" },
-          { icon: "🗺️", label: t(lang, "map"), sub: t(lang, "school_map_sub"), page: "map", color: "#d97706" },
-        ].map((card) => (
-          <button
-            key={card.page}
-            onClick={() => setActivePage(card.page)}
-            className="glass"
-            style={{ borderRadius: 12, padding: "1.25rem", cursor: "pointer", textAlign: "center", transition: "transform 0.15s" }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; }}
-          >
-            <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{card.icon}</div>
-            <div style={{ fontWeight: 700, color: card.color, fontSize: "0.95rem" }}>{card.label}</div>
-            <div style={{ fontSize: "0.8rem", color: text2, marginTop: "0.2rem" }}>{card.sub}</div>
+      {/* Quick access — personalized pinned tools */}
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem", marginBottom: "1.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: text, margin: 0, display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            ⭐ {t(lang, "my_tools")}
+          </h3>
+          <button onClick={() => setCustomizeOpen((v) => !v)}
+            style={{ background: customizeOpen ? "#2563eb" : "none", color: customizeOpen ? "white" : "#2563eb", border: `1px solid #2563eb`, padding: "0.3rem 0.85rem", borderRadius: 100, cursor: "pointer", fontSize: "0.78rem", fontWeight: 700, transition: "all 0.15s" }}>
+            {customizeOpen ? t(lang, "tools_done") : t(lang, "customize_tools")}
           </button>
-        ))}
+        </div>
+
+        {/* Pinned tool cards */}
+        {pinnedTools.length === 0 ? (
+          <div style={{ textAlign: "center", color: text2, padding: "1.5rem 1rem", fontSize: "0.88rem" }}>
+            {t(lang, "pin_tool_hint")}
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: "0.7rem" }}>
+            {pinnedTools.map((card) => (
+              <button key={card.page} onClick={() => setActivePage(card.page)}
+                className="glass"
+                style={{ borderRadius: 12, padding: "0.9rem 0.5rem", cursor: "pointer", textAlign: "center", border: "none", transition: "transform 0.15s" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; }}>
+                <div style={{ fontSize: "1.8rem", marginBottom: "0.4rem" }}>{card.icon}</div>
+                <div style={{ fontWeight: 700, color: card.color, fontSize: "0.82rem", lineHeight: 1.3 }}>{t(lang, card.key)}</div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Customize panel */}
+        {customizeOpen && (
+          <div style={{ marginTop: "1.1rem", borderTop: `1px solid ${border}`, paddingTop: "1rem" }}>
+            <p style={{ fontSize: "0.78rem", color: text2, marginBottom: "0.75rem" }}>{t(lang, "pin_tool_hint")}</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: "0.5rem" }}>
+              {ALL_PINNABLE.map((tool) => {
+                const isPinned = pinned.includes(tool.page);
+                return (
+                  <button key={tool.page} onClick={() => togglePin(tool.page)}
+                    style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", borderRadius: 9, cursor: "pointer", border: `1.5px solid ${isPinned ? tool.color : border}`, background: isPinned ? (isDark ? tool.color + "22" : tool.color + "12") : "transparent", color: isPinned ? tool.color : text2, fontWeight: isPinned ? 700 : 400, fontSize: "0.82rem", transition: "all 0.15s", textAlign: "left" }}>
+                    <span style={{ fontSize: "1rem" }}>{tool.icon}</span>
+                    <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t(lang, tool.key)}</span>
+                    {isPinned && <span style={{ fontSize: "0.65rem", opacity: 0.7 }}>✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Announcements preview */}

@@ -10,6 +10,7 @@ const TOOL_GROUPS = [
   {
     labelKey: "tool_group_study",
     tools: [
+      { page: "notes",        icon: "📓", key: "notes_page" },
       { page: "subtitle",     icon: "📝", key: "subtitle" },
       { page: "conversation", icon: "🎙️", key: "conversation" },
       { page: "vocab",        icon: "🧠", key: "vocab" },
@@ -123,7 +124,6 @@ export default function Navbar() {
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [pwSaving, setPwSaving] = useState(false);
-  const [colorOpen, setColorOpen] = useState(false);
 
   const navItems = [
     { page: "home", icon: "🏠", key: "home" },

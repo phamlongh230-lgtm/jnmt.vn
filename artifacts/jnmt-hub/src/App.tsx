@@ -35,6 +35,7 @@ const TimezonePage      = lazy(() => import("@/pages/TimezonePage"));
 const AnnouncementsPage = lazy(() => import("@/pages/AnnouncementsPage"));
 const LinksPage         = lazy(() => import("@/pages/LinksPage"));
 const AdminPage         = lazy(() => import("@/pages/AdminPage"));
+const NotesPage         = lazy(() => import("@/pages/NotesPage"));
 
 setAuthTokenGetter(() => getToken());
 
@@ -81,6 +82,7 @@ function CurrentPage({ page }: { page: string }) {
     case "announcements": return <AnnouncementsPage />;
     case "links":         return <LinksPage />;
     case "admin":         return <AdminPage />;
+    case "notes":         return <NotesPage />;
     default:              return <HomePage />;
   }
 }
