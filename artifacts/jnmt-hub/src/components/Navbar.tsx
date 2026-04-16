@@ -4,6 +4,7 @@ import { t, LANGUAGES, LangCode } from "@/lib/i18n";
 import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
 import { getToken } from "@/lib/auth";
+import { haptic } from "@/lib/haptic";
 
 const TOOL_GROUPS = [
   {
@@ -169,7 +170,7 @@ export default function Navbar() {
               const isActive = activePage === item.page;
               return (
                 <a key={item.page} href={`#${item.page}`}
-                  onClick={(e) => { e.preventDefault(); setActivePage(item.page); setToolsOpen(false); if (item.page === "chat") resetChatUnread(); }}
+                  onClick={(e) => { e.preventDefault(); haptic(); setActivePage(item.page); setToolsOpen(false); if (item.page === "chat") resetChatUnread(); }}
                   style={{
                     color: "white", textDecoration: "none",
                     padding: "0.45rem 0.85rem",
@@ -233,7 +234,7 @@ export default function Navbar() {
                         return flat.length === 0
                           ? <div style={{ padding: "1rem", fontSize: "0.83rem", color: text2, textAlign: "center" }}>{t(lang, "no_results")}</div>
                           : flat.map((tool) => (
-                            <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
+                            <button key={tool.page} onClick={() => { haptic(); setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
                               style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
                               <span>{tool.icon}</span>
                               <span>{t(lang, tool.key)}</span>
@@ -246,7 +247,7 @@ export default function Navbar() {
                             {t(lang, group.labelKey)}
                           </div>
                           {group.tools.map((tool) => (
-                            <button key={tool.page} onClick={() => { setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
+                            <button key={tool.page} onClick={() => { haptic(); setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
                               style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
                               <span>{tool.icon}</span>
                               <span>{t(lang, tool.key)}</span>
@@ -439,7 +440,7 @@ export default function Navbar() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                 {[...navItems, ...TOOLS].map((item) => (
                   <button key={item.page}
-                    onClick={() => { setActivePage(item.page); setSidebarOpen(false); }}
+                    onClick={() => { haptic(); setActivePage(item.page); setSidebarOpen(false); }}
                     style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.5rem 0.75rem", background: activePage === item.page ? "#eff6ff" : (isDark ? "#0f172a" : "#f8fafc"), border: `1px solid ${activePage === item.page ? "#bfdbfe" : border}`, borderRadius: 8, cursor: "pointer", color: activePage === item.page ? "#2563eb" : textCol, fontSize: "0.82rem", fontWeight: activePage === item.page ? 700 : 400, textAlign: "left" }}>
                     <span>{item.icon}</span>
                     <span>{t(lang, item.key)}</span>
@@ -474,7 +475,7 @@ export default function Navbar() {
             <button key={item.page} onClick={() => {
               if (item.page === "tools") { setToolsOpen((v) => !v); }
               else if (item.page === "user") { setUserMenuOpen((v) => !v); }
-              else { setActivePage(item.page); if (item.page === "chat") resetChatUnread(); }
+              else { haptic(); setActivePage(item.page); if (item.page === "chat") resetChatUnread(); }
             }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.15rem", padding: "0.3rem 0.6rem", position: "relative", minWidth: 52, borderRadius: 12 }}>
               {/* iOS pill highlight behind active item */}
               {isActive && <span style={{ position: "absolute", inset: "0.15rem 0.2rem", borderRadius: 10, background: isDark ? "rgba(37,99,235,0.22)" : "rgba(37,99,235,0.12)", border: "1px solid rgba(37,99,235,0.20)" }} />}

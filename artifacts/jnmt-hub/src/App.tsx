@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { AppProvider, useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,28 +13,28 @@ import HomePage from "@/pages/HomePage";
 import ChatPage from "@/pages/ChatPage";
 
 // Lazy-loaded (split into separate chunks)
-const DictionaryPage   = lazy(() => import("@/pages/DictionaryPage"));
-const SchedulePage     = lazy(() => import("@/pages/SchedulePage"));
-const MapPage          = lazy(() => import("@/pages/MapPage"));
-const SubtitlePage     = lazy(() => import("@/pages/SubtitlePage"));
-const ConversationPage = lazy(() => import("@/pages/ConversationPage"));
-const VocabPage        = lazy(() => import("@/pages/VocabPage"));
-const TimerPage        = lazy(() => import("@/pages/TimerPage"));
-const DdayPage         = lazy(() => import("@/pages/DdayPage"));
-const MenuPage         = lazy(() => import("@/pages/MenuPage"));
-const TransportPage    = lazy(() => import("@/pages/TransportPage"));
-const HealthPage       = lazy(() => import("@/pages/HealthPage"));
-const AIChatPage       = lazy(() => import("@/pages/AIChatPage"));
-const TinkercadPage    = lazy(() => import("@/pages/TinkercadPage"));
-const WeatherPage      = lazy(() => import("@/pages/WeatherPage"));
-const CurrencyPage     = lazy(() => import("@/pages/CurrencyPage"));
-const GPAPage          = lazy(() => import("@/pages/GPAPage"));
-const KoreanWordPage   = lazy(() => import("@/pages/KoreanWordPage"));
-const QRCodePage       = lazy(() => import("@/pages/QRCodePage"));
-const TimezonePage     = lazy(() => import("@/pages/TimezonePage"));
+const DictionaryPage    = lazy(() => import("@/pages/DictionaryPage"));
+const SchedulePage      = lazy(() => import("@/pages/SchedulePage"));
+const MapPage           = lazy(() => import("@/pages/MapPage"));
+const SubtitlePage      = lazy(() => import("@/pages/SubtitlePage"));
+const ConversationPage  = lazy(() => import("@/pages/ConversationPage"));
+const VocabPage         = lazy(() => import("@/pages/VocabPage"));
+const TimerPage         = lazy(() => import("@/pages/TimerPage"));
+const DdayPage          = lazy(() => import("@/pages/DdayPage"));
+const MenuPage          = lazy(() => import("@/pages/MenuPage"));
+const TransportPage     = lazy(() => import("@/pages/TransportPage"));
+const HealthPage        = lazy(() => import("@/pages/HealthPage"));
+const AIChatPage        = lazy(() => import("@/pages/AIChatPage"));
+const TinkercadPage     = lazy(() => import("@/pages/TinkercadPage"));
+const WeatherPage       = lazy(() => import("@/pages/WeatherPage"));
+const CurrencyPage      = lazy(() => import("@/pages/CurrencyPage"));
+const GPAPage           = lazy(() => import("@/pages/GPAPage"));
+const KoreanWordPage    = lazy(() => import("@/pages/KoreanWordPage"));
+const QRCodePage        = lazy(() => import("@/pages/QRCodePage"));
+const TimezonePage      = lazy(() => import("@/pages/TimezonePage"));
 const AnnouncementsPage = lazy(() => import("@/pages/AnnouncementsPage"));
-const LinksPage        = lazy(() => import("@/pages/LinksPage"));
-const AdminPage        = lazy(() => import("@/pages/AdminPage"));
+const LinksPage         = lazy(() => import("@/pages/LinksPage"));
+const AdminPage         = lazy(() => import("@/pages/AdminPage"));
 
 setAuthTokenGetter(() => getToken());
 
@@ -54,6 +55,43 @@ function PageLoader() {
   );
 }
 
+function CurrentPage({ page }: { page: string }) {
+  switch (page) {
+    case "home":          return <HomePage />;
+    case "chat":          return <ChatPage />;
+    case "dictionary":    return <DictionaryPage />;
+    case "schedule":      return <SchedulePage />;
+    case "map":           return <MapPage />;
+    case "subtitle":      return <SubtitlePage />;
+    case "conversation":  return <ConversationPage />;
+    case "vocab":         return <VocabPage />;
+    case "timer":         return <TimerPage />;
+    case "dday":          return <DdayPage />;
+    case "menu":          return <MenuPage />;
+    case "transport":     return <TransportPage />;
+    case "health":        return <HealthPage />;
+    case "ai":            return <AIChatPage />;
+    case "tinkercad":     return <TinkercadPage />;
+    case "weather":       return <WeatherPage />;
+    case "currency":      return <CurrencyPage />;
+    case "gpa":           return <GPAPage />;
+    case "koreanword":    return <KoreanWordPage />;
+    case "qrcode":        return <QRCodePage />;
+    case "timezone":      return <TimezonePage />;
+    case "announcements": return <AnnouncementsPage />;
+    case "links":         return <LinksPage />;
+    case "admin":         return <AdminPage />;
+    default:              return <HomePage />;
+  }
+}
+
+const springTransition = {
+  type: "spring" as const,
+  stiffness: 420,
+  damping: 36,
+  mass: 0.9,
+};
+
 function AppContent() {
   const { activePage, currentUser } = useApp();
 
@@ -64,32 +102,20 @@ function AppContent() {
       <Navbar />
       <main style={{ paddingBottom: "env(safe-area-inset-bottom)" }} className="main-content">
         <style>{`@media (max-width: 639px) { .main-content { padding-bottom: 64px !important; } }`}</style>
-        {activePage === "home"          && <HomePage />}
-        {activePage === "chat"          && <ChatPage />}
-        <Suspense fallback={<PageLoader />}>
-          {activePage === "dictionary"  && <DictionaryPage />}
-          {activePage === "schedule"    && <SchedulePage />}
-          {activePage === "map"         && <MapPage />}
-          {activePage === "subtitle"    && <SubtitlePage />}
-          {activePage === "conversation"&& <ConversationPage />}
-          {activePage === "vocab"       && <VocabPage />}
-          {activePage === "timer"       && <TimerPage />}
-          {activePage === "dday"        && <DdayPage />}
-          {activePage === "menu"        && <MenuPage />}
-          {activePage === "transport"   && <TransportPage />}
-          {activePage === "health"      && <HealthPage />}
-          {activePage === "ai"          && <AIChatPage />}
-          {activePage === "tinkercad"   && <TinkercadPage />}
-          {activePage === "weather"     && <WeatherPage />}
-          {activePage === "currency"    && <CurrencyPage />}
-          {activePage === "gpa"         && <GPAPage />}
-          {activePage === "koreanword"  && <KoreanWordPage />}
-          {activePage === "qrcode"      && <QRCodePage />}
-          {activePage === "timezone"    && <TimezonePage />}
-          {activePage === "announcements"&&<AnnouncementsPage />}
-          {activePage === "links"       && <LinksPage />}
-          {activePage === "admin"       && <AdminPage />}
-        </Suspense>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activePage}
+            initial={{ opacity: 0, y: 20, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0,  scale: 1     }}
+            exit={{    opacity: 0, y: -12, scale: 0.99  }}
+            transition={springTransition}
+            style={{ willChange: "transform, opacity" }}
+          >
+            <Suspense fallback={<PageLoader />}>
+              <CurrentPage page={activePage} />
+            </Suspense>
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );
