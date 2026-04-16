@@ -286,7 +286,7 @@ export default function ChatPage() {
   };
 
   const handleDelete = async (messageId: number) => {
-    if (!confirm("Xóa tin nhắn này?")) return;
+    if (!confirm(t(lang, "confirm_delete"))) return;
     setDeletingId(messageId);
     try {
       await fetch(`/api/messages/${messageId}`, {
@@ -376,9 +376,9 @@ export default function ChatPage() {
         {/* Header */}
         <div style={{ padding: "0.85rem 1.25rem", borderBottom: `1px solid ${border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
           <div>
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>💬 {t(lang, "chat")} Cộng đồng</h2>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>💬 {t(lang, "chat")} {t(lang, "tool_group_community")}</h2>
             <p style={{ color: text2, fontSize: "0.78rem", marginTop: 2, margin: 0 }}>
-              {isLoading ? t(lang, "loading") : `${messages?.length || 0} tin nhắn`}
+              {isLoading ? t(lang, "loading") : `${messages?.length || 0} ${t(lang, "messages_suffix")}`}
               {onlineUsers.length > 0 && (
                 <span style={{ marginLeft: "0.5rem" }}>
                   · <span style={{ color: "#22c55e", fontWeight: 600 }}>● {onlineUsers.length} {t(lang, "online_count")}</span>
@@ -397,7 +397,7 @@ export default function ChatPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Tìm kiếm tin nhắn..."
+              placeholder={t(lang, "search_messages_ph")}
               autoFocus
               style={{ width: "100%", padding: "0.5rem 0.75rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.88rem", outline: "none", boxSizing: "border-box" }}
             />
@@ -487,7 +487,7 @@ export default function ChatPage() {
                             <button
                               className="reaction-btn"
                               onClick={(e) => { e.stopPropagation(); setReactionPickerFor(reactionPickerFor === msg.id ? null : msg.id); }}
-                              title="Thả cảm xúc"
+                              title={t(lang, "react_emoji")}
                               style={{ width: 22, height: 22, borderRadius: "50%", background: isDark ? "#334155" : "#e2e8f0", border: "none", cursor: "pointer", fontSize: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}
                             >😊</button>
                           )}
@@ -496,7 +496,7 @@ export default function ChatPage() {
                             <button
                               className="reaction-btn"
                               onClick={() => { setReplyTo(msg); textareaRef.current?.focus(); }}
-                              title="Trả lời"
+                              title={t(lang, "reply_btn")}
                               style={{ width: 22, height: 22, borderRadius: "50%", background: isDark ? "#334155" : "#e2e8f0", border: "none", cursor: "pointer", fontSize: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}
                             >↩</button>
                           )}
@@ -505,7 +505,7 @@ export default function ChatPage() {
                             <button
                               className="reaction-btn"
                               onClick={() => { setEditingId(msg.id); setEditText(msg.content); }}
-                              title="Chỉnh sửa (trong 5 phút)"
+                              title={t(lang, "edit_5min")}
                               style={{ width: 22, height: 22, borderRadius: "50%", background: isDark ? "#334155" : "#e2e8f0", border: "none", cursor: "pointer", fontSize: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}
                             >✏️</button>
                           )}
@@ -515,7 +515,7 @@ export default function ChatPage() {
                               onClick={() => handleDelete(msg.id)}
                               disabled={deletingId === msg.id}
                               className="delete-btn"
-                              title="Xóa tin nhắn"
+                              title={t(lang, "delete_msg")}
                               style={{ width: 22, height: 22, borderRadius: "50%", background: "#ef4444", border: "none", color: "white", fontSize: "0.6rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                             >✕</button>
                           )}
@@ -584,7 +584,7 @@ export default function ChatPage() {
                 ))}
               </div>
               <span style={{ fontSize: "0.75rem", color: text2, fontStyle: "italic" }}>
-                {typingUsers.join(", ")} đang nhập...
+                {typingUsers.join(", ")} {t(lang, "typing_suffix")}
               </span>
             </div>
           )}
@@ -605,7 +605,7 @@ export default function ChatPage() {
               display: "flex", alignItems: "center", justifyContent: "center",
               zIndex: 10,
             }}
-            title="Xuống cuối"
+            title={t(lang, "scroll_down")}
           >↓</button>
         )}
 

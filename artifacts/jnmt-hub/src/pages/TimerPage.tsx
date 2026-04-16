@@ -97,14 +97,14 @@ export default function TimerPage() {
           </svg>
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center" }}>
             <div style={{ fontSize: "3rem", fontWeight: 900, color: textCol, fontVariantNumeric: "tabular-nums", letterSpacing: 2 }}>{mins}:{secs}</div>
-            <div style={{ fontSize: "0.85rem", color: text2, marginTop: 4, fontWeight: 600 }}>{isStudy ? "HỌC" : "NGHỈ"}</div>
+            <div style={{ fontSize: "0.85rem", color: text2, marginTop: 4, fontWeight: 600 }}>{isStudy ? t(lang, "study_label") : t(lang, "break_label")}</div>
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
           <button onClick={() => setRunning(r => !r)}
             style={{ padding: "0.85rem 2.5rem", background: accent, color: "white", border: "none", borderRadius: 12, fontSize: "1rem", fontWeight: 700, cursor: "pointer" }}>
-            {running ? "⏸ Tạm dừng" : seconds === 0 ? "▶ Bắt đầu mới" : "▶ Bắt đầu"}
+            {running ? `⏸ ${t(lang, "pause")}` : seconds === 0 ? `▶ ${t(lang, "start_new")}` : `▶ ${t(lang, "start")}`}
           </button>
           <button onClick={reset}
             style={{ padding: "0.85rem 1.25rem", background: isDark ? "#334155" : "#f1f5f9", color: textCol, border: "none", borderRadius: 12, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
@@ -114,21 +114,21 @@ export default function TimerPage() {
       </div>
 
       <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem" }}>
-        <p style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 1rem" }}>⚙️ Tùy chỉnh thời gian</p>
+        <p style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 1rem" }}>⚙️ {t(lang, "customize_time")}</p>
         <div style={{ display: "flex", gap: "0.75rem", marginBottom: "0.75rem" }}>
           <div style={{ flex: 1 }}>
-            <label style={{ color: text2, fontSize: "0.78rem", display: "block", marginBottom: 4 }}>Học (phút)</label>
+            <label style={{ color: text2, fontSize: "0.78rem", display: "block", marginBottom: 4 }}>{t(lang, "study_minutes")}</label>
             <input type="number" value={customStudy} onChange={e => setCustomStudy(e.target.value)} min={1} max={99}
               style={{ width: "100%", padding: "0.65rem", borderRadius: 8, border: `1px solid ${border}`, background: inputBg, color: textCol, fontSize: "1.1rem", outline: "none", boxSizing: "border-box", textAlign: "center", fontWeight: 700 }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ color: text2, fontSize: "0.78rem", display: "block", marginBottom: 4 }}>Nghỉ (phút)</label>
+            <label style={{ color: text2, fontSize: "0.78rem", display: "block", marginBottom: 4 }}>{t(lang, "break_minutes")}</label>
             <input type="number" value={customBreak} onChange={e => setCustomBreak(e.target.value)} min={1} max={99}
               style={{ width: "100%", padding: "0.65rem", borderRadius: 8, border: `1px solid ${border}`, background: inputBg, color: textCol, fontSize: "1.1rem", outline: "none", boxSizing: "border-box", textAlign: "center", fontWeight: 700 }} />
           </div>
         </div>
         <button onClick={applyCustom} style={{ width: "100%", padding: "0.7rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, fontSize: "0.9rem", fontWeight: 700, cursor: "pointer" }}>
-          Áp dụng
+          {t(lang, "apply")}
         </button>
       </div>
     </div>

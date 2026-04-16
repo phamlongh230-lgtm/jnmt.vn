@@ -101,14 +101,14 @@ export default function TransportPage() {
 
             {expanded === route.id && (
               <div style={{ borderTop: `1px solid ${border}`, padding: "14px 16px" }}>
-                <p style={{ color: text, fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Giờ chạy xe:</p>
+                <p style={{ color: text, fontSize: 13, fontWeight: 600, marginBottom: 6 }}>{t(lang, "bus_schedule")}</p>
                 <p style={{ color: sub, fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>{route.schedule}</p>
                 <p style={{ color: text, fontSize: 13, marginBottom: 12 }}>
-                  <span style={{ fontWeight: 600 }}>Lưu ý: </span>{route.note}
+                  <span style={{ fontWeight: 600 }}>{t(lang, "note_label")} </span>{route.note}
                 </p>
                 <a href={route.mapsUrl} target="_blank" rel="noopener noreferrer"
                   style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: accent, color: "#fff", borderRadius: 8, textDecoration: "none", fontSize: 13, fontWeight: 600 }}>
-                  🗺️ Xem bản đồ
+                  🗺️ {t(lang, "view_map")}
                 </a>
               </div>
             )}

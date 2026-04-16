@@ -114,11 +114,11 @@ function WeatherWidget({ lang }: { lang: LangCode }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.6rem", marginTop: "0.75rem", fontSize: "0.82rem" }}>
         <div style={{ background: "rgba(255,255,255,0.12)", padding: "0.4rem 0.6rem", borderRadius: 6, textAlign: "center" }}>
-          <div style={{ opacity: 0.85 }}>💧 Độ ẩm</div>
+          <div style={{ opacity: 0.85 }}>💧 {t(lang, "humidity_label")}</div>
           <div style={{ fontWeight: 700 }}>{weather.humidity}%</div>
         </div>
         <div style={{ background: "rgba(255,255,255,0.12)", padding: "0.4rem 0.6rem", borderRadius: 6, textAlign: "center" }}>
-          <div style={{ opacity: 0.85 }}>💨 Gió</div>
+          <div style={{ opacity: 0.85 }}>💨 {t(lang, "wind_label")}</div>
           <div style={{ fontWeight: 700 }}>{weather.wind} km/h</div>
         </div>
       </div>
@@ -203,7 +203,7 @@ export default function HomePage() {
       <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.5rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.85rem" }}>
           <span style={{ fontSize: "1.1rem" }}>🔍</span>
-          <h3 style={{ fontSize: "1rem", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", margin: 0 }}>Tìm kiếm đa nguồn</h3>
+          <h3 style={{ fontSize: "1rem", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", margin: 0 }}>{t(lang, "multi_search_title")}</h3>
           <span style={{ fontSize: "0.75rem", color: isDark ? "#64748b" : "#94a3b8", marginLeft: "0.2rem" }}>Google · YouTube · Naver · Scholar · AI...</span>
         </div>
         <MultiSearch />
@@ -243,11 +243,11 @@ export default function HomePage() {
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
             {[
-              ["Tên trường", "전남미래국제고등학교"],
-              ["Tên tiếng Anh", "Jeonnam Future International High School"],
-              ["Khai trường", "01/03/2026"],
-              ["Địa điểm", "Gangjin-gun, Jeollanam-do, Hàn Quốc"],
-              ["Đối tượng", "Học sinh đa văn hóa & quốc tế"],
+              [t(lang, "school_name_label"), "전남미래국제고등학교"],
+              [t(lang, "school_name_en_label"), "Jeonnam Future International High School"],
+              [t(lang, "school_founded_label"), "01/03/2026"],
+              [t(lang, "school_location_label"), "Gangjin-gun, Jeollanam-do, Korea"],
+              [t(lang, "school_target_label"), t(lang, "school_target_desc")],
             ].map(([label, value]) => (
               <div key={label} style={{ display: "flex", gap: "0.5rem" }}>
                 <span style={{ fontSize: "0.8rem", color: text2, minWidth: 90 }}>{label}</span>
@@ -293,7 +293,7 @@ export default function HomePage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
               <div style={{ fontWeight: 700, color: text }}>Vũ Văn Tâm</div>
-              <div style={{ fontSize: "0.8rem", color: text2 }}>Học sinh · 전남미래국제고등학교</div>
+              <div style={{ fontSize: "0.8rem", color: text2 }}>{t(lang, "student_label")} · 전남미래국제고등학교</div>
               <a href="mailto:phamlongh230@gmail.com"
                 style={{ fontSize: "0.8rem", color: "#2563eb", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
                 ✉️ phamlongh230@gmail.com
@@ -303,7 +303,7 @@ export default function HomePage() {
                 📞 010-6315-8995
               </a>
               <div style={{ fontSize: "0.75rem", color: text2, marginTop: "0.2rem", background: isDark ? "#0f172a" : "#f8fafc", padding: "0.35rem 0.6rem", borderRadius: 6, borderLeft: "3px solid #f59e0b" }}>
-                💡 Liên hệ khi gặp lỗi
+                💡 {t(lang, "contact_when_bug")}
               </div>
             </div>
           </div>

@@ -32,7 +32,7 @@ export default function QRCodePage() {
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
-        <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📱 Tạo QR Code</h1>
+        <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📱 {t(lang, "qrcode")}</h1>
         <p style={{ margin: 0, opacity: 0.75, fontSize: "0.85rem" }}>Tạo QR code từ link, văn bản, số điện thoại...</p>
       </div>
 

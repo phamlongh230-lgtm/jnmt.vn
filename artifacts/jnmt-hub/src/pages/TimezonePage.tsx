@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 const TIMEZONES = [
-  { id: "Asia/Seoul", label: "Hàn Quốc", flag: "🇰🇷", city: "Seoul" },
-  { id: "Asia/Ho_Chi_Minh", label: "Việt Nam", flag: "🇻🇳", city: "TP. Hồ Chí Minh" },
-  { id: "Asia/Ulaanbaatar", label: "Mông Cổ", flag: "🇲🇳", city: "Ulaanbaatar" },
-  { id: "Asia/Almaty", label: "Kazakhstan", flag: "🇰🇿", city: "Almaty" },
-  { id: "Europe/Moscow", label: "Nga", flag: "🇷🇺", city: "Moskva" },
-  { id: "America/New_York", label: "Mỹ (ET)", flag: "🇺🇸", city: "New York" },
-  { id: "Europe/London", label: "Anh", flag: "🇬🇧", city: "London" },
-  { id: "Asia/Tokyo", label: "Nhật Bản", flag: "🇯🇵", city: "Tokyo" },
+  { id: "Asia/Seoul", labelKey: "tz_korea", flag: "🇰🇷", city: "Seoul" },
+  { id: "Asia/Ho_Chi_Minh", labelKey: "tz_vietnam", flag: "🇻🇳", city: "TP. Hồ Chí Minh" },
+  { id: "Asia/Ulaanbaatar", labelKey: "tz_mongolia", flag: "🇲🇳", city: "Ulaanbaatar" },
+  { id: "Asia/Almaty", labelKey: "tz_kazakhstan", flag: "🇰🇿", city: "Almaty" },
+  { id: "Europe/Moscow", labelKey: "tz_russia", flag: "🇷🇺", city: "Moskva" },
+  { id: "America/New_York", labelKey: "tz_usa", flag: "🇺🇸", city: "New York" },
+  { id: "Europe/London", labelKey: "tz_uk", flag: "🇬🇧", city: "London" },
+  { id: "Asia/Tokyo", labelKey: "tz_japan", flag: "🇯🇵", city: "Tokyo" },
 ];
 
 function getTime(tz: string) {
@@ -41,7 +42,7 @@ function getOffset(tz: string) {
 }
 
 export default function TimezonePage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
@@ -62,9 +63,9 @@ export default function TimezonePage() {
       <div style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
         <div style={{ fontSize: "3rem" }}>{isDayKorea ? "☀️" : "🌙"}</div>
         <div>
-          <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>🌍 Múi giờ</h1>
+          <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>🌍 {t(lang, "timezone_tool")}</h1>
           <div style={{ fontSize: "2rem", fontWeight: 900, lineHeight: 1 }}>{getTime("Asia/Seoul")}</div>
-          <div style={{ fontSize: "0.85rem", opacity: 0.85, marginTop: "0.15rem" }}>🇰🇷 Hàn Quốc — {getDate("Asia/Seoul")}</div>
+          <div style={{ fontSize: "0.85rem", opacity: 0.85, marginTop: "0.15rem" }}>🇰🇷 {t(lang, "tz_korea")} — {getDate("Asia/Seoul")}</div>
         </div>
       </div>
 
@@ -77,7 +78,7 @@ export default function TimezonePage() {
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <span style={{ fontSize: "1.5rem" }}>{tz.flag}</span>
                   <div>
-                    <div style={{ fontWeight: 700, color: textCol, fontSize: "0.9rem" }}>{tz.label}</div>
+                    <div style={{ fontWeight: 700, color: textCol, fontSize: "0.9rem" }}>{t(lang, tz.labelKey)}</div>
                     <div style={{ fontSize: "0.7rem", color: text2 }}>{tz.city}</div>
                   </div>
                 </div>

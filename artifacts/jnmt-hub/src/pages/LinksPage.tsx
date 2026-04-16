@@ -12,7 +12,7 @@ interface LinkItem {
   tags: string[];
 }
 
-const LINK_GROUPS: { label: string; labelKo: string; icon: string; links: LinkItem[] }[] = [
+const LINK_GROUPS: { label: string; labelKey?: string; labelKo: string; icon: string; links: LinkItem[] }[] = [
   {
     label: "AI Tools",
     labelKo: "AI 도구",
@@ -28,6 +28,7 @@ const LINK_GROUPS: { label: string; labelKo: string; icon: string; links: LinkIt
   },
   {
     label: "Học tiếng Hàn",
+    labelKey: "link_group_korean",
     labelKo: "한국어 학습",
     icon: "🇰🇷",
     links: [
@@ -39,6 +40,7 @@ const LINK_GROUPS: { label: string; labelKo: string; icon: string; links: LinkIt
   },
   {
     label: "Sáng tạo & Thiết kế",
+    labelKey: "link_group_creative",
     labelKo: "창작 & 디자인",
     icon: "🎨",
     links: [
@@ -48,6 +50,7 @@ const LINK_GROUPS: { label: string; labelKo: string; icon: string; links: LinkIt
   },
   {
     label: "Học tập & Lập trình",
+    labelKey: "link_group_study",
     labelKo: "학습 & 코딩",
     icon: "💻",
     links: [
@@ -106,8 +109,8 @@ export default function LinksPage() {
 
       {/* Header */}
       <div style={{ background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", borderRadius: 16, padding: "1.75rem 1.5rem", marginBottom: "1.25rem", color: "white" }}>
-        <h1 style={{ fontSize: "1.5rem", fontWeight: 900, margin: "0 0 0.3rem" }}>🔗 Liên kết hữu ích</h1>
-        <p style={{ margin: 0, opacity: 0.9, fontSize: "0.88rem" }}>Tổng hợp công cụ AI, học tiếng Hàn, sáng tạo và học tập</p>
+        <h1 style={{ fontSize: "1.5rem", fontWeight: 900, margin: "0 0 0.3rem" }}>🔗 {t(lang, "links_title")}</h1>
+        <p style={{ margin: 0, opacity: 0.9, fontSize: "0.88rem" }}>{t(lang, "links_subtitle")}</p>
       </div>
 
       {/* Search */}
@@ -116,7 +119,7 @@ export default function LinksPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Tìm kiếm: claude, canva, korean, video..."
+          placeholder={t(lang, "search_links_ph")}
           style={{ width: "100%", padding: "0.75rem 1rem 0.75rem 2.5rem", border: `1px solid ${border}`, borderRadius: 12, background: inputBg, color: textCol, fontSize: "0.93rem", outline: "none", boxSizing: "border-box" }}
           autoFocus
         />
@@ -135,7 +138,7 @@ export default function LinksPage() {
             </div>
           ) : (
             <>
-              <div style={{ fontSize: "0.8rem", color: text2, marginBottom: "0.75rem" }}>{filteredAll.length} kết quả</div>
+              <div style={{ fontSize: "0.8rem", color: text2, marginBottom: "0.75rem" }}>{filteredAll.length} {t(lang, "results_suffix")}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                 {filteredAll.map((link) => <LinkCard key={link.url} link={link} />)}
               </div>
@@ -151,7 +154,7 @@ export default function LinksPage() {
             <div key={group.label}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
                 <span style={{ fontSize: "1.2rem" }}>{group.icon}</span>
-                <h2 style={{ fontSize: "1rem", fontWeight: 800, color: textCol, margin: 0 }}>{group.label}</h2>
+                <h2 style={{ fontSize: "1rem", fontWeight: 800, color: textCol, margin: 0 }}>{group.labelKey ? t(lang, group.labelKey) : group.label}</h2>
                 <span style={{ fontSize: "0.78rem", color: text2, fontWeight: 500 }}>{group.labelKo}</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>

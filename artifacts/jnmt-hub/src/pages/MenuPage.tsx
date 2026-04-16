@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 type MealTime = "sang" | "trua" | "toi";
 type DayKey = "T2" | "T3" | "T4" | "T5" | "T6" | "T7" | "CN";
@@ -16,11 +17,11 @@ const MENU_DATA: Record<DayKey, Record<MealTime, string>> = {
   CN: { sang: "팬케이크 + 시럽 (Bánh pancake)", trua: "부대찌개 (Lẩu thập cẩm)", toi: "삼겹살 파티 (Tiệc thịt ba chỉ)" },
 };
 
-const MEAL_LABEL: Record<MealTime, string> = { sang: "Sáng", trua: "Trưa", toi: "Tối" };
+const MEAL_KEY: Record<MealTime, string> = { sang: "meal_morning", trua: "meal_noon", toi: "meal_night" };
 const MEAL_ICON: Record<MealTime, string> = { sang: "🌅", trua: "☀️", toi: "🌙" };
 
 export default function MenuPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [meal, setMeal] = useState<MealTime>("trua");
   const today = new Date().getDay();
   const todayKey = today === 0 ? "CN" : today === 6 ? "T7" : (["T2", "T3", "T4", "T5", "T6"][today - 1] as DayKey);
@@ -36,8 +37,8 @@ export default function MenuPage() {
   return (
     <div style={{ minHeight: "100vh", background: bg, padding: "20px 16px 80px" }}>
       <div style={{ maxWidth: 480, margin: "0 auto" }}>
-        <h2 style={{ color: text, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>🍱 Thực đơn tuần</h2>
-        <p style={{ color: sub, fontSize: 13, marginBottom: 20 }}>Thực đơn ký túc xá JNMT</p>
+        <h2 style={{ color: text, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>🍱 {t(lang, "menu_title")}</h2>
+        <p style={{ color: sub, fontSize: 13, marginBottom: 20 }}>{t(lang, "menu_subtitle")}</p>
 
         <div style={{ display: "flex", gap: 6, marginBottom: 20, overflowX: "auto", paddingBottom: 4 }}>
           {DAYS.map(d => (
@@ -59,20 +60,20 @@ export default function MenuPage() {
               background: meal === m ? accent : "transparent", color: meal === m ? "#fff" : text,
               cursor: "pointer", fontSize: 14, fontWeight: 600,
             }}>
-              {MEAL_ICON[m]} {MEAL_LABEL[m]}
+              {MEAL_ICON[m]} {t(lang, MEAL_KEY[m])}
             </button>
           ))}
         </div>
 
         <div style={{ background: card, borderRadius: 16, padding: 24, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
-          <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>{selectedDay} - {MEAL_LABEL[meal]}</p>
+          <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>{selectedDay} - {t(lang, MEAL_KEY[meal])}</p>
           <p style={{ color: text, fontSize: 20, fontWeight: 700, lineHeight: 1.5, margin: 0 }}>
             {MENU_DATA[selectedDay][meal]}
           </p>
         </div>
 
         <div style={{ marginTop: 16, background: card, borderRadius: 16, padding: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-          <p style={{ color: text, fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Thực đơn cả tuần — {MEAL_LABEL[meal]}</p>
+          <p style={{ color: text, fontSize: 14, fontWeight: 700, marginBottom: 12 }}>{t(lang, "weekly_menu_all")} — {t(lang, MEAL_KEY[meal])}</p>
           {DAYS.map(d => (
             <div key={d} style={{ padding: "10px 0", borderBottom: `1px solid ${border}`, display: "flex", gap: 12, alignItems: "center" }}>
               <span style={{ color: d === selectedDay ? accent : sub, fontWeight: 700, fontSize: 13, minWidth: 24 }}>{d}</span>

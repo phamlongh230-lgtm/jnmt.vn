@@ -8,9 +8,9 @@ interface ClassItem {
   c: string;
 }
 
-const SCHEDULE_DATA: { day: string; dayShort: string; classes: ClassItem[] }[] = [
+const SCHEDULE_DATA: { dayKey: string; dayShort: string; classes: ClassItem[] }[] = [
   {
-    day: "Thứ Hai", dayShort: "월",
+    dayKey: "monday", dayShort: "월",
     classes: [
       { time: "08:50", s: "자율 (Tự học)", r: "", c: "#94a3b8" },
       { time: "09:50", s: "국어 (Ngữ văn)", r: "", c: "#0ea5e9" },
@@ -22,7 +22,7 @@ const SCHEDULE_DATA: { day: string; dayShort: string; classes: ClassItem[] }[] =
     ],
   },
   {
-    day: "Thứ Ba", dayShort: "화",
+    dayKey: "tuesday", dayShort: "화",
     classes: [
       { time: "08:50", s: "디지털과 (KT số)", r: "", c: "#f97316" },
       { time: "09:50", s: "기계 (Kỹ thuật)", r: "", c: "#10b981" },
@@ -34,7 +34,7 @@ const SCHEDULE_DATA: { day: string; dayShort: string; classes: ClassItem[] }[] =
     ],
   },
   {
-    day: "Thứ Tư", dayShort: "수",
+    dayKey: "wednesday", dayShort: "수",
     classes: [
       { time: "08:50", s: "수학 (Toán)", r: "", c: "#2563eb" },
       { time: "09:50", s: "디지털과 (KT số)", r: "", c: "#f97316" },
@@ -45,7 +45,7 @@ const SCHEDULE_DATA: { day: string; dayShort: string; classes: ClassItem[] }[] =
     ],
   },
   {
-    day: "Thứ Năm", dayShort: "목",
+    dayKey: "thursday", dayShort: "목",
     classes: [
       { time: "08:50", s: "기계 (Kỹ thuật)", r: "", c: "#10b981" },
       { time: "09:50", s: "한국어 (Tiếng Hàn)", r: "", c: "#0ea5e9" },
@@ -57,7 +57,7 @@ const SCHEDULE_DATA: { day: string; dayShort: string; classes: ClassItem[] }[] =
     ],
   },
   {
-    day: "Thứ Sáu", dayShort: "금",
+    dayKey: "friday", dayShort: "금",
     classes: [
       { time: "08:50", s: "디지털과 (KT số)", r: "", c: "#f97316" },
       { time: "09:50", s: "영어 (Tiếng Anh)", r: "", c: "#8b5cf6" },
@@ -100,13 +100,13 @@ export default function SchedulePage() {
           📅 {t(lang, "schedule")}
         </h2>
         <p style={{ color: text2, fontSize: "0.85rem", marginBottom: "1.25rem" }}>
-          {todayData ? todayData.day : "Chủ nhật"} — {today.toLocaleDateString("vi-VN")}
+          {todayData ? t(lang, todayData.dayKey) : t(lang, "sunday")} — {today.toLocaleDateString("vi-VN")}
         </p>
 
         {todayData ? (
           <>
             <div style={{ fontWeight: 700, color: textCol, marginBottom: "0.75rem", fontSize: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              📋 Lịch hôm nay — {todayData.day}
+              📋 {t(lang, "today_schedule")} — {t(lang, todayData.dayKey)}
               <span style={{ background: "#dbeafe", color: "#1d4ed8", padding: "0.15rem 0.6rem", borderRadius: 20, fontSize: "0.75rem" }}>
                 {todayData.dayShort}요일
               </span>
@@ -152,8 +152,8 @@ export default function SchedulePage() {
         ) : (
           <div style={{ textAlign: "center", padding: "3rem", color: text2 }}>
             <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🎉</div>
-            <p style={{ fontSize: "1rem", fontWeight: 600 }}>Hôm nay không có lịch học!</p>
-            <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>Chúc bạn nghỉ ngơi vui vẻ 😊</p>
+            <p style={{ fontSize: "1rem", fontWeight: 600 }}>{t(lang, "no_class_today")}</p>
+            <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>{t(lang, "enjoy_rest")}</p>
           </div>
         )}
       </div>
@@ -161,11 +161,11 @@ export default function SchedulePage() {
       {/* Full week */}
       <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem" }}>
         <h3 style={{ fontWeight: 700, color: textCol, marginBottom: "1rem", fontSize: "1rem" }}>
-          📆 Thời khóa biểu cả tuần
+          📆 {t(lang, "full_week_schedule")}
         </h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: "1rem" }}>
           {SCHEDULE_DATA.map((day, di) => (
-            <div key={day.day} style={{ border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div key={day.dayKey} style={{ border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
               <div style={{
                 background: di === todayIdx ? "#2563eb" : isDark ? "#334155" : "#f1f5f9",
                 padding: "0.65rem 0.9rem",
@@ -176,7 +176,7 @@ export default function SchedulePage() {
                 justifyContent: "space-between",
                 alignItems: "center",
               }}>
-                <span>{day.day} {di === todayIdx ? "🌟" : ""}</span>
+                <span>{t(lang, day.dayKey)} {di === todayIdx ? "🌟" : ""}</span>
                 <span style={{
                   background: di === todayIdx ? "rgba(255,255,255,0.25)" : isDark ? "#1e293b" : "#e2e8f0",
                   padding: "0.1rem 0.5rem",

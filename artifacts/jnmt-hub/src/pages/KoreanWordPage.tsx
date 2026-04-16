@@ -70,7 +70,7 @@ export default function KoreanWordPage() {
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Word of day */}
       <div style={{ background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem", textAlign: "center" }}>
-        <div style={{ fontSize: "0.85rem", opacity: 0.85, marginBottom: "0.5rem" }}>⭐ Từ của ngày hôm nay</div>
+        <div style={{ fontSize: "0.85rem", opacity: 0.85, marginBottom: "0.5rem" }}>⭐ {t(lang, "word_of_day")}</div>
         <div style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "0.25rem" }}>{wordOfDay.ko}</div>
         <div style={{ fontSize: "1rem", opacity: 0.9, marginBottom: "0.25rem" }}>[{wordOfDay.ro}]</div>
         <div style={{ fontSize: "1.2rem", fontWeight: 700 }}>{wordOfDay.vi} · {wordOfDay.en}</div>
@@ -82,7 +82,7 @@ export default function KoreanWordPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="🔍 Tìm từ vựng..."
+          placeholder={t(lang, "search_vocab_ph")}
           style={{ flex: 1, minWidth: 180, padding: "0.6rem 0.85rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none" }}
         />
       </div>
@@ -108,7 +108,7 @@ export default function KoreanWordPage() {
             {flipped[i] ? (
               <div style={{ fontSize: "1rem", fontWeight: 700, color: "#f59e0b" }}>{getMeaning(w)}</div>
             ) : (
-              <div style={{ fontSize: "0.8rem", color: text2 }}>Nhấn để xem nghĩa 👆</div>
+              <div style={{ fontSize: "0.8rem", color: text2 }}>{t(lang, "tap_to_see_meaning")} 👆</div>
             )}
           </div>
         ))}

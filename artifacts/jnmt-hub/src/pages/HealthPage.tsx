@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 interface BodyPart {
   id: string;
@@ -34,7 +35,7 @@ const EMERGENCY = [
 ];
 
 export default function HealthPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [selected, setSelected] = useState<BodyPart | null>(null);
   const [showKo, setShowKo] = useState(false);
 
@@ -48,12 +49,12 @@ export default function HealthPage() {
   return (
     <div style={{ minHeight: "100vh", background: bg, padding: "20px 16px 80px" }}>
       <div style={{ maxWidth: 480, margin: "0 auto" }}>
-        <h2 style={{ color: text, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>❤️ Sức khỏe</h2>
-        <p style={{ color: sub, fontSize: 13, marginBottom: 20 }}>Nhấn vào vùng đau để xem thông tin</p>
+        <h2 style={{ color: text, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>❤️ {t(lang, "health_title")}</h2>
+        <p style={{ color: sub, fontSize: 13, marginBottom: 20 }}>{t(lang, "health_subtitle")}</p>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
           <button onClick={() => setShowKo(false)} style={{ flex: 1, padding: "8px", borderRadius: 8, border: `2px solid ${!showKo ? accent : border}`, background: !showKo ? accent : "transparent", color: !showKo ? "#fff" : text, fontWeight: 600, cursor: "pointer", fontSize: 13 }}>
-            Tiếng Việt
+            {t(lang, "lang_vi_btn")}
           </button>
           <button onClick={() => setShowKo(true)} style={{ flex: 1, padding: "8px", borderRadius: 8, border: `2px solid ${showKo ? accent : border}`, background: showKo ? accent : "transparent", color: showKo ? "#fff" : text, fontWeight: 600, cursor: "pointer", fontSize: 13 }}>
             한국어
@@ -90,7 +91,7 @@ export default function HealthPage() {
             </div>
             <div style={{ marginBottom: 12 }}>
               <p style={{ color: sub, fontSize: 12, fontWeight: 600, margin: "0 0 4px" }}>
-                {showKo ? "주요 증상:" : "Triệu chứng thường gặp:"}
+                {showKo ? "주요 증상:" : t(lang, "symptoms_common")}
               </p>
               <p style={{ color: text, fontSize: 14, margin: 0, lineHeight: 1.6 }}>
                 {showKo ? selected.symptomsKo : selected.symptoms}
@@ -98,7 +99,7 @@ export default function HealthPage() {
             </div>
             <div style={{ background: isDark ? "#1a2f1a" : "#f0fff4", borderRadius: 10, padding: 12 }}>
               <p style={{ color: "#22c55e", fontSize: 12, fontWeight: 600, margin: "0 0 4px" }}>
-                {showKo ? "조언:" : "Lời khuyên:"}
+                {showKo ? "조언:" : t(lang, "advice")}
               </p>
               <p style={{ color: text, fontSize: 14, margin: 0, lineHeight: 1.6 }}>
                 {showKo ? selected.adviceKo : selected.advice}
@@ -109,7 +110,7 @@ export default function HealthPage() {
 
         <div style={{ background: card, borderRadius: 16, padding: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
           <p style={{ color: text, fontSize: 15, fontWeight: 700, margin: "0 0 12px" }}>
-            {showKo ? "긴급 연락처" : "Số khẩn cấp"}
+            {showKo ? "긴급 연락처" : t(lang, "emergency_numbers")}
           </p>
           {EMERGENCY.map(e => (
             <a key={e.number} href={`tel:${e.number}`} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: `1px solid ${border}`, textDecoration: "none" }}>

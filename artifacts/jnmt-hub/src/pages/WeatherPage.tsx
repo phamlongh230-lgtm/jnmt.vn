@@ -76,11 +76,11 @@ export default function WeatherPage() {
 
       {/* 3-day forecast */}
       <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1rem", marginBottom: "1rem" }}>
-        <div style={{ fontWeight: 700, color: textCol, marginBottom: "0.85rem", fontSize: "0.95rem" }}>📅 Dự báo 3 ngày tới</div>
+        <div style={{ fontWeight: 700, color: textCol, marginBottom: "0.85rem", fontSize: "0.95rem" }}>📅 {t(lang, "weather_3day")}</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
           {data.weather.map((day, i) => {
             const d = new Date(day.date);
-            const dayName = i === 0 ? "Hôm nay" : DAY_VI[d.getDay()];
+            const dayName = i === 0 ? t(lang, "weather_today") : DAY_VI[d.getDay()];
             const desc = day.hourly[4]?.weatherDesc[0]?.value || "";
             return (
               <div key={day.date} style={{ background: bg2, borderRadius: 10, padding: "0.85rem", textAlign: "center", border: `1px solid ${border}` }}>
@@ -95,7 +95,7 @@ export default function WeatherPage() {
       </div>
 
       <div style={{ textAlign: "center", fontSize: "0.72rem", color: text2 }}>
-        Dữ liệu từ wttr.in · Cập nhật mỗi lần tải trang
+        {t(lang, "weather_source")}
       </div>
     </div>
   );

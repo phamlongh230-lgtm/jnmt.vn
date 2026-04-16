@@ -54,8 +54,8 @@ export default function GPAPage() {
   return (
     <div style={{ maxWidth: 650, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
-        <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📊 Tính điểm trung bình</h1>
-        <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>Hệ thống đánh giá Hàn Quốc — 수 우 양 미 가</p>
+        <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📊 {t(lang, "gpa")}</h1>
+        <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>{t(lang, "gpa_subtitle")}</p>
       </div>
 
       {/* Result */}

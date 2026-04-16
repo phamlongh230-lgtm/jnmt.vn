@@ -398,6 +398,58 @@ const translations: Record<LangCode, Record<string, string>> = {
     qr_input_ph: "Nhập link, text, số điện thoại...",
     studying_now: "Đang học",
     useful_info: "Thông tin hữu ích",
+    // Chat extra
+    confirm_delete: "Xóa tin nhắn này?",
+    messages_suffix: "tin nhắn",
+    search_messages_ph: "Tìm kiếm tin nhắn...",
+    react_emoji: "Thả cảm xúc",
+    reply_btn: "Trả lời",
+    edit_5min: "Chỉnh sửa (trong 5 phút)",
+    delete_msg: "Xóa tin nhắn",
+    typing_suffix: "đang nhập...",
+    scroll_down: "Xuống cuối",
+    // Schedule
+    today_schedule: "Lịch hôm nay",
+    no_class_today: "Hôm nay không có lịch học!",
+    enjoy_rest: "Chúc bạn nghỉ ngơi vui vẻ 😊",
+    full_week_schedule: "Thời khóa biểu cả tuần",
+    // Weather
+    weather_today: "Hôm nay",
+    // KoreanWord
+    word_of_day: "Từ của ngày hôm nay",
+    search_vocab_ph: "🔍 Tìm từ vựng...",
+    // Links
+    links_title: "Liên kết hữu ích",
+    links_subtitle: "Tổng hợp công cụ AI, học tiếng Hàn, sáng tạo và học tập",
+    search_links_ph: "Tìm kiếm: claude, canva, korean, video...",
+    results_suffix: "kết quả",
+    link_group_korean: "Học tiếng Hàn",
+    link_group_creative: "Sáng tạo & Thiết kế",
+    link_group_study: "Học tập & Lập trình",
+    // AI
+    ai_sorry: "Xin lỗi, tôi không thể trả lời lúc này.",
+    // HomePage
+    student_label: "Học sinh",
+    school_name_label: "Tên trường",
+    school_name_en_label: "Tên tiếng Anh",
+    school_founded_label: "Thành lập",
+    school_location_label: "Địa điểm",
+    school_target_label: "Đối tượng",
+    school_target_desc: "Học sinh quốc tế tại Hàn Quốc",
+    // Health
+    symptoms_common: "Triệu chứng thường gặp:",
+    // Transport
+    bus_schedule: "Giờ chạy xe:",
+    note_label: "Lưu ý:",
+    // Timezone countries
+    tz_korea: "Hàn Quốc",
+    tz_vietnam: "Việt Nam",
+    tz_mongolia: "Mông Cổ",
+    tz_kazakhstan: "Kazakhstan",
+    tz_russia: "Nga",
+    tz_usa: "Mỹ (ET)",
+    tz_uk: "Anh",
+    tz_japan: "Nhật Bản",
   },
   ko: {
     home: "홈",
@@ -749,6 +801,58 @@ const translations: Record<LangCode, Record<string, string>> = {
     qr_input_ph: "링크, 텍스트, 전화번호 입력...",
     studying_now: "수업 중",
     useful_info: "유용한 정보",
+    // Chat extra
+    confirm_delete: "이 메시지를 삭제하시겠습니까?",
+    messages_suffix: "메시지",
+    search_messages_ph: "메시지 검색...",
+    react_emoji: "이모지 반응",
+    reply_btn: "답장",
+    edit_5min: "수정 (5분 이내)",
+    delete_msg: "메시지 삭제",
+    typing_suffix: "입력 중...",
+    scroll_down: "아래로 이동",
+    // Schedule
+    today_schedule: "오늘 시간표",
+    no_class_today: "오늘 수업이 없습니다!",
+    enjoy_rest: "즐거운 휴식 되세요 😊",
+    full_week_schedule: "주간 시간표",
+    // Weather
+    weather_today: "오늘",
+    // KoreanWord
+    word_of_day: "오늘의 단어",
+    search_vocab_ph: "🔍 단어 검색...",
+    // Links
+    links_title: "유용한 링크",
+    links_subtitle: "AI 도구, 한국어 학습, 창작 및 학습 종합",
+    search_links_ph: "검색: claude, canva, korean, video...",
+    results_suffix: "결과",
+    link_group_korean: "한국어 학습",
+    link_group_creative: "창작 & 디자인",
+    link_group_study: "학습 & 프로그래밍",
+    // AI
+    ai_sorry: "죄송합니다, 지금 답변드릴 수 없습니다.",
+    // HomePage
+    student_label: "학생",
+    school_name_label: "학교 이름",
+    school_name_en_label: "영어 이름",
+    school_founded_label: "설립",
+    school_location_label: "위치",
+    school_target_label: "대상",
+    school_target_desc: "한국 내 외국인 학생",
+    // Health
+    symptoms_common: "자주 나타나는 증상:",
+    // Transport
+    bus_schedule: "버스 시간표:",
+    note_label: "참고:",
+    // Timezone countries
+    tz_korea: "한국",
+    tz_vietnam: "베트남",
+    tz_mongolia: "몽골",
+    tz_kazakhstan: "카자흐스탄",
+    tz_russia: "러시아",
+    tz_usa: "미국 (ET)",
+    tz_uk: "영국",
+    tz_japan: "일본",
   },
   en: {
     home: "Home",
@@ -1100,6 +1204,58 @@ const translations: Record<LangCode, Record<string, string>> = {
     qr_input_ph: "Enter link, text, phone number...",
     studying_now: "In class",
     useful_info: "Useful info",
+    // Chat extra
+    confirm_delete: "Delete this message?",
+    messages_suffix: "messages",
+    search_messages_ph: "Search messages...",
+    react_emoji: "React with emoji",
+    reply_btn: "Reply",
+    edit_5min: "Edit (within 5 min)",
+    delete_msg: "Delete message",
+    typing_suffix: "is typing...",
+    scroll_down: "Scroll to bottom",
+    // Schedule
+    today_schedule: "Today's Schedule",
+    no_class_today: "No classes today!",
+    enjoy_rest: "Enjoy your rest 😊",
+    full_week_schedule: "Full Week Schedule",
+    // Weather
+    weather_today: "Today",
+    // KoreanWord
+    word_of_day: "Word of the day",
+    search_vocab_ph: "🔍 Search vocabulary...",
+    // Links
+    links_title: "Useful Links",
+    links_subtitle: "AI tools, Korean learning, creative & study resources",
+    search_links_ph: "Search: claude, canva, korean, video...",
+    results_suffix: "results",
+    link_group_korean: "Korean Learning",
+    link_group_creative: "Creative & Design",
+    link_group_study: "Study & Coding",
+    // AI
+    ai_sorry: "Sorry, I cannot respond right now.",
+    // HomePage
+    student_label: "Student",
+    school_name_label: "School Name",
+    school_name_en_label: "English Name",
+    school_founded_label: "Founded",
+    school_location_label: "Location",
+    school_target_label: "Target",
+    school_target_desc: "International students in Korea",
+    // Health
+    symptoms_common: "Common symptoms:",
+    // Transport
+    bus_schedule: "Bus schedule:",
+    note_label: "Note:",
+    // Timezone countries
+    tz_korea: "Korea",
+    tz_vietnam: "Vietnam",
+    tz_mongolia: "Mongolia",
+    tz_kazakhstan: "Kazakhstan",
+    tz_russia: "Russia",
+    tz_usa: "USA (ET)",
+    tz_uk: "UK",
+    tz_japan: "Japan",
   },
   mn: {
     home: "Үндсэн хуудас",
@@ -1451,6 +1607,58 @@ const translations: Record<LangCode, Record<string, string>> = {
     qr_input_ph: "Линк, текст, утасны дугаар оруулна уу...",
     studying_now: "Хичээл орж байна",
     useful_info: "Хэрэгтэй мэдээлэл",
+    // Chat extra
+    confirm_delete: "Энэ мессежийг устгах уу?",
+    messages_suffix: "мессеж",
+    search_messages_ph: "Мессеж хайх...",
+    react_emoji: "Emoji хариу",
+    reply_btn: "Хариулах",
+    edit_5min: "Засах (5 минутын дотор)",
+    delete_msg: "Мессеж устгах",
+    typing_suffix: "бичиж байна...",
+    scroll_down: "Доош гүйлгэх",
+    // Schedule
+    today_schedule: "Өнөөдрийн хуваарь",
+    no_class_today: "Өнөөдөр хичээл байхгүй!",
+    enjoy_rest: "Тайван амар! 😊",
+    full_week_schedule: "Долоо хоногийн хуваарь",
+    // Weather
+    weather_today: "Өнөөдөр",
+    // KoreanWord
+    word_of_day: "Өдрийн үг",
+    search_vocab_ph: "🔍 Үг хайх...",
+    // Links
+    links_title: "Хэрэгтэй линкүүд",
+    links_subtitle: "AI хэрэгслүүд, Солонгос хэлний сургалт, бүтээлч болон суралцах нөөцүүд",
+    search_links_ph: "Хайх: claude, canva, korean, video...",
+    results_suffix: "үр дүн",
+    link_group_korean: "Солонгос хэл сурах",
+    link_group_creative: "Бүтээлч & Дизайн",
+    link_group_study: "Суралцах & Програмчлал",
+    // AI
+    ai_sorry: "Уучлаарай, одоо хариулж чадахгүй байна.",
+    // HomePage
+    student_label: "Оюутан",
+    school_name_label: "Сургуулийн нэр",
+    school_name_en_label: "Англи нэр",
+    school_founded_label: "Байгуулагдсан",
+    school_location_label: "Байршил",
+    school_target_label: "Чиглэл",
+    school_target_desc: "Солонгост суралцаж буй гадаадын оюутнууд",
+    // Health
+    symptoms_common: "Нийтлэг шинж тэмдэг:",
+    // Transport
+    bus_schedule: "Автобусны хуваарь:",
+    note_label: "Тэмдэглэл:",
+    // Timezone countries
+    tz_korea: "Солонгос",
+    tz_vietnam: "Вьетнам",
+    tz_mongolia: "Монгол",
+    tz_kazakhstan: "Казахстан",
+    tz_russia: "Орос",
+    tz_usa: "АНУ (ET)",
+    tz_uk: "Их Британи",
+    tz_japan: "Япон",
   },
   kk: {
     home: "Басты бет",
@@ -1802,6 +2010,58 @@ const translations: Record<LangCode, Record<string, string>> = {
     qr_input_ph: "Сілтеме, мәтін, телефон нөмірі енгізіңіз...",
     studying_now: "Сабақ кезінде",
     useful_info: "Пайдалы ақпарат",
+    // Chat extra
+    confirm_delete: "Бұл хабарламаны жою керек пе?",
+    messages_suffix: "хабарлама",
+    search_messages_ph: "Хабарламаларды іздеу...",
+    react_emoji: "Эмодзимен жауап",
+    reply_btn: "Жауап беру",
+    edit_5min: "Өңдеу (5 минут ішінде)",
+    delete_msg: "Хабарламаны жою",
+    typing_suffix: "теруде...",
+    scroll_down: "Төменге айналдыру",
+    // Schedule
+    today_schedule: "Бүгінгі кесте",
+    no_class_today: "Бүгін сабақ жоқ!",
+    enjoy_rest: "Демалысыңыз керемет болсын! 😊",
+    full_week_schedule: "Апталық кесте",
+    // Weather
+    weather_today: "Бүгін",
+    // KoreanWord
+    word_of_day: "Күндегі сөз",
+    search_vocab_ph: "🔍 Сөздікті іздеу...",
+    // Links
+    links_title: "Пайдалы сілтемелер",
+    links_subtitle: "AI құралдары, корей тілін үйрену, шығармашылық және оқу ресурстары",
+    search_links_ph: "Іздеу: claude, canva, korean, video...",
+    results_suffix: "нәтиже",
+    link_group_korean: "Корей тілін үйрену",
+    link_group_creative: "Шығармашылық & Дизайн",
+    link_group_study: "Оқу & Бағдарламалау",
+    // AI
+    ai_sorry: "Кешіріңіз, қазір жауап бере алмаймын.",
+    // HomePage
+    student_label: "Оқушы",
+    school_name_label: "Мектеп атауы",
+    school_name_en_label: "Ағылшынша атауы",
+    school_founded_label: "Құрылған",
+    school_location_label: "Орналасуы",
+    school_target_label: "Мақсатты топ",
+    school_target_desc: "Кореядағы шетелдік оқушылар",
+    // Health
+    symptoms_common: "Жиі кездесетін белгілер:",
+    // Transport
+    bus_schedule: "Автобус кестесі:",
+    note_label: "Ескертпе:",
+    // Timezone countries
+    tz_korea: "Корея",
+    tz_vietnam: "Вьетнам",
+    tz_mongolia: "Монғолия",
+    tz_kazakhstan: "Қазақстан",
+    tz_russia: "Ресей",
+    tz_usa: "АҚШ (ET)",
+    tz_uk: "Ұлыбритания",
+    tz_japan: "Жапония",
   },
   ru: {
     home: "Главная",
@@ -2153,6 +2413,58 @@ const translations: Record<LangCode, Record<string, string>> = {
     qr_input_ph: "Введите ссылку, текст, номер телефона...",
     studying_now: "На уроке",
     useful_info: "Полезная информация",
+    // Chat extra
+    confirm_delete: "Удалить это сообщение?",
+    messages_suffix: "сообщений",
+    search_messages_ph: "Поиск сообщений...",
+    react_emoji: "Реакция эмодзи",
+    reply_btn: "Ответить",
+    edit_5min: "Редактировать (в течение 5 мин)",
+    delete_msg: "Удалить сообщение",
+    typing_suffix: "печатает...",
+    scroll_down: "Прокрутить вниз",
+    // Schedule
+    today_schedule: "Расписание сегодня",
+    no_class_today: "Сегодня занятий нет!",
+    enjoy_rest: "Приятного отдыха! 😊",
+    full_week_schedule: "Расписание на неделю",
+    // Weather
+    weather_today: "Сегодня",
+    // KoreanWord
+    word_of_day: "Слово дня",
+    search_vocab_ph: "🔍 Поиск слов...",
+    // Links
+    links_title: "Полезные ссылки",
+    links_subtitle: "ИИ-инструменты, корейский язык, творчество и учёба",
+    search_links_ph: "Поиск: claude, canva, korean, video...",
+    results_suffix: "результатов",
+    link_group_korean: "Корейский язык",
+    link_group_creative: "Творчество & Дизайн",
+    link_group_study: "Учёба & Программирование",
+    // AI
+    ai_sorry: "Извините, я не могу ответить сейчас.",
+    // HomePage
+    student_label: "Ученик",
+    school_name_label: "Название школы",
+    school_name_en_label: "Английское название",
+    school_founded_label: "Основана",
+    school_location_label: "Местоположение",
+    school_target_label: "Целевая аудитория",
+    school_target_desc: "Иностранные студенты в Корее",
+    // Health
+    symptoms_common: "Распространённые симптомы:",
+    // Transport
+    bus_schedule: "Расписание автобусов:",
+    note_label: "Примечание:",
+    // Timezone countries
+    tz_korea: "Корея",
+    tz_vietnam: "Вьетнам",
+    tz_mongolia: "Монголия",
+    tz_kazakhstan: "Казахстан",
+    tz_russia: "Россия",
+    tz_usa: "США (ET)",
+    tz_uk: "Великобритания",
+    tz_japan: "Япония",
   },
 };
 

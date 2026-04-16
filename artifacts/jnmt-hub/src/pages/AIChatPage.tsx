@@ -94,7 +94,7 @@ export default function AIChatPage() {
 
       const aiMsg: Message = {
         role: "assistant",
-        content: data.reply || data.error || "Xin lỗi, tôi không thể trả lời lúc này.",
+        content: data.reply || data.error || t(lang, "ai_sorry"),
         time: new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }),
       };
 
