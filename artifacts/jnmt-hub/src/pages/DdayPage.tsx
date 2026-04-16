@@ -71,7 +71,7 @@ export default function DdayPage() {
         <p style={{ color: sub, fontSize: 13, marginBottom: 16 }}>{t(lang, "dday_subtitle")}</p>
 
         {showAdd && (
-          <div className="glass" style={{ borderRadius: 16, padding: 16, marginBottom: 16 }}>
+          <div className="glass" style={{ borderRadius: 22, padding: 16, marginBottom: 16 }}>
             <input value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, "event_name")} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, color: text, fontSize: 14, outline: "none", boxSizing: "border-box", marginBottom: 8 }} />
             <input type="date" value={date} onChange={e => setDate(e.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${border}`, background: bg, color: text, fontSize: 14, outline: "none", boxSizing: "border-box", marginBottom: 12 }} />
             <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>{t(lang, "choose_icon")}</p>

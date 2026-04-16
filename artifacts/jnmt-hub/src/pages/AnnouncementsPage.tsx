@@ -75,7 +75,7 @@ export default function AnnouncementsPage() {
       </div>
 
       {showForm && isAdmin && (
-        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1rem" }}>
+        <div className="glass" style={{ borderRadius: 18, padding: "1.25rem", marginBottom: "1rem" }}>
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t(lang, "announcement_title_ph")} style={{ width: "100%", padding: "0.7rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.95rem", marginBottom: "0.75rem", outline: "none", boxSizing: "border-box" }} />
           <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t(lang, "announcement_content_ph")} rows={4} style={{ width: "100%", padding: "0.7rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.9rem", resize: "vertical", outline: "none", boxSizing: "border-box", marginBottom: "0.75rem" }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -99,7 +99,7 @@ export default function AnnouncementsPage() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           {items.map((item) => (
-            <div key={item.id} className="glass" style={{ borderRadius: 12, overflow: "hidden", borderLeft: item.isPinned ? "4px solid #2563eb" : undefined }}>
+            <div key={item.id} className="glass" style={{ borderRadius: 18, overflow: "hidden", borderLeft: item.isPinned ? "4px solid #2563eb" : undefined }}>
               <div style={{ padding: "1rem 1.1rem", cursor: "pointer" }} onClick={() => setExpanded(expanded === item.id ? null : item.id)}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "0.5rem" }}>
                   <div style={{ flex: 1 }}>

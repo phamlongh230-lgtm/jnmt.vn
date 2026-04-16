@@ -35,7 +35,6 @@ export default function RegisterModal({ onClose, onLogin }: Props) {
     registerMutation.mutate({ data: { username, email, password } });
   };
 
-  const bg = isDark ? "#0f172a" : "white";
   const borderCol = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const inputBg = isDark ? "#1e293b" : "#f8fafc";
@@ -45,7 +44,7 @@ export default function RegisterModal({ onClose, onLogin }: Props) {
       style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 500, padding: "1rem" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div style={{ background: bg, borderRadius: 16, padding: "2rem", width: "100%", maxWidth: 420, boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+      <div className="glass" style={{ borderRadius: 22, padding: "2rem", width: "100%", maxWidth: 420 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
           <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: textCol }}>✨ {t(lang, "register_new")}</h2>
           <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "1.2rem", cursor: "pointer", color: "#64748b" }}>✕</button>

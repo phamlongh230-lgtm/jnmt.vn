@@ -429,6 +429,25 @@ const vi: Record<string, string> = {
   // Transport
   bus_schedule: "Giờ chạy xe:",
   note_label: "Lưu ý:",
+  // Transport — route labels
+  route_city_bus: "Xe nội thị",
+  route_taxi: "Taxi",
+  route_taxi_dest: "Trung tâm Gangjin",
+  route_1_note: "Bến xe Gangjin → Gwangju U-Square",
+  route_2_note: "Bến xe Gangjin → Mokpo Bus Terminal",
+  route_3_note: "Bến xe Gangjin → Suncheon Bus Terminal",
+  route_4_dest: "JNMT → Trung tâm Gangjin",
+  route_4_note: "Xe buýt nội thị qua trung tâm thành phố",
+  route_5_note: "Gọi: Kakao T App hoặc 1330",
+  duration_2h: "~2 giờ",
+  duration_1h30: "~1.5 giờ",
+  duration_20min: "~20 phút",
+  duration_10min: "~10 phút",
+  // Transport — useful info section
+  transport_info_check: "Tra giờ xe:",
+  transport_info_buy: "Mua vé: Tại bến xe hoặc trên xe",
+  transport_info_taxi: "Taxi: Ứng dụng Kakao T",
+  transport_info_hotline: "Hotline hỗ trợ khách nước ngoài:",
   // Timezone countries
   tz_korea: "Hàn Quốc",
   tz_vietnam: "Việt Nam",

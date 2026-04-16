@@ -45,7 +45,6 @@ export default function AdminPage() {
   const [classErr, setClassErr] = useState("");
   const [classSaving, setClassSaving] = useState(false);
 
-  const cardBg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -143,7 +142,7 @@ export default function AdminPage() {
 
   return (
     <div style={{ maxWidth: 960, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
+      <div className="glass-hero" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.80) 0%, rgba(168,85,247,0.70) 100%)", borderRadius: 22,  padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>⚙️ {t(lang, "admin_page")}</h1>
         <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>{users.length} {t(lang, "username")} · {classes.length} {t(lang, "tinkercad_class_list")}</p>
       </div>
@@ -167,7 +166,7 @@ export default function AdminPage() {
           {loadingUsers ? (
             <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>{t(lang, "loading")}</div>
           ) : (
-            <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div className="glass" style={{ borderRadius: 18, overflow: "hidden" }}>
               {filtered.map((user, i) => (
                 <div key={user.id} style={{ padding: "0.9rem 1rem", borderBottom: i < filtered.length - 1 ? `1px solid ${border}` : undefined, display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
                   <div style={{ width: 36, height: 36, borderRadius: "50%", background: user.avatarColor || "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0 }}>
@@ -255,12 +254,12 @@ export default function AdminPage() {
           {loadingClasses ? (
             <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>{t(lang, "loading")}</div>
           ) : classes.length === 0 ? (
-            <div style={{ textAlign: "center", color: text2, padding: "3rem", background: cardBg, border: `1px solid ${border}`, borderRadius: 12 }}>
+            <div className="glass" style={{ textAlign: "center", color: text2, padding: "3rem", borderRadius: 12 }}>
               <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔧</div>
               <div>{t(lang, "no_classes_yet")}</div>
             </div>
           ) : (
-            <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div className="glass" style={{ borderRadius: 18, overflow: "hidden" }}>
               {classes.map((cls, i) => (
                 <div key={cls.id}>
                   {editingClass?.id === cls.id ? (

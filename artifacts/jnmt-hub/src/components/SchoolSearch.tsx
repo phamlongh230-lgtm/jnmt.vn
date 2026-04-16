@@ -165,7 +165,6 @@ export default function SchoolSearch() {
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
   const hoverBg = isDark ? "#0f172a" : "#f0f7ff";
-  const dropdownBg = isDark ? "#1e293b" : "white";
 
   return (
     <div style={{ width: "100%" }} ref={containerRef}>
@@ -229,12 +228,12 @@ export default function SchoolSearch() {
         {open && (
           <ul
             ref={listRef}
+            className="glass"
             style={{
               position: "absolute",
               top: "100%",
               left: 0,
               right: 0,
-              background: dropdownBg,
               border: `2px solid #2563eb`,
               borderTop: "none",
               borderRadius: "0 0 12px 12px",
@@ -244,7 +243,6 @@ export default function SchoolSearch() {
               maxHeight: 320,
               overflowY: "auto",
               zIndex: 200,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
             }}
           >
             {!query.trim() ? (

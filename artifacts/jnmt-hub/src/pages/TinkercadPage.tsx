@@ -18,8 +18,6 @@ export default function TinkercadPage() {
   const [error, setError] = useState("");
   const [joined, setJoined] = useState(false);
 
-  const cardBg  = isDark ? "#1e293b" : "white";
-  const border  = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2   = isDark ? "#94a3b8" : "#64748b";
 
@@ -39,7 +37,7 @@ export default function TinkercadPage() {
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)", borderRadius: 16, padding: "1.75rem 1.5rem", marginBottom: "1.25rem", color: "white", display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap" }}>
+      <div className="glass-hero" style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.80) 0%, rgba(234,88,12,0.75) 100%)", borderRadius: 22,  padding: "1.75rem 1.5rem", marginBottom: "1.25rem", color: "white", display: "flex", alignItems: "center", gap: "1.25rem", flexWrap: "wrap" }}>
         <div style={{ fontSize: "3.5rem", lineHeight: 1 }}>🔧</div>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.25rem" }}>
@@ -97,7 +95,7 @@ export default function TinkercadPage() {
       {/* Feature cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "0.85rem", marginBottom: "1.25rem" }}>
         {FEATURES.map((f) => (
-          <div key={f.title} style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1.1rem", borderTop: `3px solid ${f.color}` }}>
+          <div key={f.title} className="glass" style={{ borderRadius: 18, padding: "1.1rem", borderTop: `3px solid ${f.color}` }}>
             <div style={{ fontSize: "1.75rem", marginBottom: "0.5rem" }}>{f.icon}</div>
             <div style={{ fontWeight: 700, color: textCol, marginBottom: "0.1rem" }}>{f.title}</div>
             <div style={{ fontSize: "0.72rem", color: f.color, fontWeight: 600, marginBottom: "0.4rem" }}>{f.titleKo}</div>
@@ -107,7 +105,7 @@ export default function TinkercadPage() {
       </div>
 
       {/* How to start */}
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem" }}>
+      <div className="glass" style={{ borderRadius: 18, padding: "1.25rem" }}>
         <h3 style={{ fontSize: "1rem", fontWeight: 700, color: textCol, marginBottom: "1rem" }}>📋 {t(lang, "getting_started")}</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
           {[

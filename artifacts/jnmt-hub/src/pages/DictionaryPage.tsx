@@ -57,7 +57,7 @@ export default function DictionaryPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }}>
-      <div className="glass" style={{ borderRadius: 16, overflow: "hidden" }}>
+      <div className="glass" style={{ borderRadius: 22, overflow: "hidden" }}>
 
         {/* Header */}
         <div style={{ padding: "1.25rem 1.5rem", borderBottom: `1px solid ${border}` }}>

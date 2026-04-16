@@ -17,8 +17,6 @@ export default function EmojiPicker({ onSelect, onClose }: Props) {
   const { isDark } = useApp();
   const ref = useRef<HTMLDivElement>(null);
 
-  const bg = isDark ? "#1e293b" : "white";
-  const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
 
@@ -31,10 +29,9 @@ export default function EmojiPicker({ onSelect, onClose }: Props) {
   }, [onClose]);
 
   return (
-    <div ref={ref} style={{
+    <div ref={ref} className="glass" style={{
       position: "absolute", bottom: "calc(100% + 8px)", left: 0,
-      background: bg, border: `1px solid ${border}`, borderRadius: 12,
-      boxShadow: "0 8px 32px rgba(0,0,0,0.2)", zIndex: 100,
+      borderRadius: 12, zIndex: 100,
       width: 320, maxHeight: 300, overflowY: "auto",
     }}>
       {Object.entries(EMOJIS).map(([category, emojis]) => (

@@ -60,7 +60,7 @@ export default function WeatherPage() {
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Current */}
-      <div className="glass-hero" style={{ background: "rgba(14,165,233,0.50)", borderRadius: 16, padding: "2rem", marginBottom: "1.25rem", textAlign: "center" }}>
+      <div className="glass-hero" style={{ background: "rgba(14,165,233,0.50)", borderRadius: 22,  padding: "2rem", marginBottom: "1.25rem", textAlign: "center" }}>
         <div style={{ fontSize: "0.9rem", opacity: 0.85, marginBottom: "0.5rem" }}>📍 강진군, 전라남도</div>
         <div style={{ fontSize: "5rem", lineHeight: 1, marginBottom: "0.5rem" }}>{emoji}</div>
         <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>{curr.temp_C}°C</div>
@@ -72,7 +72,7 @@ export default function WeatherPage() {
       </div>
 
       {/* 3-day forecast */}
-      <div className="glass" style={{ borderRadius: 12, padding: "1rem", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 18, padding: "1rem", marginBottom: "1rem" }}>
         <div style={{ fontWeight: 700, color: textCol, marginBottom: "0.85rem", fontSize: "0.95rem" }}>📅 {t(lang, "weather_3day")}</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
           {data.weather.map((day, i) => {

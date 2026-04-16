@@ -26,7 +26,6 @@ export default function GifPicker({ onSelect, onClose }: Props) {
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const bg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
@@ -69,10 +68,10 @@ export default function GifPicker({ onSelect, onClose }: Props) {
   return (
     <div
       ref={containerRef}
+      className="glass"
       style={{
         position: "absolute", bottom: "calc(100% + 8px)", left: 0, right: 0,
-        background: bg, border: `1px solid ${border}`, borderRadius: 12,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.2)", zIndex: 100, overflow: "hidden",
+        borderRadius: 12, zIndex: 100, overflow: "hidden",
       }}
     >
       <div style={{ padding: "0.6rem" }}>

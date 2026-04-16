@@ -143,7 +143,7 @@ function AnnouncementsPreview({ isDark, text, text2, lang, setActivePage }: { is
   }, []);
   if (items.length === 0) return null;
   return (
-    <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1.5rem" }}>
+    <div className="glass" style={{ borderRadius: 18, padding: "1.25rem", marginBottom: "1.5rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
         <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>📢 {t(lang, "latest_announcements")}</h3>
         <button onClick={() => setActivePage("announcements")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>{t(lang, "see_all")}</button>
@@ -172,7 +172,7 @@ export default function HomePage() {
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Banner */}
-      <div className="glass-hero" style={{ background: "rgba(37,99,235,0.55)", borderRadius: 16, padding: "2rem", marginBottom: "1.5rem" }}>
+      <div className="glass-hero" style={{ background: "rgba(37,99,235,0.55)", borderRadius: 22,  padding: "2rem", marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div style={{ flex: 1, minWidth: 220 }}>
             <h1 style={{ fontSize: "1.4rem", fontWeight: 900, marginBottom: "0.25rem" }}>전남미래국제고등학교</h1>
@@ -199,7 +199,7 @@ export default function HomePage() {
       </div>
 
       {/* Multi-engine search bar */}
-      <div className="glass" style={{ borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.5rem" }}>
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem", marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.85rem" }}>
           <span style={{ fontSize: "1.1rem" }}>🔍</span>
           <h3 style={{ fontSize: "1rem", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", margin: 0 }}>{t(lang, "multi_search_title")}</h3>
@@ -237,7 +237,7 @@ export default function HomePage() {
       {/* Info section */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
         {/* School info */}
-        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
+        <div className="glass" style={{ borderRadius: 18, padding: "1.25rem" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "1rem", fontSize: "1rem" }}>
             🏫 {t(lang, "school_info")}
           </h3>
@@ -258,7 +258,7 @@ export default function HomePage() {
         </div>
 
         {/* Student info */}
-        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
+        <div className="glass" style={{ borderRadius: 18, padding: "1.25rem" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "1rem", fontSize: "1rem" }}>
             👤 {t(lang, "student_info")}
           </h3>
@@ -283,7 +283,7 @@ export default function HomePage() {
         </div>
 
         {/* Creator */}
-        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
+        <div className="glass" style={{ borderRadius: 18, padding: "1.25rem" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "1rem", fontSize: "1rem" }}>
             💻 {t(lang, "creator")}
           </h3>

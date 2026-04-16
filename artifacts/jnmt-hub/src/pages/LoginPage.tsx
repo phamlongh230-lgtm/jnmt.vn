@@ -22,8 +22,6 @@ export default function LoginPage() {
   const [regLoading, setRegLoading] = useState(false);
   const [regDone, setRegDone] = useState(false);
 
-  const bg = isDark ? "#0f172a" : "#f1f5f9";
-  const cardBg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -86,7 +84,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "1.5rem 1rem" }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "1.5rem 1rem" }}>
       {/* Logo / Branding */}
       <div style={{ marginBottom: "1.75rem", textAlign: "center" }}>
         <div style={{ fontSize: "3rem", marginBottom: "0.25rem" }}>🏫</div>
@@ -95,7 +93,7 @@ export default function LoginPage() {
       </div>
 
       {/* Card */}
-      <div style={{ width: "100%", maxWidth: 420, background: cardBg, border: `1px solid ${border}`, borderRadius: 16, overflow: "hidden", boxShadow: isDark ? "0 4px 32px rgba(0,0,0,0.4)" : "0 4px 24px rgba(0,0,0,0.08)" }}>
+      <div className="glass" style={{ width: "100%", maxWidth: 420, borderRadius: 22, overflow: "hidden" }}>
         {/* Tabs */}
         <div style={{ display: "flex", borderBottom: `1px solid ${border}` }}>
           {(["login", "register"] as const).map((tabKey) => (

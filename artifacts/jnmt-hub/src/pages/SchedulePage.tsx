@@ -94,7 +94,7 @@ export default function SchedulePage() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Today's schedule */}
-      <div className="glass" style={{ borderRadius: 16, padding: "1.5rem", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 22, padding: "1.5rem", marginBottom: "1rem" }}>
         <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#2563eb", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
           📅 {t(lang, "schedule")}
         </h2>
@@ -158,13 +158,13 @@ export default function SchedulePage() {
       </div>
 
       {/* Full week */}
-      <div className="glass" style={{ borderRadius: 16, padding: "1.5rem" }}>
+      <div className="glass" style={{ borderRadius: 22, padding: "1.5rem" }}>
         <h3 style={{ fontWeight: 700, color: textCol, marginBottom: "1rem", fontSize: "1rem" }}>
           📆 {t(lang, "full_week_schedule")}
         </h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: "1rem" }}>
           {SCHEDULE_DATA.map((day, di) => (
-            <div key={day.dayKey} className="glass" style={{ borderRadius: 12, overflow: "hidden" }}>
+            <div key={day.dayKey} className="glass" style={{ borderRadius: 18, overflow: "hidden" }}>
               <div style={{
                 background: di === todayIdx ? "#2563eb" : isDark ? "#334155" : "#f1f5f9",
                 padding: "0.65rem 0.9rem",

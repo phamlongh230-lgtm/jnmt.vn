@@ -110,7 +110,7 @@ export default function CurrencyPage() {
 
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div className="glass-hero" style={{ background: "rgba(16,185,129,0.50)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.25rem" }}>
+      <div className="glass-hero" style={{ background: "rgba(16,185,129,0.50)", borderRadius: 22,  padding: "1.5rem", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>💱 {t(lang, "currency")}</h1>
         <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>
           {loading ? t(lang, "loading_rates") : date ? `${t(lang, "exchange_rate_label")} ${date} · ${t(lang, "currency_hint")}` : t(lang, "currency_hint")}
@@ -123,7 +123,7 @@ export default function CurrencyPage() {
         </div>
       )}
 
-      <div className="glass" style={{ borderRadius: 16, padding: "1.25rem", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem", marginBottom: "1rem" }}>
         <div style={{ marginBottom: "0.6rem" }}>
           <div style={{ fontSize: "0.72rem", color: text2, fontWeight: 700, marginBottom: "0.35rem", textTransform: "uppercase", letterSpacing: 0.5 }}>{t(lang, "from_currency")}</div>
           <div style={{ display: "flex", gap: "0.6rem" }}>
@@ -172,7 +172,7 @@ export default function CurrencyPage() {
         </div>
       </div>
 
-      <div className="glass" style={{ borderRadius: 12, overflow: "hidden" }}>
+      <div className="glass" style={{ borderRadius: 18, overflow: "hidden" }}>
         <div style={{ padding: "0.7rem 1rem", borderBottom: `1px solid ${border}`, fontSize: "0.8rem", color: text2, fontWeight: 700 }}>
           {fromInfo.flag} {t(lang, "all_rates_vs")} {fromCode}
         </div>

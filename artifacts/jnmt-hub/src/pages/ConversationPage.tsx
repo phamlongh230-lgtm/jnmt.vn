@@ -59,7 +59,6 @@ export default function ConversationPage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
 
   const hasSpeechRecognition = !!(
@@ -151,7 +150,7 @@ export default function ConversationPage() {
       </div>
 
       {!connected ? (
-        <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem" }}>
+        <div className="glass" style={{ borderRadius: 22, padding: "1.5rem" }}>
           <div style={{ display: "flex", gap: 8, marginBottom: "1.25rem" }}>
             {(["create", "join"] as const).map(m => (
               <button key={m} onClick={() => setMode(m)} style={{
@@ -188,7 +187,7 @@ export default function ConversationPage() {
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1rem 1.25rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div className="glass" style={{ borderRadius: 22, padding: "1rem 1.25rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
               <span style={{ color: "#10b981", fontWeight: 700, fontSize: "0.9rem" }}>● Phòng: {roomId}</span>
               <p style={{ color: text2, fontSize: "0.8rem", margin: "2px 0 0" }}>{status}</p>
@@ -196,7 +195,7 @@ export default function ConversationPage() {
             <button onClick={disconnect} style={{ padding: "0.5rem 1rem", background: "#ef4444", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>{t(lang, "disconnect")}</button>
           </div>
 
-          <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem", minHeight: 280, maxHeight: 400, overflowY: "auto" }}>
+          <div className="glass" style={{ borderRadius: 22, padding: "1.25rem", minHeight: 280, maxHeight: 400, overflowY: "auto" }}>
             {messages.length === 0 ? (
               <div style={{ textAlign: "center", color: text2, paddingTop: 60 }}>
                 <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>🎤</div>

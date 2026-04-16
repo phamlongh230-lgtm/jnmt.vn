@@ -128,7 +128,7 @@ export default function VocabPage() {
       <p style={{ color: text2, fontSize: "0.9rem", marginBottom: "1rem" }}>{items.length} {t(lang, "saved_words_count")}</p>
 
       {showAdd && (
-        <div className="glass" style={{ borderRadius: 16, padding: "1.25rem", marginBottom: "1rem" }}>
+        <div className="glass" style={{ borderRadius: 22, padding: "1.25rem", marginBottom: "1rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <input value={word} onChange={e => setWord(e.target.value)} placeholder={t(lang, "vocab_word_ph")} style={{ padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 10, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none" }} />
             <input value={meaning} onChange={e => setMeaning(e.target.value)} placeholder={t(lang, "vocab_meaning_ph")} style={{ padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 10, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none" }} />

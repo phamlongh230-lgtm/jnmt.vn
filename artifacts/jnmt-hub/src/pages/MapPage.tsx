@@ -6,11 +6,9 @@ export default function MapPage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
-
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, overflow: "hidden" }}>
+      <div className="glass" style={{ borderRadius: 22, overflow: "hidden" }}>
         <div style={{ padding: "1.25rem 1.5rem", borderBottom: `1px solid ${border}` }}>
           <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#2563eb", display: "flex", alignItems: "center", gap: "0.5rem" }}>
             🗺️ {t(lang, "map")}

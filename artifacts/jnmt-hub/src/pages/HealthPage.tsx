@@ -82,7 +82,7 @@ export default function HealthPage() {
         </div>
 
         {selected && (
-          <div className="glass" style={{ borderRadius: 16, padding: 16, marginBottom: 20, border: `2px solid ${accent}` }}>
+          <div className="glass" style={{ borderRadius: 22, padding: 16, marginBottom: 20, border: `2px solid ${accent}` }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
               <span style={{ fontSize: 32 }}>{selected.emoji}</span>
               <h3 style={{ color: text, fontSize: 18, fontWeight: 700, margin: 0 }}>
@@ -108,7 +108,7 @@ export default function HealthPage() {
           </div>
         )}
 
-        <div className="glass" style={{ borderRadius: 16, padding: 16 }}>
+        <div className="glass" style={{ borderRadius: 22, padding: 16 }}>
           <p style={{ color: text, fontSize: 15, fontWeight: 700, margin: "0 0 12px" }}>
             {showKo ? "긴급 연락처" : t(lang, "emergency_numbers")}
           </p>

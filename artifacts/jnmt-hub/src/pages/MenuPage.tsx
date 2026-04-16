@@ -64,14 +64,14 @@ export default function MenuPage() {
           ))}
         </div>
 
-        <div className="glass" style={{ borderRadius: 16, padding: 24 }}>
+        <div className="glass" style={{ borderRadius: 22, padding: 24 }}>
           <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>{selectedDay} - {t(lang, MEAL_KEY[meal])}</p>
           <p style={{ color: text, fontSize: 20, fontWeight: 700, lineHeight: 1.5, margin: 0 }}>
             {MENU_DATA[selectedDay][meal]}
           </p>
         </div>
 
-        <div className="glass" style={{ marginTop: 16, borderRadius: 16, padding: 16 }}>
+        <div className="glass" style={{ marginTop: 16, borderRadius: 22, padding: 16 }}>
           <p style={{ color: text, fontSize: 14, fontWeight: 700, marginBottom: 12 }}>{t(lang, "weekly_menu_all")} — {t(lang, MEAL_KEY[meal])}</p>
           {DAYS.map(d => (
             <div key={d} style={{ padding: "10px 0", borderBottom: `1px solid ${border}`, display: "flex", gap: 12, alignItems: "center" }}>

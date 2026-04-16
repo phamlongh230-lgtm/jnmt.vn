@@ -201,7 +201,6 @@ export default function ChatPage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
 
   const { data: messages, isLoading } = useGetMessages(
@@ -372,7 +371,7 @@ export default function ChatPage() {
         .gif-btn:hover, .emoji-btn:hover { background: ${isDark ? "#334155" : "#e2e8f0"} !important; }
       `}</style>
 
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", position: "relative" }}>
+      <div className="glass" style={{ borderRadius: 22, display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", position: "relative" }}>
         {/* Header */}
         <div style={{ padding: "0.85rem 1.25rem", borderBottom: `1px solid ${border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
           <div>

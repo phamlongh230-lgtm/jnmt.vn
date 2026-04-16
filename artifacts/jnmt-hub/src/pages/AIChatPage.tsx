@@ -58,7 +58,6 @@ export default function AIChatPage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
 
   useEffect(() => {
@@ -123,7 +122,7 @@ export default function AIChatPage() {
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "1rem", height: "calc(100vh - 80px)", display: "flex", flexDirection: "column" }}>
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #7c3aed, #2563eb)", borderRadius: "16px 16px 0 0", padding: "1rem 1.25rem", color: "white", display: "flex", alignItems: "center", gap: "0.75rem" }}>
+      <div className="glass-hero" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.80), rgba(37,99,235,0.75))", borderRadius: "16px 16px 0 0", padding: "1rem 1.25rem", color: "white", display: "flex", alignItems: "center", gap: "0.75rem" }}>
         <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", flexShrink: 0 }}>
           🤖
         </div>
@@ -145,7 +144,7 @@ export default function AIChatPage() {
       </div>
 
       {/* Messages */}
-      <div style={{ flex: 1, overflowY: "auto", background: cardBg, border: `1px solid ${border}`, borderTop: "none", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+      <div className="glass" style={{ flex: 1, overflowY: "auto", borderTop: "none", borderRadius: 0, padding: "1rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
 
         {/* Welcome */}
         {messages.length === 0 && (
@@ -226,7 +225,7 @@ export default function AIChatPage() {
       </div>
 
       {/* Input */}
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderTop: "none", borderRadius: "0 0 16px 16px", padding: "0.75rem", display: "flex", gap: "0.6rem", alignItems: "flex-end" }}>
+      <div className="glass" style={{ borderTop: "none", borderRadius: "0 0 16px 16px", padding: "0.75rem", display: "flex", gap: "0.6rem", alignItems: "flex-end" }}>
         <textarea
           ref={inputRef}
           value={input}

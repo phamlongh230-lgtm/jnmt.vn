@@ -108,7 +108,7 @@ export default function LinksPage() {
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
 
       {/* Header */}
-      <div className="glass-hero" style={{ background: "rgba(37,99,235,0.50)", borderRadius: 16, padding: "1.75rem 1.5rem", marginBottom: "1.25rem" }}>
+      <div className="glass-hero" style={{ background: "rgba(37,99,235,0.50)", borderRadius: 22,  padding: "1.75rem 1.5rem", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.5rem", fontWeight: 900, margin: "0 0 0.3rem" }}>🔗 {t(lang, "links_title")}</h1>
         <p style={{ margin: 0, opacity: 0.9, fontSize: "0.88rem" }}>{t(lang, "links_subtitle")}</p>
       </div>

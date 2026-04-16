@@ -55,12 +55,12 @@ function PageLoader() {
 }
 
 function AppContent() {
-  const { activePage, isDark, currentUser } = useApp();
+  const { activePage, currentUser } = useApp();
 
   if (!currentUser) return <LoginPage />;
 
   return (
-    <div style={{ minHeight: "100vh", background: isDark ? "#0f172a" : "#f8fafc", color: "var(--text)" }}>
+    <div style={{ minHeight: "100vh", color: "var(--text)" }}>
       <Navbar />
       <main style={{ paddingBottom: "env(safe-area-inset-bottom)" }} className="main-content">
         <style>{`@media (max-width: 639px) { .main-content { padding-bottom: 64px !important; } }`}</style>

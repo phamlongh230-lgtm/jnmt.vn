@@ -135,7 +135,6 @@ export default function Navbar() {
   const isToolPage = TOOLS.some((tool) => tool.page === activePage);
   const support = SUPPORT_INFO[lang] || SUPPORT_INFO.vi;
 
-  const bg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -149,48 +148,70 @@ export default function Navbar() {
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <button
               onClick={() => setSidebarOpen(true)}
-              style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "white", width: 36, height: 36, borderRadius: 8, cursor: "pointer", fontSize: "1.1rem", display: "flex", alignItems: "center", justifyContent: "center" }}
+              style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", width: 36, height: 36, borderRadius: 12, cursor: "pointer", fontSize: "1.1rem", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)", transition: "background 0.15s" }}
               title={support.title}
             >
               ☰
             </button>
             <a href="#" onClick={(e) => { e.preventDefault(); setActivePage("home"); }}
               style={{ color: "white", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <img src="/favicon.svg" alt="JNMT.kr" width={36} height={36} style={{ borderRadius: 9, boxShadow: "0 1px 6px rgba(0,0,0,0.3)", flexShrink: 0 }} />
+              <img src="/favicon.svg" alt="JNMT.kr" width={34} height={34} style={{ borderRadius: 10, boxShadow: "0 2px 8px rgba(0,0,0,0.35)", flexShrink: 0 }} />
               <div>
-                <div style={{ fontWeight: 900, fontSize: "1.05rem", lineHeight: 1 }}>JNMT.kr</div>
-                <div style={{ fontSize: "0.62rem", opacity: 0.85, lineHeight: 1.3 }}>학생</div>
+                <div style={{ fontWeight: 900, fontSize: "1.05rem", lineHeight: 1, letterSpacing: -0.3 }}>JNMT.kr</div>
+                <div style={{ fontSize: "0.62rem", opacity: 0.80, lineHeight: 1.3 }}>학생</div>
               </div>
             </a>
           </div>
 
-          {/* Nav links */}
-          <nav style={{ display: "flex", gap: 0, flexWrap: "wrap" }}>
-            {navItems.map((item) => (
-              <a key={item.page} href={`#${item.page}`}
-                onClick={(e) => { e.preventDefault(); setActivePage(item.page); setToolsOpen(false); if (item.page === "chat") resetChatUnread(); }}
-                style={{ color: "white", textDecoration: "none", padding: "0.6rem 0.85rem", fontWeight: 500, fontSize: "0.9rem", borderBottom: activePage === item.page ? "3px solid white" : "3px solid transparent", transition: "border-color 0.2s", display: "flex", alignItems: "center", gap: "0.35rem", position: "relative" }}>
-                <span>{item.icon}</span>
-                <span>{t(lang, item.key)}</span>
-                {item.page === "chat" && chatUnread > 0 && (
-                  <span style={{ position: "absolute", top: 6, right: 2, background: "#ef4444", color: "white", borderRadius: "50%", width: 18, height: 18, fontSize: "0.65rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>
-                    {chatUnread > 9 ? "9+" : chatUnread}
-                  </span>
-                )}
-              </a>
-            ))}
+          {/* Nav links — iOS pill style on active */}
+          <nav style={{ display: "flex", gap: "0.15rem", flexWrap: "wrap", alignItems: "center" }}>
+            {navItems.map((item) => {
+              const isActive = activePage === item.page;
+              return (
+                <a key={item.page} href={`#${item.page}`}
+                  onClick={(e) => { e.preventDefault(); setActivePage(item.page); setToolsOpen(false); if (item.page === "chat") resetChatUnread(); }}
+                  style={{
+                    color: "white", textDecoration: "none",
+                    padding: "0.45rem 0.85rem",
+                    fontWeight: isActive ? 700 : 500, fontSize: "0.88rem",
+                    borderRadius: 100,
+                    background: isActive ? "rgba(255,255,255,0.22)" : "transparent",
+                    border: isActive ? "1px solid rgba(255,255,255,0.35)" : "1px solid transparent",
+                    boxShadow: isActive ? "inset 0 1px 0 rgba(255,255,255,0.45)" : "none",
+                    transition: "background 0.15s, border-color 0.15s",
+                    display: "flex", alignItems: "center", gap: "0.35rem", position: "relative",
+                  }}>
+                  <span>{item.icon}</span>
+                  <span>{t(lang, item.key)}</span>
+                  {item.page === "chat" && chatUnread > 0 && (
+                    <span style={{ position: "absolute", top: -2, right: -2, background: "#ef4444", color: "white", borderRadius: "50%", width: 17, height: 17, fontSize: "0.6rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>
+                      {chatUnread > 9 ? "9+" : chatUnread}
+                    </span>
+                  )}
+                </a>
+              );
+            })}
 
             {/* Tools dropdown */}
             <div style={{ position: "relative" }}>
               <button onClick={() => setToolsOpen((p) => !p)}
-                style={{ color: "white", background: "none", border: "none", padding: "0.6rem 0.85rem", fontWeight: 500, fontSize: "0.9rem", borderBottom: isToolPage ? "3px solid white" : "3px solid transparent", display: "flex", alignItems: "center", gap: "0.35rem", cursor: "pointer", height: "100%" }}>
+                style={{
+                  color: "white", cursor: "pointer",
+                  padding: "0.45rem 0.85rem",
+                  fontWeight: isToolPage ? 700 : 500, fontSize: "0.88rem",
+                  borderRadius: 100,
+                  background: isToolPage ? "rgba(255,255,255,0.22)" : "transparent",
+                  border: isToolPage ? "1px solid rgba(255,255,255,0.35)" : "1px solid transparent",
+                  boxShadow: isToolPage ? "inset 0 1px 0 rgba(255,255,255,0.45)" : "none",
+                  display: "flex", alignItems: "center", gap: "0.35rem",
+                }}>
                 <span>🛠️</span>
                 <span>{t(lang, "tools")} ▾</span>
               </button>
               {toolsOpen && (
                 <>
                   <div onClick={() => { setToolsOpen(false); setToolSearch(""); }} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
-                  <div className="glass-panel" style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, borderRadius: 16, minWidth: 240, maxHeight: "80vh", overflowY: "auto", zIndex: 200 }}>
+                  <div className="glass-panel" style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, borderRadius: 20, minWidth: 244, maxHeight: "80vh", overflowY: "auto", zIndex: 200 }}>
                     {/* Search box */}
                     <div style={{ padding: "0.6rem 0.75rem", borderBottom: `1px solid ${border}`, position: "sticky", top: 0, background: "transparent", backdropFilter: "none", zIndex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: isDark ? "#0f172a" : "#f1f5f9", borderRadius: 8, padding: "0.4rem 0.65rem" }}>
@@ -241,27 +262,27 @@ export default function Navbar() {
           </nav>
 
           {/* Right: theme, lang, user */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
             <button onClick={toggleDark}
-              style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", color: "white", padding: "0.4rem 0.65rem", borderRadius: 8, cursor: "pointer", fontSize: "1rem" }}
+              style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", padding: "0.4rem 0.6rem", borderRadius: 100, cursor: "pointer", fontSize: "1rem", backdropFilter: "blur(10px)" }}
               title={t(lang, "dark_mode")}>
               {isDark ? "☀️" : "🌙"}
             </button>
             <select value={lang} onChange={(e) => setLang(e.target.value as LangCode)}
-              style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", color: "white", padding: "0.4rem 0.5rem", borderRadius: 8, cursor: "pointer", fontSize: "0.85rem" }}>
+              style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", padding: "0.4rem 0.5rem", borderRadius: 100, cursor: "pointer", fontSize: "0.85rem" }}>
               {LANGUAGES.map((l) => (
                 <option key={l.code} value={l.code} style={{ background: "#1d4ed8", color: "white" }}>{l.flag} {l.name}</option>
               ))}
             </select>
             <div style={{ position: "relative" }}>
               <button onClick={() => setUserMenuOpen((p) => !p)}
-                style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", color: "white", padding: "0.4rem 0.65rem", borderRadius: 8, cursor: "pointer", fontSize: "1rem" }}>
+                style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", padding: "0.4rem 0.6rem", borderRadius: 100, cursor: "pointer", fontSize: "1rem", backdropFilter: "blur(10px)" }}>
                 {currentUser ? currentUser.username.charAt(0).toUpperCase() : "👤"}
               </button>
               {userMenuOpen && (
                 <>
                   <div onClick={() => setUserMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
-                  <div className="glass-panel" style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, borderRadius: 16, minWidth: 220, zIndex: 200 }}>
+                  <div className="glass-panel" style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, borderRadius: 20, minWidth: 224, zIndex: 200 }}>
                     {currentUser ? (
                       <>
                         <div style={{ padding: "0.75rem 1rem", borderBottom: `1px solid ${border}` }}>
@@ -327,7 +348,7 @@ export default function Navbar() {
             style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 300, backdropFilter: "blur(2px)" }} />
 
           {/* Panel */}
-          <div className="glass-panel" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 310, borderRadius: "0 20px 20px 0", zIndex: 400, boxShadow: "4px 0 40px rgba(0,0,0,0.25)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
+          <div className="glass-panel" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 310, borderRadius: "0 28px 28px 0", zIndex: 400, boxShadow: "8px 0 60px rgba(0,0,0,0.22)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
 
             {/* Header */}
             <div style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.85), rgba(124,58,237,0.80))", backdropFilter: "blur(10px)", color: "white", padding: "1.5rem 1.25rem 1.25rem", borderRadius: "0 20px 0 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
@@ -454,11 +475,12 @@ export default function Navbar() {
               if (item.page === "tools") { setToolsOpen((v) => !v); }
               else if (item.page === "user") { setUserMenuOpen((v) => !v); }
               else { setActivePage(item.page); if (item.page === "chat") resetChatUnread(); }
-            }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.1rem", padding: "0.25rem 0.6rem", position: "relative", minWidth: 52 }}>
-              <span style={{ fontSize: "1.3rem" }}>{item.icon}</span>
-              <span style={{ fontSize: "0.6rem", color: isActive ? "#2563eb" : text2, fontWeight: isActive ? 700 : 400 }}>{t(lang, item.labelKey)}</span>
-              {isActive && <span style={{ position: "absolute", top: -1, left: "50%", transform: "translateX(-50%)", width: 24, height: 3, background: "#2563eb", borderRadius: 2 }} />}
-              {item.badge > 0 && <span style={{ position: "absolute", top: 2, right: 8, background: "#ef4444", color: "white", borderRadius: "50%", width: 16, height: 16, fontSize: "0.55rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.badge > 9 ? "9+" : item.badge}</span>}
+            }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.15rem", padding: "0.3rem 0.6rem", position: "relative", minWidth: 52, borderRadius: 12 }}>
+              {/* iOS pill highlight behind active item */}
+              {isActive && <span style={{ position: "absolute", inset: "0.15rem 0.2rem", borderRadius: 10, background: isDark ? "rgba(37,99,235,0.22)" : "rgba(37,99,235,0.12)", border: "1px solid rgba(37,99,235,0.20)" }} />}
+              <span style={{ fontSize: "1.25rem", position: "relative" }}>{item.icon}</span>
+              <span style={{ fontSize: "0.58rem", color: isActive ? "#2563eb" : text2, fontWeight: isActive ? 700 : 400, position: "relative" }}>{t(lang, item.labelKey)}</span>
+              {item.badge > 0 && <span style={{ position: "absolute", top: 2, right: 6, background: "#ef4444", color: "white", borderRadius: "50%", width: 16, height: 16, fontSize: "0.55rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.badge > 9 ? "9+" : item.badge}</span>}
             </button>
           );
         })}

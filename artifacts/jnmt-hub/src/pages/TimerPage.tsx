@@ -112,7 +112,7 @@ export default function TimerPage() {
         </div>
       </div>
 
-      <div className="glass" style={{ borderRadius: 16, padding: "1.25rem" }}>
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem" }}>
         <p style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 1rem" }}>⚙️ {t(lang, "customize_time")}</p>
         <div style={{ display: "flex", gap: "0.75rem", marginBottom: "0.75rem" }}>
           <div style={{ flex: 1 }}>

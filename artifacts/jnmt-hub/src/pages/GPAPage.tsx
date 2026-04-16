@@ -52,14 +52,14 @@ export default function GPAPage() {
 
   return (
     <div style={{ maxWidth: 650, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div className="glass-hero" style={{ background: "rgba(124,58,237,0.50)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.25rem" }}>
+      <div className="glass-hero" style={{ background: "rgba(124,58,237,0.50)", borderRadius: 22,  padding: "1.5rem", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📊 {t(lang, "gpa")}</h1>
         <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>{t(lang, "gpa_subtitle")}</p>
       </div>
 
       {/* Result */}
       {validSubjects.length > 0 && (
-        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+        <div className="glass" style={{ borderRadius: 18, padding: "1.25rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "3rem", fontWeight: 900, color: avgGrade.color, lineHeight: 1 }}>{avg.toFixed(1)}</div>
             <div style={{ fontSize: "0.8rem", color: text2 }}>Điểm TB</div>
@@ -82,7 +82,7 @@ export default function GPAPage() {
       )}
 
       {/* Subjects */}
-      <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 18, padding: "1.25rem", marginBottom: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
           {subjects.map((s) => {
             const score = parseFloat(s.score);
@@ -104,7 +104,7 @@ export default function GPAPage() {
       </div>
 
       {/* Grade scale */}
-      <div className="glass" style={{ borderRadius: 12, padding: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 18, padding: "1rem" }}>
         <div style={{ fontSize: "0.8rem", fontWeight: 700, color: textCol, marginBottom: "0.6rem" }}>{t(lang, "korean_grade_scale")}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
           {gradeScale.map((g) => (
