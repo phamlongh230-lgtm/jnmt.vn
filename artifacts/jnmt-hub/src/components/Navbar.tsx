@@ -429,7 +429,7 @@ export default function Navbar() {
 
             {/* Version */}
             <div style={{ marginTop: "auto", padding: "1rem 1.25rem", borderTop: `1px solid ${border}`, fontSize: "0.72rem", color: text2, textAlign: "center" }}>
-              {support.version} 1.3.0 · JNMT.kr · 2026
+              {support.version} 1.5.0 · JNMT.kr · 2026
             </div>
           </div>
         </>
