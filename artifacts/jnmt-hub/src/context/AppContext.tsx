@@ -36,7 +36,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return stored === "vi";
   });
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem("jnmt_theme") === "dark";
+    const saved = localStorage.getItem("jnmt_theme");
+    if (saved) return saved === "dark";
+    // Auto: dark 20:00–06:59, light otherwise
+    const h = new Date().getHours();
+    return h >= 20 || h < 7;
   });
   const [currentUser, setCurrentUser] = useState<User | null>(() => getStoredUser());
   const [token, setTokenState] = useState<string | null>(() => getToken());
