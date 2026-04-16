@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 // Korean grade scale (수행평가 / 지필평가)
 const gradeScale = [
@@ -26,7 +27,7 @@ interface Subject {
 }
 
 export default function GPAPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [subjects, setSubjects] = useState<Subject[]>([
     { id: 1, name: "수학", score: "", credit: "3" },
     { id: 2, name: "영어", score: "", credit: "3" },
@@ -99,13 +100,13 @@ export default function GPAPage() {
           })}
         </div>
         <button onClick={addSubject} style={{ marginTop: "0.75rem", padding: "0.55rem 1rem", background: "transparent", border: `1px dashed ${border}`, borderRadius: 8, color: text2, cursor: "pointer", fontSize: "0.85rem", width: "100%" }}>
-          + Thêm môn học
+          {t(lang, "add_subject_btn")}
         </button>
       </div>
 
       {/* Grade scale */}
       <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1rem" }}>
-        <div style={{ fontSize: "0.8rem", fontWeight: 700, color: textCol, marginBottom: "0.6rem" }}>Thang điểm Hàn Quốc</div>
+        <div style={{ fontSize: "0.8rem", fontWeight: 700, color: textCol, marginBottom: "0.6rem" }}>{t(lang, "korean_grade_scale")}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
           {gradeScale.map((g) => (
             <div key={g.grade} style={{ background: g.color + "20", border: `1px solid ${g.color}40`, borderRadius: 6, padding: "0.3rem 0.6rem", fontSize: "0.75rem", color: g.color, fontWeight: 700 }}>

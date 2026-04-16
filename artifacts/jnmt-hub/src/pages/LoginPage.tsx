@@ -1,9 +1,10 @@
 import { useState, FormEvent } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 import { setToken, setStoredUser, User } from "@/lib/auth";
 
 export default function LoginPage() {
-  const { login, isDark } = useApp();
+  const { login, isDark, lang } = useApp();
   const [tab, setTab] = useState<"login" | "register">("login");
 
   // Login state
@@ -51,12 +52,12 @@ export default function LoginPage() {
         body: JSON.stringify({ email: loginEmail, password: loginPw }),
       });
       const d = await r.json();
-      if (!r.ok) { setLoginErr(d.error || "Đăng nhập thất bại!"); return; }
+      if (!r.ok) { setLoginErr(d.error || t(lang, "error_login_failed")); return; }
       setToken(d.token);
       setStoredUser(d.user as User);
       login(d.user as User, d.token);
     } catch {
-      setLoginErr("Không kết nối được server!");
+      setLoginErr(t(lang, "error_server"));
     } finally {
       setLoginLoading(false);
     }
@@ -65,8 +66,8 @@ export default function LoginPage() {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     setRegErr("");
-    if (regPw !== regPw2) { setRegErr("Mật khẩu xác nhận không khớp!"); return; }
-    if (regPw.length < 6) { setRegErr("Mật khẩu phải có ít nhất 6 ký tự!"); return; }
+    if (regPw !== regPw2) { setRegErr(t(lang, "error_password_mismatch")); return; }
+    if (regPw.length < 6) { setRegErr(t(lang, "error_password_short")); return; }
     setRegLoading(true);
     try {
       const r = await fetch("/api/auth/register", {
@@ -75,10 +76,10 @@ export default function LoginPage() {
         body: JSON.stringify({ username: regUsername, email: regEmail, password: regPw }),
       });
       const d = await r.json();
-      if (!r.ok) { setRegErr(d.error || "Đăng ký thất bại!"); return; }
+      if (!r.ok) { setRegErr(d.error || t(lang, "error_login_failed")); return; }
       setRegDone(true);
     } catch {
-      setRegErr("Không kết nối được server!");
+      setRegErr(t(lang, "error_server"));
     } finally {
       setRegLoading(false);
     }
@@ -97,10 +98,10 @@ export default function LoginPage() {
       <div style={{ width: "100%", maxWidth: 420, background: cardBg, border: `1px solid ${border}`, borderRadius: 16, overflow: "hidden", boxShadow: isDark ? "0 4px 32px rgba(0,0,0,0.4)" : "0 4px 24px rgba(0,0,0,0.08)" }}>
         {/* Tabs */}
         <div style={{ display: "flex", borderBottom: `1px solid ${border}` }}>
-          {(["login", "register"] as const).map((t) => (
-            <button key={t} onClick={() => { setTab(t); setLoginErr(""); setRegErr(""); setRegDone(false); }}
-              style={{ flex: 1, padding: "0.85rem", background: "none", border: "none", cursor: "pointer", fontWeight: tab === t ? 700 : 400, fontSize: "0.9rem", color: tab === t ? "#2563eb" : text2, borderBottom: tab === t ? "2px solid #2563eb" : "2px solid transparent", transition: "all 0.15s" }}>
-              {t === "login" ? "🔑 Đăng nhập" : "📝 Đăng ký"}
+          {(["login", "register"] as const).map((tabKey) => (
+            <button key={tabKey} onClick={() => { setTab(tabKey); setLoginErr(""); setRegErr(""); setRegDone(false); }}
+              style={{ flex: 1, padding: "0.85rem", background: "none", border: "none", cursor: "pointer", fontWeight: tab === tabKey ? 700 : 400, fontSize: "0.9rem", color: tab === tabKey ? "#2563eb" : text2, borderBottom: tab === tabKey ? "2px solid #2563eb" : "2px solid transparent", transition: "all 0.15s" }}>
+              {tabKey === "login" ? t(lang, "tab_login") : t(lang, "tab_register")}
             </button>
           ))}
         </div>
@@ -109,17 +110,17 @@ export default function LoginPage() {
           {tab === "login" && (
             <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>Email</label>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "email")}</label>
                 <input type="email" required value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} placeholder="email@example.com" style={inputStyle} autoComplete="email" />
               </div>
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>Mật khẩu</label>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "password")}</label>
                 <input type="password" required value={loginPw} onChange={(e) => setLoginPw(e.target.value)} placeholder="••••••••" style={inputStyle} autoComplete="current-password" />
               </div>
               {loginErr && <div style={{ background: isDark ? "#450a0a" : "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "0.6rem 0.85rem", fontSize: "0.85rem", color: "#ef4444" }}>{loginErr}</div>}
               <button type="submit" disabled={loginLoading}
                 style={{ width: "100%", padding: "0.8rem", background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)", color: "white", border: "none", borderRadius: 10, fontWeight: 700, fontSize: "0.95rem", cursor: loginLoading ? "not-allowed" : "pointer", opacity: loginLoading ? 0.7 : 1 }}>
-                {loginLoading ? "Đang đăng nhập..." : "Đăng nhập →"}
+                {loginLoading ? t(lang, "logging_in") : t(lang, "login_btn")}
               </button>
             </form>
           )}
@@ -127,25 +128,25 @@ export default function LoginPage() {
           {tab === "register" && !regDone && (
             <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>Tên hiển thị</label>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "display_name")}</label>
                 <input type="text" required value={regUsername} onChange={(e) => setRegUsername(e.target.value)} placeholder="Nguyễn Văn A" style={inputStyle} autoComplete="username" minLength={2} maxLength={40} />
               </div>
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>Email</label>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "email")}</label>
                 <input type="email" required value={regEmail} onChange={(e) => setRegEmail(e.target.value)} placeholder="email@example.com" style={inputStyle} autoComplete="email" />
               </div>
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>Mật khẩu</label>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "password")}</label>
                 <input type="password" required value={regPw} onChange={(e) => setRegPw(e.target.value)} placeholder="••••••••" style={inputStyle} autoComplete="new-password" minLength={6} />
               </div>
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>Xác nhận mật khẩu</label>
+                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "confirm_password")}</label>
                 <input type="password" required value={regPw2} onChange={(e) => setRegPw2(e.target.value)} placeholder="••••••••" style={inputStyle} autoComplete="new-password" />
               </div>
               {regErr && <div style={{ background: isDark ? "#450a0a" : "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "0.6rem 0.85rem", fontSize: "0.85rem", color: "#ef4444" }}>{regErr}</div>}
               <button type="submit" disabled={regLoading}
                 style={{ width: "100%", padding: "0.8rem", background: "linear-gradient(135deg, #16a34a 0%, #15803d 100%)", color: "white", border: "none", borderRadius: 10, fontWeight: 700, fontSize: "0.95rem", cursor: regLoading ? "not-allowed" : "pointer", opacity: regLoading ? 0.7 : 1 }}>
-                {regLoading ? "Đang đăng ký..." : "Tạo tài khoản →"}
+                {regLoading ? t(lang, "registering") : t(lang, "create_account_btn")}
               </button>
             </form>
           )}
@@ -153,11 +154,11 @@ export default function LoginPage() {
           {tab === "register" && regDone && (
             <div style={{ textAlign: "center", padding: "1.5rem 0" }}>
               <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>✅</div>
-              <div style={{ fontWeight: 700, color: "#16a34a", marginBottom: "0.5rem" }}>Đăng ký thành công!</div>
-              <div style={{ fontSize: "0.85rem", color: text2, marginBottom: "1.25rem" }}>Tài khoản đã được tạo. Bạn có thể đăng nhập ngay bây giờ.</div>
+              <div style={{ fontWeight: 700, color: "#16a34a", marginBottom: "0.5rem" }}>{t(lang, "register_success_title")}</div>
+              <div style={{ fontSize: "0.85rem", color: text2, marginBottom: "1.25rem" }}>{t(lang, "register_success_desc")}</div>
               <button onClick={() => { setTab("login"); setLoginEmail(regEmail); setRegDone(false); }}
                 style={{ padding: "0.7rem 1.5rem", background: "#2563eb", color: "white", border: "none", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontSize: "0.9rem" }}>
-                Đăng nhập ngay
+                {t(lang, "login_now_btn")}
               </button>
             </div>
           )}

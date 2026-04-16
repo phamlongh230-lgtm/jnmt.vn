@@ -35,7 +35,7 @@ const Clock = memo(function Clock({ lang }: { lang: LangCode }) {
   );
 });
 
-function WeatherWidget() {
+function WeatherWidget({ lang }: { lang: LangCode }) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -90,7 +90,7 @@ function WeatherWidget() {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem" }}>
         <div className="spinner" style={{ borderColor: "rgba(255,255,255,0.3)", borderTopColor: "white" }} />
-        <span style={{ opacity: 0.85, fontSize: "0.9rem" }}>Đang tải thời tiết...</span>
+        <span style={{ opacity: 0.85, fontSize: "0.9rem" }}>{t(lang, "loading_weather")}</span>
       </div>
     );
   }
@@ -98,7 +98,7 @@ function WeatherWidget() {
   if (error || !weather) {
     return (
       <div style={{ padding: "0.75rem", opacity: 0.8, fontSize: "0.9rem" }}>
-        ☁️ Không thể tải thời tiết
+        ☁️ {t(lang, "weather_error")}
       </div>
     );
   }
@@ -194,7 +194,7 @@ export default function HomePage() {
             <div style={{ fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.5rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>
               {t(lang, "weather")} 🌡️
             </div>
-            <WeatherWidget />
+            <WeatherWidget lang={lang} />
           </div>
         </div>
       </div>

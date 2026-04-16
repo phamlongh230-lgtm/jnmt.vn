@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 const PRESETS = [
   { label: "Link trường", value: "https://jnmt.kr" },
@@ -8,7 +9,7 @@ const PRESETS = [
 ];
 
 export default function QRCodePage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [text, setText] = useState("https://jnmt.kr");
   const [size, setSize] = useState(250);
 
@@ -39,22 +40,22 @@ export default function QRCodePage() {
         {/* Left: inputs */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem" }}>
-            <label style={{ display: "block", fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.4rem" }}>Nội dung QR</label>
+            <label style={{ display: "block", fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.4rem" }}>{t(lang, "qr_content_label")}</label>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={3}
               style={{ width: "100%", padding: "0.7rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.9rem", resize: "vertical", outline: "none", boxSizing: "border-box" }}
-              placeholder="Nhập link, text, số điện thoại..."
+              placeholder={t(lang, "qr_input_ph")}
             />
             <div style={{ marginTop: "0.75rem" }}>
-              <label style={{ display: "block", fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.4rem" }}>Kích thước: {size}×{size}px</label>
+              <label style={{ display: "block", fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.4rem" }}>{t(lang, "qr_size_label")}: {size}×{size}px</label>
               <input type="range" min={100} max={500} step={50} value={size} onChange={(e) => setSize(Number(e.target.value))} style={{ width: "100%" }} />
             </div>
           </div>
 
           <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1rem" }}>
-            <div style={{ fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.6rem" }}>Mẫu nhanh</div>
+            <div style={{ fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.6rem" }}>{t(lang, "quick_presets")}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               {PRESETS.map((p) => (
                 <button key={p.label} onClick={() => setText(p.value)}
@@ -75,12 +76,12 @@ export default function QRCodePage() {
               </div>
               <button onClick={download}
                 style={{ padding: "0.6rem 1.25rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: "0.85rem" }}>
-                ⬇️ Tải xuống
+                ⬇️ {t(lang, "download")}
               </button>
             </>
           ) : (
             <div style={{ width: 200, height: 200, background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 12, border: `1px dashed ${border}`, display: "flex", alignItems: "center", justifyContent: "center", color: text2, fontSize: "0.85rem" }}>
-              Nhập nội dung
+              {t(lang, "qr_placeholder")}
             </div>
           )}
         </div>

@@ -102,7 +102,7 @@ export default function AIChatPage() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "❌ Lỗi kết nối. Thử lại nhé!", time: "" },
+        { role: "assistant", content: t(lang, "ai_error_connection"), time: "" },
       ]);
     } finally {
       setLoading(false);
@@ -232,14 +232,7 @@ export default function AIChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={
-            lang === "ko" ? "메시지를 입력하세요... (Enter로 전송)" :
-            lang === "en" ? "Type a message... (Enter to send)" :
-            lang === "mn" ? "Зурвас бичнэ үү... (Enter дарж илгээнэ)" :
-            lang === "kk" ? "Хабарлама жазыңыз... (Enter басу)" :
-            lang === "ru" ? "Введите сообщение... (Enter для отправки)" :
-            "Nhập tin nhắn... (Enter để gửi)"
-          }
+          placeholder={t(lang, "ai_message_ph")}
           rows={1}
           style={{ flex: 1, border: `1px solid ${border}`, borderRadius: 10, padding: "0.65rem 0.85rem", background: inputBg, color: textCol, fontSize: "0.9rem", resize: "none", outline: "none", fontFamily: "inherit", maxHeight: 120, overflowY: "auto" }}
           disabled={loading}

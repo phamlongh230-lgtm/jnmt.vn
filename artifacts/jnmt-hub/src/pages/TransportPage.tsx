@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 interface Route {
   id: string;
@@ -66,7 +67,7 @@ const ROUTES: Route[] = [
 ];
 
 export default function TransportPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [expanded, setExpanded] = useState<string | null>("1");
 
   const bg = isDark ? "#1a1a2e" : "#f0f4ff";
@@ -79,7 +80,7 @@ export default function TransportPage() {
   return (
     <div style={{ minHeight: "100vh", background: bg, padding: "20px 16px 80px" }}>
       <div style={{ maxWidth: 480, margin: "0 auto" }}>
-        <h2 style={{ color: text, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>🚌 Thông tin giao thông</h2>
+        <h2 style={{ color: text, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>🚌 {t(lang, "transport_title")}</h2>
         <p style={{ color: sub, fontSize: 13, marginBottom: 20 }}>Gangjin-gun, Jeollanam-do</p>
 
         {ROUTES.map(route => (
@@ -115,7 +116,7 @@ export default function TransportPage() {
         ))}
 
         <div style={{ background: card, borderRadius: 14, padding: 16, marginTop: 4, boxShadow: "0 2px 6px rgba(0,0,0,0.06)" }}>
-          <p style={{ color: text, fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Thông tin hữu ích</p>
+          <p style={{ color: text, fontSize: 14, fontWeight: 700, marginBottom: 10 }}>{t(lang, "useful_info")}</p>
           <p style={{ color: sub, fontSize: 13, lineHeight: 1.7, margin: 0 }}>
             • Tra giờ xe: <strong style={{ color: text }}>naver.com/map</strong> hoặc <strong style={{ color: text }}>kakaomap.com</strong><br/>
             • Mua vé: Tại bến xe hoặc trên xe<br/>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 const WORDS = [
   { ko: "안녕하세요", ro: "An-nyeong-ha-se-yo", vi: "Xin chào", en: "Hello", mn: "Сайн уу", category: "인사" },
@@ -113,7 +114,7 @@ export default function KoreanWordPage() {
         ))}
       </div>
       {filtered.length === 0 && (
-        <div style={{ textAlign: "center", color: text2, padding: "2rem" }}>Không tìm thấy từ nào</div>
+        <div style={{ textAlign: "center", color: text2, padding: "2rem" }}>{t(lang, "no_words_found")}</div>
       )}
     </div>
   );

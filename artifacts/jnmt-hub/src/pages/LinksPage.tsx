@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 interface LinkItem {
   name: string;
@@ -60,7 +61,7 @@ const LINK_GROUPS: { label: string; labelKo: string; icon: string; links: LinkIt
 const ALL_LINKS = LINK_GROUPS.flatMap((g) => g.links);
 
 export default function LinksPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [search, setSearch] = useState("");
 
   const cardBg  = isDark ? "#1e293b" : "white";
@@ -130,7 +131,7 @@ export default function LinksPage() {
           {filteredAll.length === 0 ? (
             <div style={{ textAlign: "center", padding: "3rem", color: text2 }}>
               <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔍</div>
-              <div>Không tìm thấy kết quả cho "<strong>{search}</strong>"</div>
+              <div>{t(lang, "no_results_for")} "<strong>{search}</strong>"</div>
             </div>
           ) : (
             <>

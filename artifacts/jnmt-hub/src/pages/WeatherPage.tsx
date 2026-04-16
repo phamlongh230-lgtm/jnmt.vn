@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 interface WttrDay {
   date: string;
@@ -28,7 +29,7 @@ function getEmoji(desc: string) {
 const DAY_VI = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
 export default function WeatherPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [data, setData] = useState<WttrData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -43,17 +44,17 @@ export default function WeatherPage() {
     fetch("https://wttr.in/Gangjin,Korea?format=j1")
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
-      .catch(() => { setError("Không thể tải thời tiết!"); setLoading(false); });
+      .catch(() => { setError(t(lang, "weather_error")); setLoading(false); });
   }, []);
 
   if (loading) return (
     <div style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem", textAlign: "center", color: text2 }}>
-      <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🌤️</div>Đang tải thời tiết...
+      <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🌤️</div>{t(lang, "loading_weather")}
     </div>
   );
 
   if (error || !data) return (
-    <div style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem", textAlign: "center", color: "#ef4444" }}>{error || "Lỗi tải dữ liệu"}</div>
+    <div style={{ maxWidth: 700, margin: "2rem auto", padding: "0 1rem", textAlign: "center", color: "#ef4444" }}>{error || t(lang, "weather_error")}</div>
   );
 
   const curr = data.current_condition[0];

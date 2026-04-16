@@ -32,12 +32,12 @@ export default function DictionaryPage() {
       if (!res.ok) throw new Error(data.error || "Lỗi");
       setResult(data.translatedText);
     } catch {
-      setError("Lỗi dịch thuật. Thử lại!");
+      setError(t(lang, "error_translation"));
       setResult("");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [lang]);
 
   // Tự động dịch sau 600ms ngừng gõ
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function DictionaryPage() {
             📖 {t(lang, "dictionary")}
           </h2>
           <p style={{ color: text2, fontSize: "0.82rem", margin: "0.25rem 0 0" }}>
-            Dịch tự động • 6 ngôn ngữ
+            {t(lang, "dict_subtitle")}
           </p>
         </div>
 
@@ -99,11 +99,11 @@ export default function DictionaryPage() {
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Nhập văn bản để dịch..."
+              placeholder={t(lang, "translate_input_ph")}
               style={{ flex: 1, border: "none", outline: "none", resize: "none", background: "transparent", color: textCol, fontSize: "1rem", padding: "1rem", fontFamily: "inherit", lineHeight: 1.6 }}
             />
             <div style={{ padding: "0.4rem 1rem", fontSize: "0.72rem", color: text2, borderTop: `1px solid ${border}` }}>
-              {text.length} ký tự
+              {text.length} {t(lang, "chars_suffix")}
             </div>
           </div>
 
@@ -112,7 +112,7 @@ export default function DictionaryPage() {
             <div style={{ padding: "0.5rem 1rem", borderBottom: `1px solid ${border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontSize: "0.78rem", color: text2, fontWeight: 600 }}>{getLangFlag(targetLang)} {getLangName(targetLang)}</span>
               {result && (
-                <button onClick={() => navigator.clipboard.writeText(result)} title="Sao chép"
+                <button onClick={() => navigator.clipboard.writeText(result)} title={t(lang, "copy_btn")}
                   style={{ background: "none", border: "none", cursor: "pointer", color: "#2563eb", fontSize: "0.85rem" }}>📋</button>
               )}
             </div>
@@ -120,7 +120,7 @@ export default function DictionaryPage() {
               {loading && (
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: text2, fontSize: "0.9rem" }}>
                   <div style={{ width: 16, height: 16, border: "2px solid #e2e8f0", borderTopColor: "#2563eb", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                  Đang dịch...
+                  {t(lang, "translating")}
                 </div>
               )}
               {error && !loading && <div style={{ color: "#ef4444", fontSize: "0.9rem" }}>❌ {error}</div>}
@@ -128,7 +128,7 @@ export default function DictionaryPage() {
                 <div style={{ color: "#10b981", fontSize: "1rem", fontWeight: 600, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{result}</div>
               )}
               {!text && !loading && !result && (
-                <div style={{ color: text2, fontSize: "0.9rem", textAlign: "center", width: "100%", marginTop: "1rem" }}>🌍 Kết quả dịch sẽ hiện ở đây</div>
+                <div style={{ color: text2, fontSize: "0.9rem", textAlign: "center", width: "100%", marginTop: "1rem" }}>🌍 {t(lang, "translation_empty")}</div>
               )}
             </div>
           </div>

@@ -227,7 +227,7 @@ export default function ChatPage() {
       },
       onError: (err: unknown) => {
         const e = err as { data?: { error?: string } };
-        setError(e?.data?.error || "Không thể gửi tin nhắn!");
+        setError(e?.data?.error || t(lang, "error_send_message"));
       },
     },
   });
@@ -293,9 +293,9 @@ export default function ChatPage() {
         method: "DELETE",
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      showToast("Đã xóa tin nhắn!", "success");
+      showToast(t(lang, "deleted_ok"), "success");
     } catch {
-      showToast("Không thể xóa tin nhắn!", "error");
+      showToast(t(lang, "error_delete_message"), "error");
     } finally {
       setDeletingId(null);
     }
@@ -311,14 +311,14 @@ export default function ChatPage() {
         body: JSON.stringify({ content: text }),
       });
       if (r.ok) {
-        showToast("Đã sửa!", "success");
+        showToast(t(lang, "edited_ok"), "success");
         setEditingId(null);
       } else {
         const e = await r.json();
-        showToast(e.error || "Không thể sửa!", "error");
+        showToast(e.error || t(lang, "error_edit_message"), "error");
       }
     } catch {
-      showToast("Lỗi kết nối!", "error");
+      showToast(t(lang, "connection_error"), "error");
     }
   };
 
@@ -552,7 +552,7 @@ export default function ChatPage() {
                       style={{ fontSize: "0.68rem", color: text2, marginTop: "0.12rem", textAlign: isOwn ? "right" : "left", cursor: "default" }}
                     >
                       {formatTime(msg.createdAt)}
-                      {msg.editedAt && <span style={{ marginLeft: "0.3rem", opacity: 0.7 }}>(đã sửa)</span>}
+                      {msg.editedAt && <span style={{ marginLeft: "0.3rem", opacity: 0.7 }}>({t(lang, "edited_label")})</span>}
                     </div>
                   </div>
                 </div>
@@ -563,13 +563,13 @@ export default function ChatPage() {
               {search ? (
                 <>
                   <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>🔍</div>
-                  <p>Không tìm thấy tin nhắn nào</p>
+                  <p>{t(lang, "no_messages_found")}</p>
                 </>
               ) : (
                 <>
                   <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>💬</div>
-                  <p style={{ fontWeight: 600 }}>Chưa có tin nhắn nào</p>
-                  <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>Hãy là người đầu tiên nhắn!</p>
+                  <p style={{ fontWeight: 600 }}>{t(lang, "no_messages_yet")}</p>
+                  <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>{t(lang, "be_first_to_chat")}</p>
                 </>
               )}
             </div>

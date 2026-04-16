@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
-import { LANGUAGES } from "@/lib/i18n";
+import { t, LANGUAGES } from "@/lib/i18n";
 
 interface SubtitleMsg {
   type: "transcript";
@@ -10,7 +10,7 @@ interface SubtitleMsg {
 }
 
 export default function SubtitlePage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [roomId, setRoomId] = useState("");
   const [targetLang, setTargetLang] = useState("vi");
   const [connected, setConnected] = useState(false);
@@ -30,18 +30,18 @@ export default function SubtitlePage() {
   }, [subtitles]);
 
   function connect() {
-    if (!roomId.trim()) { setStatus("Vui lòng nhập mã phòng"); return; }
+    if (!roomId.trim()) { setStatus(t(lang, "enter_room_code")); return; }
     const wsUrl = window.location.origin.replace(/^https/, "wss").replace(/^http/, "ws") + "/ws/room/" + roomId.toUpperCase();
     const ws = new WebSocket(wsUrl);
-    ws.onopen = () => { setConnected(true); setStatus("Đã kết nối. Chờ giáo viên..."); };
+    ws.onopen = () => { setConnected(true); setStatus(t(lang, "connected_waiting_teacher")); };
     ws.onmessage = (e) => {
       try {
         const msg = JSON.parse(e.data) as SubtitleMsg;
         if (msg.type === "transcript") setSubtitles(prev => [...prev.slice(-50), msg]);
       } catch {}
     };
-    ws.onclose = () => { setConnected(false); setStatus("Đã ngắt kết nối"); };
-    ws.onerror = () => setStatus("Lỗi kết nối");
+    ws.onclose = () => { setConnected(false); setStatus(t(lang, "disconnected_msg")); };
+    ws.onerror = () => setStatus(t(lang, "connection_error"));
     wsRef.current = ws;
   }
 
@@ -56,16 +56,16 @@ export default function SubtitlePage() {
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       <div style={{ marginBottom: "1.5rem" }}>
         <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#2563eb", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          📝 Phụ đề bài giảng
+          📝 {t(lang, "subtitle_title")}
         </h2>
-        <p style={{ color: text2, fontSize: "0.9rem", marginTop: "0.25rem" }}>Nhận phụ đề real-time từ giáo viên qua WebSocket</p>
+        <p style={{ color: text2, fontSize: "0.9rem", marginTop: "0.25rem" }}>{t(lang, "subtitle_desc")}</p>
       </div>
 
       {!connected ? (
         <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem" }}>
           <div style={{ marginBottom: "1rem" }}>
             <label style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, display: "block", marginBottom: "0.5rem" }}>
-              Mã phòng (6 ký tự)
+              {t(lang, "room_code")}
             </label>
             <input
               value={roomId}
@@ -81,7 +81,7 @@ export default function SubtitlePage() {
           </div>
           <div style={{ marginBottom: "1.25rem" }}>
             <label style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, display: "block", marginBottom: "0.5rem" }}>
-              Ngôn ngữ dịch
+              {t(lang, "select_lang")}
             </label>
             <select
               value={targetLang}
@@ -96,7 +96,7 @@ export default function SubtitlePage() {
             onClick={connect}
             style={{ width: "100%", padding: "0.85rem", background: "#2563eb", color: "white", border: "none", borderRadius: 10, fontSize: "1rem", fontWeight: 700, cursor: "pointer" }}
           >
-            🔌 Kết nối
+            🔌 {t(lang, "connect")}
           </button>
         </div>
       ) : (
@@ -110,7 +110,7 @@ export default function SubtitlePage() {
               onClick={disconnect}
               style={{ padding: "0.5rem 1rem", background: "#ef4444", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
             >
-              Rời phòng
+              {t(lang, "disconnect")}
             </button>
           </div>
 
@@ -118,13 +118,13 @@ export default function SubtitlePage() {
             {subtitles.length === 0 ? (
               <div style={{ textAlign: "center", color: text2, paddingTop: 60 }}>
                 <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>👂</div>
-                <p style={{ fontWeight: 600 }}>Đang chờ phụ đề...</p>
-                <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>Giáo viên sẽ phát âm thanh từ thiết bị của họ</p>
+                <p style={{ fontWeight: 600 }}>{t(lang, "waiting_subtitle")}</p>
+                <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>{t(lang, "teacher_speaking_hint")}</p>
               </div>
             ) : (
               subtitles.map((s, i) => (
                 <div key={i} style={{ marginBottom: "1rem", borderBottom: `1px solid ${border}`, paddingBottom: "0.85rem" }}>
-                  <p style={{ color: text2, fontSize: "0.78rem", margin: "0 0 4px", fontWeight: 600 }}>Giáo viên:</p>
+                  <p style={{ color: text2, fontSize: "0.78rem", margin: "0 0 4px", fontWeight: 600 }}>{t(lang, "teacher_label")}:</p>
                   <p style={{ color: textCol, fontSize: "0.95rem", margin: "0 0 6px", fontStyle: "italic" }}>{s.original}</p>
                   <p style={{ color: "#2563eb", fontSize: "1.05rem", fontWeight: 700, margin: 0 }}>{s.translated}</p>
                 </div>

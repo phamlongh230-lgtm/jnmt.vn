@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
-import { LANGUAGES } from "@/lib/i18n";
+import { t, LANGUAGES } from "@/lib/i18n";
 
 interface ChatMsg {
   id: string;
@@ -44,7 +44,7 @@ function generateRoomCode() {
 }
 
 export default function ConversationPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [roomId, setRoomId] = useState("");
   const [myLang, setMyLang] = useState("vi");
   const [connected, setConnected] = useState(false);
@@ -86,7 +86,7 @@ export default function ConversationPage() {
   function connect(room: string) {
     const wsUrl = window.location.origin.replace(/^https/, "wss").replace(/^http/, "ws") + "/ws/room/" + room;
     const ws = new WebSocket(wsUrl);
-    ws.onopen = () => { setConnected(true); setStatus("Đã kết nối. Chờ người kia vào phòng..."); };
+    ws.onopen = () => { setConnected(true); setStatus(t(lang, "waiting_partner")); };
     ws.onmessage = async (e: MessageEvent) => {
       try {
         const msg = JSON.parse(e.data) as { type: string; original: string; fromLang: string; id: string; timestamp: number };
@@ -101,13 +101,13 @@ export default function ConversationPage() {
         }
       } catch {}
     };
-    ws.onclose = () => { setConnected(false); setStatus("Đã ngắt kết nối"); };
-    ws.onerror = () => setStatus("Lỗi kết nối");
+    ws.onclose = () => { setConnected(false); setStatus(t(lang, "disconnected_msg")); };
+    ws.onerror = () => setStatus(t(lang, "connection_error"));
     wsRef.current = ws;
   }
 
   function handleCreate() { const code = generateRoomCode(); setRoomId(code); connect(code); }
-  function handleJoin() { if (!roomId.trim()) { setStatus("Nhập mã phòng"); return; } connect(roomId.toUpperCase()); }
+  function handleJoin() { if (!roomId.trim()) { setStatus(t(lang, "enter_room_code")); return; } connect(roomId.toUpperCase()); }
 
   function disconnect() {
     recognitionRef.current?.stop();
@@ -135,7 +135,7 @@ export default function ConversationPage() {
     recognition.interimResults = false;
     recognition.onresult = (e: SpeechRecognitionEvent) => sendText(e.results[0][0].transcript);
     recognition.onend = () => setListening(false);
-    recognition.onerror = () => { setListening(false); setStatus("Lỗi nhận giọng nói"); };
+    recognition.onerror = () => { setListening(false); setStatus(t(lang, "speech_error")); };
     recognition.start();
     recognitionRef.current = recognition;
     setListening(true);
@@ -159,13 +159,13 @@ export default function ConversationPage() {
                 border: `2px solid ${mode === m ? "#2563eb" : border}`,
                 background: mode === m ? "#2563eb" : "transparent", color: mode === m ? "white" : textCol,
               }}>
-                {m === "create" ? "Tạo phòng" : "Vào phòng"}
+                {m === "create" ? t(lang, "create_room_btn") : t(lang, "join_room_btn")}
               </button>
             ))}
           </div>
 
           <div style={{ marginBottom: "1rem" }}>
-            <label style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, display: "block", marginBottom: "0.5rem" }}>Ngôn ngữ của bạn</label>
+            <label style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, display: "block", marginBottom: "0.5rem" }}>{t(lang, "your_lang")}</label>
             <select value={myLang} onChange={e => setMyLang(e.target.value)}
               style={{ width: "100%", padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 10, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none", boxSizing: "border-box" }}>
               {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.flag} {l.name}</option>)}
@@ -174,7 +174,7 @@ export default function ConversationPage() {
 
           {mode === "join" && (
             <div style={{ marginBottom: "1rem" }}>
-              <label style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, display: "block", marginBottom: "0.5rem" }}>Mã phòng</label>
+              <label style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, display: "block", marginBottom: "0.5rem" }}>{t(lang, "room_code")}</label>
               <input value={roomId} onChange={e => setRoomId(e.target.value.toUpperCase().slice(0, 6))} placeholder="ABC123" maxLength={6}
                 style={{ width: "100%", padding: "0.75rem 1rem", borderRadius: 10, border: `1.5px solid ${border}`, background: inputBg, color: textCol, fontSize: "1.25rem", fontWeight: 700, letterSpacing: 6, outline: "none", boxSizing: "border-box" }} />
             </div>
@@ -183,7 +183,7 @@ export default function ConversationPage() {
           {status && <p style={{ color: "#ef4444", fontSize: "0.85rem", marginBottom: "0.75rem" }}>{status}</p>}
           <button onClick={mode === "create" ? handleCreate : handleJoin}
             style={{ width: "100%", padding: "0.85rem", background: "#2563eb", color: "white", border: "none", borderRadius: 10, fontSize: "1rem", fontWeight: 700, cursor: "pointer" }}>
-            {mode === "create" ? "🚀 Tạo & Kết nối" : "🔌 Kết nối"}
+            {mode === "create" ? `🚀 ${t(lang, "create_connect_btn")}` : `🔌 ${t(lang, "join_connect_btn")}`}
           </button>
         </div>
       ) : (
@@ -193,14 +193,14 @@ export default function ConversationPage() {
               <span style={{ color: "#10b981", fontWeight: 700, fontSize: "0.9rem" }}>● Phòng: {roomId}</span>
               <p style={{ color: text2, fontSize: "0.8rem", margin: "2px 0 0" }}>{status}</p>
             </div>
-            <button onClick={disconnect} style={{ padding: "0.5rem 1rem", background: "#ef4444", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>Rời phòng</button>
+            <button onClick={disconnect} style={{ padding: "0.5rem 1rem", background: "#ef4444", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}>{t(lang, "disconnect")}</button>
           </div>
 
           <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem", minHeight: 280, maxHeight: 400, overflowY: "auto" }}>
             {messages.length === 0 ? (
               <div style={{ textAlign: "center", color: text2, paddingTop: 60 }}>
                 <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>🎤</div>
-                <p style={{ fontWeight: 600 }}>Nhấn mic để nói chuyện</p>
+                <p style={{ fontWeight: 600 }}>{t(lang, "mic_prompt")}</p>
               </div>
             ) : (
               messages.map(m => (
@@ -217,9 +217,9 @@ export default function ConversationPage() {
 
           <button onClick={toggleListening}
             style={{ width: "100%", padding: "1rem", borderRadius: 12, border: "none", background: listening ? "#ef4444" : "#2563eb", color: "white", fontSize: "1rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-            {listening ? "🔴 Đang nghe... (nhấn để dừng)" : "🎤 Nhấn để nói"}
+            {listening ? `🔴 ${t(lang, "listening_label")}` : `🎤 ${t(lang, "speak_btn")}`}
           </button>
-          {!hasSpeechRecognition && <p style={{ color: "#ef4444", fontSize: "0.82rem", textAlign: "center" }}>Trình duyệt không hỗ trợ nhận giọng nói</p>}
+          {!hasSpeechRecognition && <p style={{ color: "#ef4444", fontSize: "0.82rem", textAlign: "center" }}>{t(lang, "no_speech_support")}</p>}
         </div>
       )}
     </div>

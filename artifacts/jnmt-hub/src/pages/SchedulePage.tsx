@@ -136,7 +136,7 @@ export default function SchedulePage() {
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         {isCurrent && (
                           <span style={{ background: "#2563eb", color: "white", padding: "0.15rem 0.65rem", borderRadius: 20, fontSize: "0.72rem", fontWeight: 700 }}>
-                            🔴 Đang học
+                            🔴 {t(lang, "studying_now")}
                           </span>
                         )}
                         <span style={{ fontWeight: 700, color: cls.c, fontSize: "0.9rem", fontFamily: "monospace" }}>

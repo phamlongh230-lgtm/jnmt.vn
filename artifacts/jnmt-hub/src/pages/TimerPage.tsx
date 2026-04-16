@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 export default function TimerPage() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [studyMin, setStudyMin] = useState(25);
   const [breakMin, setBreakMin] = useState(5);
   const [isStudy, setIsStudy] = useState(true);
@@ -80,7 +81,7 @@ export default function TimerPage() {
           ⏱️ Pomodoro Timer
         </h2>
         <p style={{ color: text2, fontSize: "0.9rem", marginTop: "0.25rem" }}>
-          {isStudy ? "⏰ Thời gian học" : "☕ Thời gian nghỉ"} · Đã hoàn thành: <strong style={{ color: "#2563eb" }}>{rounds}</strong> vòng
+          {isStudy ? t(lang, "study_phase") : t(lang, "break_phase")} · {t(lang, "rounds_completed")}: <strong style={{ color: "#2563eb" }}>{rounds}</strong> {t(lang, "rounds_unit")}
         </p>
       </div>
 
