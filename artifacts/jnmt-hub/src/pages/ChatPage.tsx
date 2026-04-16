@@ -62,8 +62,28 @@ function renderContent(content: string, textCol: string, isDark: boolean) {
   );
 }
 
+const ROOMS = [
+  { id: "general", icon: "💬", key: "room_general" },
+  { id: "study",   icon: "📚", key: "room_study" },
+  { id: "sports",  icon: "⚽", key: "room_sports" },
+  { id: "notice",  icon: "📢", key: "room_notice" },
+];
+
+interface LocalMsg { id: string; username: string; content: string; createdAt: string; avatarColor?: string; }
+
+function loadLocalMsgs(room: string): LocalMsg[] {
+  try { return JSON.parse(localStorage.getItem(`jnmt_chat_${room}`) || "[]"); }
+  catch { return []; }
+}
+function saveLocalMsgs(room: string, msgs: LocalMsg[]) {
+  localStorage.setItem(`jnmt_chat_${room}`, JSON.stringify(msgs.slice(-200)));
+}
+
 export default function ChatPage() {
   const { lang, currentUser, token, isDark, showToast, resetChatUnread, sendWsMessage, onlineUsers } = useApp();
+  const [activeRoom, setActiveRoom] = useState("general");
+  const [localMsgs, setLocalMsgs] = useState<LocalMsg[]>([]);
+  const [localText, setLocalText] = useState("");
   const [messageText, setMessageText] = useState("");
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -86,6 +106,34 @@ export default function ChatPage() {
   const queryClient = useQueryClient();
 
   const isMod = currentUser?.role === "moderator" || currentUser?.role === "admin";
+
+  // Load local messages when switching rooms
+  useEffect(() => {
+    if (activeRoom !== "general") {
+      setLocalMsgs(loadLocalMsgs(activeRoom));
+    }
+  }, [activeRoom]);
+
+  function sendLocalMsg() {
+    if (!localText.trim() || !currentUser) return;
+    const msg: LocalMsg = {
+      id: Date.now().toString(),
+      username: currentUser.username,
+      content: localText.trim(),
+      createdAt: new Date().toISOString(),
+      avatarColor: currentUser.avatarColor,
+    };
+    const updated = [...localMsgs, msg];
+    setLocalMsgs(updated);
+    saveLocalMsgs(activeRoom, updated);
+    setLocalText("");
+  }
+
+  function deleteLocalMsg(id: string) {
+    const updated = localMsgs.filter((m) => m.id !== id);
+    setLocalMsgs(updated);
+    saveLocalMsgs(activeRoom, updated);
+  }
 
   useEffect(() => {
     resetChatUnread();
@@ -390,8 +438,19 @@ export default function ChatPage() {
           </button>
         </div>
 
+        {/* Room tabs */}
+        <div style={{ padding: "0.5rem 1rem", borderBottom: `1px solid ${border}`, display: "flex", gap: "0.35rem", overflowX: "auto" }}>
+          {ROOMS.map((room) => (
+            <button key={room.id} onClick={() => setActiveRoom(room.id)}
+              style={{ padding: "0.4rem 0.85rem", borderRadius: 100, border: "none", cursor: "pointer", fontWeight: activeRoom === room.id ? 700 : 400, fontSize: "0.82rem", whiteSpace: "nowrap", background: activeRoom === room.id ? "#2563eb" : (isDark ? "#334155" : "#f1f5f9"), color: activeRoom === room.id ? "white" : text2, display: "flex", alignItems: "center", gap: "0.3rem", transition: "all 0.15s" }}>
+              <span>{room.icon}</span>
+              <span>{t(lang, room.key)}</span>
+            </button>
+          ))}
+        </div>
+
         {/* Search bar */}
-        {showSearch && (
+        {showSearch && activeRoom === "general" && (
           <div style={{ padding: "0.6rem 1rem", borderBottom: `1px solid ${border}` }}>
             <input
               value={search}
@@ -403,8 +462,78 @@ export default function ChatPage() {
           </div>
         )}
 
+        {/* ── Local room messages (non-general) ── */}
+        {activeRoom !== "general" && (
+          <>
+            <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+              {localMsgs.length === 0 ? (
+                <div style={{ textAlign: "center", color: text2, padding: "3rem" }}>
+                  <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>
+                    {ROOMS.find(r => r.id === activeRoom)?.icon || "💬"}
+                  </div>
+                  <p style={{ fontWeight: 600 }}>{t(lang, "no_messages_yet")}</p>
+                  <p style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>{t(lang, "be_first_to_chat")}</p>
+                </div>
+              ) : (
+                localMsgs.map((msg) => {
+                  const isOwn = currentUser && msg.username === currentUser.username;
+                  const col = msg.avatarColor || "#2563eb";
+                  return (
+                    <div key={msg.id} className="msg-wrap" style={{ display: "flex", flexDirection: isOwn ? "row-reverse" : "row", gap: "0.5rem", alignItems: "flex-end" }}>
+                      {!isOwn && (
+                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: col, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.85rem", flexShrink: 0 }}>
+                          {msg.username.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div style={{ maxWidth: "70%" }}>
+                        {!isOwn && <div style={{ fontSize: "0.72rem", color: text2, marginBottom: "0.2rem", fontWeight: 600 }}>{msg.username}</div>}
+                        <div style={{ position: "relative" }}>
+                          <div style={{ background: isOwn ? "#2563eb" : (isDark ? "#1e293b" : "#f1f5f9"), color: isOwn ? "white" : textCol, padding: "0.6rem 0.9rem", borderRadius: isOwn ? "14px 14px 4px 14px" : "14px 14px 14px 4px", fontSize: "0.92rem", lineHeight: 1.5, wordBreak: "break-word" }}>
+                            {msg.content}
+                          </div>
+                          {(isOwn || isMod) && (
+                            <button onClick={() => deleteLocalMsg(msg.id)} className="delete-btn"
+                              style={{ position: "absolute", top: -4, left: isOwn ? -28 : "auto", right: isOwn ? "auto" : -28, width: 20, height: 20, borderRadius: "50%", background: "#ef4444", border: "none", color: "white", fontSize: "0.6rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: 0, transition: "opacity 0.15s" }}>✕
+                            </button>
+                          )}
+                        </div>
+                        <div style={{ fontSize: "0.68rem", color: text2, marginTop: "0.12rem", textAlign: isOwn ? "right" : "left" }}>
+                          {new Date(msg.createdAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+            {/* Local room input */}
+            <div style={{ padding: "0.85rem 1rem", borderTop: `1px solid ${border}` }}>
+              {!currentUser ? (
+                <div style={{ textAlign: "center", color: text2, padding: "0.75rem", background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 10 }}>
+                  🔑 {t(lang, "must_login_to_chat")}
+                </div>
+              ) : (
+                <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+                  <textarea
+                    value={localText}
+                    onChange={(e) => setLocalText(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendLocalMsg(); } }}
+                    placeholder={t(lang, "message_placeholder")}
+                    rows={1}
+                    style={{ flex: 1, padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 14, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none", resize: "none", fontFamily: "inherit", lineHeight: 1.4 }}
+                  />
+                  <button onClick={sendLocalMsg} disabled={!localText.trim()}
+                    style={{ padding: "0.65rem 1.1rem", background: "#2563eb", color: "white", border: "none", borderRadius: 14, cursor: localText.trim() ? "pointer" : "default", fontSize: "0.9rem", fontWeight: 700, opacity: localText.trim() ? 1 : 0.45, flexShrink: 0 }}>
+                    {t(lang, "send")}
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
         {/* Messages */}
-        <div ref={listRef} onScroll={handleScroll} style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+        {activeRoom === "general" && <div ref={listRef} onScroll={handleScroll} style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
           {isLoading ? (
             <ChatSkeleton />
           ) : filteredMessages && filteredMessages.length > 0 ? (
@@ -589,10 +718,10 @@ export default function ChatPage() {
           )}
 
           <div ref={messagesEndRef} />
-        </div>
+        </div>}
 
         {/* Scroll-to-bottom button */}
-        {showScrollBtn && (
+        {activeRoom === "general" && showScrollBtn && (
           <button
             onClick={scrollToBottom}
             style={{
@@ -608,8 +737,8 @@ export default function ChatPage() {
           >↓</button>
         )}
 
-        {/* Input */}
-        <div style={{ padding: "0.85rem 1rem", borderTop: `1px solid ${border}` }}>
+        {/* Input — general room only */}
+        {activeRoom === "general" && <div style={{ padding: "0.85rem 1rem", borderTop: `1px solid ${border}` }}>
           <style>{`@keyframes typing-dot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }`}</style>
           {!currentUser ? (
             <div style={{ textAlign: "center", color: text2, padding: "0.75rem", background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 10 }}>
@@ -669,7 +798,7 @@ export default function ChatPage() {
               </div>
             </>
           )}
-        </div>
+        </div>}
       </div>
       <div ref={bottomRef} />
     </div>

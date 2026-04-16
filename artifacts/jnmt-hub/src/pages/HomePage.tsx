@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useMemo } from "react";
 import { useApp } from "@/context/AppContext";
 import { t, LangCode } from "@/lib/i18n";
 import MultiSearch from "@/components/MultiSearch";
@@ -172,7 +172,25 @@ function WeatherWidget({ lang }: { lang: LangCode }) {
   );
 }
 
+// ── Types ──────────────────────────────────────────────────
 interface Announcement { id: number; title: string; content: string; authorUsername: string; isPinned: boolean; createdAt: string; }
+interface DdayItem { id: string; name: string; date: string; icon: string; }
+interface NoteItem { id: string; title: string; subject: string; dueDate: string; priority: string; done: boolean; }
+
+function loadDdays(): DdayItem[] {
+  try { return JSON.parse(localStorage.getItem("jnmt_ddays") || "[]"); }
+  catch { return []; }
+}
+function loadPendingNotes(): NoteItem[] {
+  try {
+    const all: NoteItem[] = JSON.parse(localStorage.getItem("jnmt_notes") || "[]");
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    return all
+      .filter((n) => !n.done && n.dueDate)
+      .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+      .slice(0, 4);
+  } catch { return []; }
+}
 
 function AnnouncementsPreview({ isDark, text, text2, lang, setActivePage }: { isDark: boolean; text: string; text2: string; lang: LangCode; setActivePage: (p: string) => void }) {
   const [items, setItems] = useState<Announcement[]>([]);
@@ -202,6 +220,72 @@ function AnnouncementsPreview({ isDark, text, text2, lang, setActivePage }: { is
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function DdayWidget({ lang, isDark, text, text2, border, setActivePage }: { lang: LangCode; isDark: boolean; text: string; text2: string; border: string; setActivePage: (p: string) => void }) {
+  const ddays = useMemo(() => loadDdays(), []);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  if (ddays.length === 0) return null;
+  return (
+    <div className="glass" style={{ borderRadius: 18, padding: "1.25rem", flex: 1, minWidth: 220 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
+        <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: text, margin: 0 }}>📆 {t(lang, "dday_widget_title")}</h3>
+        <button onClick={() => setActivePage("dday")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.78rem", fontWeight: 600 }}>{t(lang, "view_all_dday")}</button>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem" }}>
+        {ddays.slice(0, 4).map((d) => {
+          const dueDate = new Date(d.date + "T00:00:00"); dueDate.setHours(0, 0, 0, 0);
+          const diff = Math.round((dueDate.getTime() - today.getTime()) / 86400000);
+          const color = diff < 0 ? "#ef4444" : diff === 0 ? "#f59e0b" : diff <= 3 ? "#f97316" : "#2563eb";
+          return (
+            <div key={d.id} style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.6rem", background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 8, border: `1px solid ${border}` }}>
+              <span style={{ fontSize: "1.1rem", flexShrink: 0 }}>{d.icon || "📆"}</span>
+              <span style={{ flex: 1, fontSize: "0.82rem", color: text, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.name}</span>
+              <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "white", background: color, padding: "0.1rem 0.5rem", borderRadius: 100, flexShrink: 0 }}>
+                {diff < 0 ? `+${Math.abs(diff)}d` : diff === 0 ? "D-0" : `D-${diff}`}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function HomeworkWidget({ lang, isDark, text, text2, border, setActivePage }: { lang: LangCode; isDark: boolean; text: string; text2: string; border: string; setActivePage: (p: string) => void }) {
+  const notes = useMemo(() => loadPendingNotes(), []);
+  const PRIORITY_COLORS: Record<string, string> = { high: "#ef4444", medium: "#f59e0b", low: "#10b981" };
+
+  return (
+    <div className="glass" style={{ borderRadius: 18, padding: "1.25rem", flex: 1, minWidth: 220 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
+        <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: text, margin: 0 }}>📓 {t(lang, "hw_widget_title")}</h3>
+        <button onClick={() => setActivePage("notes")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.78rem", fontWeight: 600 }}>{t(lang, "view_all_notes")}</button>
+      </div>
+      {notes.length === 0 ? (
+        <div style={{ textAlign: "center", color: text2, padding: "1rem 0", fontSize: "0.85rem" }}>
+          ✅ {t(lang, "no_upcoming_hw")}
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem" }}>
+          {notes.map((n) => {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const due = new Date(n.dueDate + "T00:00:00"); due.setHours(0, 0, 0, 0);
+            const diff = Math.round((due.getTime() - today.getTime()) / 86400000);
+            const dueLabel = diff < 0 ? t(lang, "notes_overdue") : diff === 0 ? t(lang, "notes_due_today") : diff === 1 ? t(lang, "notes_due_tomorrow") : `${diff}d`;
+            const dueColor = diff < 0 ? "#ef4444" : diff === 0 ? "#f59e0b" : diff === 1 ? "#f97316" : "#64748b";
+            return (
+              <div key={n.id} onClick={() => setActivePage("notes")} style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.45rem 0.6rem", background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 8, border: `1px solid ${border}`, borderLeft: `3px solid ${PRIORITY_COLORS[n.priority] || "#64748b"}`, cursor: "pointer" }}>
+                <span style={{ flex: 1, fontSize: "0.82rem", color: text, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{n.title}</span>
+                <span style={{ fontSize: "0.72rem", fontWeight: 700, color: dueColor, flexShrink: 0 }}>{dueLabel}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -320,6 +404,12 @@ export default function HomePage() {
 
       {/* Announcements preview */}
       <AnnouncementsPreview isDark={isDark} text={text} text2={text2} lang={lang} setActivePage={setActivePage} />
+
+      {/* ── Widgets row: D-Day + Homework ── */}
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+        <HomeworkWidget lang={lang} isDark={isDark} text={text} text2={text2} border={border} setActivePage={setActivePage} />
+        <DdayWidget lang={lang} isDark={isDark} text={text} text2={text2} border={border} setActivePage={setActivePage} />
+      </div>
 
       {/* Info section */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useApp } from "@/context/AppContext";
 import { t, LangCode } from "@/lib/i18n";
 
@@ -56,13 +56,70 @@ const DEFAULT_FORM = {
   priority: "medium" as Note["priority"], content: "",
 };
 
+function requestNotifPermission() {
+  if (!("Notification" in window)) return Promise.resolve("denied" as NotificationPermission);
+  return Notification.requestPermission();
+}
+
+function scheduleNotifChecks(notes: Note[], lang: LangCode) {
+  if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+  notes
+    .filter((n) => !n.done && n.dueDate)
+    .forEach((n) => {
+      const due = new Date(n.dueDate + "T00:00:00"); due.setHours(0, 0, 0, 0);
+      const diff = Math.round((due.getTime() - today.getTime()) / 86400000);
+      if (diff === 0 || diff === 1) {
+        const label = diff === 0 ? t(lang, "notes_due_today") : t(lang, "notes_due_tomorrow");
+        new Notification(`📓 ${label}: ${n.title}`, {
+          body: `${t(lang, "notes_subject")}: ${t(lang, n.subject)}`,
+          icon: "/icon-192.png",
+          tag: `note-${n.id}-${diff}`,
+          silent: false,
+        });
+      }
+    });
+}
+
 export default function NotesPage() {
-  const { lang, isDark } = useApp();
+  const { lang, isDark, showToast } = useApp();
   const [notes, setNotes] = useState<Note[]>(loadNotes);
   const [filter, setFilter] = useState<"all" | "pending" | "done">("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Note | null>(null);
   const [form, setForm] = useState({ ...DEFAULT_FORM });
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission>(() =>
+    typeof Notification !== "undefined" ? Notification.permission : "denied"
+  );
+
+  // Check for upcoming due dates on mount
+  useEffect(() => {
+    if (notifPermission === "granted") {
+      scheduleNotifChecks(notes, lang);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const enableNotifications = useCallback(async () => {
+    const perm = await requestNotifPermission();
+    setNotifPermission(perm);
+    if (perm === "granted") {
+      showToast(t(lang, "notif_enabled"), "success");
+      scheduleNotifChecks(notes, lang);
+    } else {
+      showToast(t(lang, "notif_denied"), "error");
+    }
+  }, [lang, notes, showToast]);
+
+  const sendTestNotif = useCallback(() => {
+    if (notifPermission !== "granted") return;
+    new Notification(`📓 ${t(lang, "notif_test")}`, {
+      body: t(lang, "notes_page"),
+      icon: "/icon-192.png",
+    });
+    showToast(t(lang, "notif_test_sent"), "success");
+  }, [lang, notifPermission, showToast]);
 
   const text  = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -145,10 +202,25 @@ export default function NotesPage() {
               </p>
             )}
           </div>
-          <button onClick={openAdd}
-            style={{ background: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.45)", color: "white", padding: "0.6rem 1.4rem", borderRadius: 100, cursor: "pointer", fontWeight: 700, fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "0.4rem", backdropFilter: "blur(8px)" }}>
-            + {t(lang, "notes_add_new")}
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            {typeof Notification !== "undefined" && (
+              notifPermission === "granted" ? (
+                <button onClick={sendTestNotif}
+                  style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.35)", color: "white", padding: "0.5rem 0.9rem", borderRadius: 100, cursor: "pointer", fontWeight: 600, fontSize: "0.8rem", backdropFilter: "blur(8px)" }}>
+                  🔔 {t(lang, "notif_test")}
+                </button>
+              ) : (
+                <button onClick={enableNotifications}
+                  style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.35)", color: "white", padding: "0.5rem 0.9rem", borderRadius: 100, cursor: "pointer", fontWeight: 600, fontSize: "0.8rem", backdropFilter: "blur(8px)" }}>
+                  🔕 {t(lang, "notif_enable")}
+                </button>
+              )
+            )}
+            <button onClick={openAdd}
+              style={{ background: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.45)", color: "white", padding: "0.6rem 1.4rem", borderRadius: 100, cursor: "pointer", fontWeight: 700, fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "0.4rem", backdropFilter: "blur(8px)" }}>
+              + {t(lang, "notes_add_new")}
+            </button>
+          </div>
         </div>
 
         {/* Progress bar */}
