@@ -67,7 +67,6 @@ export default function LinksPage() {
   const { isDark, lang } = useApp();
   const [search, setSearch] = useState("");
 
-  const cardBg  = isDark ? "#1e293b" : "white";
   const border  = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2   = isDark ? "#94a3b8" : "#64748b";
@@ -86,9 +85,10 @@ export default function LinksPage() {
       href={link.url}
       target="_blank"
       rel="noopener noreferrer"
-      style={{ display: "flex", alignItems: "flex-start", gap: "0.85rem", padding: "0.95rem 1rem", background: cardBg, border: `1px solid ${border}`, borderRadius: 12, textDecoration: "none", transition: "box-shadow 0.15s, border-color 0.15s", borderLeft: `4px solid ${link.color}` }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 16px rgba(0,0,0,0.12)"; (e.currentTarget as HTMLElement).style.borderLeftColor = link.color; }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+      className="glass"
+      style={{ display: "flex", alignItems: "flex-start", gap: "0.85rem", padding: "0.95rem 1rem", borderRadius: 12, textDecoration: "none", transition: "opacity 0.15s", borderLeft: `4px solid ${link.color}` }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.85"; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
     >
       <div style={{ width: 42, height: 42, borderRadius: 10, background: link.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", flexShrink: 0 }}>
         {link.icon}
@@ -108,7 +108,7 @@ export default function LinksPage() {
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", borderRadius: 16, padding: "1.75rem 1.5rem", marginBottom: "1.25rem", color: "white" }}>
+      <div className="glass-hero" style={{ background: "rgba(37,99,235,0.50)", borderRadius: 16, padding: "1.75rem 1.5rem", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.5rem", fontWeight: 900, margin: "0 0 0.3rem" }}>🔗 {t(lang, "links_title")}</h1>
         <p style={{ margin: 0, opacity: 0.9, fontSize: "0.88rem" }}>{t(lang, "links_subtitle")}</p>
       </div>

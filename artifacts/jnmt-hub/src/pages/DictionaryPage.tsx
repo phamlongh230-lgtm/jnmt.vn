@@ -15,7 +15,6 @@ export default function DictionaryPage() {
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
   const inputBg = isDark ? "#1e293b" : "#f8fafc";
-  const cardBg = isDark ? "#1e293b" : "white";
 
   const doTranslate = useCallback(async (q: string, sl: string, tl: string) => {
     if (!q.trim()) return;
@@ -58,7 +57,7 @@ export default function DictionaryPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }}>
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+      <div className="glass" style={{ borderRadius: 16, overflow: "hidden" }}>
 
         {/* Header */}
         <div style={{ padding: "1.25rem 1.5rem", borderBottom: `1px solid ${border}` }}>

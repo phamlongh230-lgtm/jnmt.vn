@@ -47,7 +47,6 @@ export default function KoreanWordPage() {
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
   const wordOfDay = WORDS[dayOfYear % WORDS.length];
 
-  const cardBg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -69,7 +68,7 @@ export default function KoreanWordPage() {
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Word of day */}
-      <div style={{ background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem", textAlign: "center" }}>
+      <div className="glass-hero" style={{ background: "rgba(245,158,11,0.55)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.25rem", textAlign: "center" }}>
         <div style={{ fontSize: "0.85rem", opacity: 0.85, marginBottom: "0.5rem" }}>⭐ {t(lang, "word_of_day")}</div>
         <div style={{ fontSize: "2.5rem", fontWeight: 900, marginBottom: "0.25rem" }}>{wordOfDay.ko}</div>
         <div style={{ fontSize: "1rem", opacity: 0.9, marginBottom: "0.25rem" }}>[{wordOfDay.ro}]</div>
@@ -99,7 +98,7 @@ export default function KoreanWordPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "0.75rem" }}>
         {filtered.map((w, i) => (
           <div key={i} onClick={() => setFlipped((prev) => ({ ...prev, [i]: !prev[i] }))}
-            style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1rem", cursor: "pointer", transition: "transform 0.1s", userSelect: "none" }}>
+            className="glass" style={{ borderRadius: 12, padding: "1rem", cursor: "pointer", transition: "transform 0.1s", userSelect: "none" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
               <span style={{ fontSize: "1.5rem", fontWeight: 900, color: textCol }}>{w.ko}</span>
               <span style={{ fontSize: "0.7rem", background: isDark ? "#334155" : "#f1f5f9", padding: "0.2rem 0.5rem", borderRadius: 10, color: text2 }}>#{w.category}</span>

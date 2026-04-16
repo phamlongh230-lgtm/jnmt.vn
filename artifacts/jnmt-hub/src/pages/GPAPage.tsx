@@ -34,7 +34,6 @@ export default function GPAPage() {
     { id: 3, name: "한국어", score: "", credit: "4" },
   ]);
 
-  const cardBg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -53,14 +52,14 @@ export default function GPAPage() {
 
   return (
     <div style={{ maxWidth: 650, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div style={{ background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
+      <div className="glass-hero" style={{ background: "rgba(124,58,237,0.50)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📊 {t(lang, "gpa")}</h1>
         <p style={{ margin: 0, opacity: 0.85, fontSize: "0.85rem" }}>{t(lang, "gpa_subtitle")}</p>
       </div>
 
       {/* Result */}
       {validSubjects.length > 0 && (
-        <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "3rem", fontWeight: 900, color: avgGrade.color, lineHeight: 1 }}>{avg.toFixed(1)}</div>
             <div style={{ fontSize: "0.8rem", color: text2 }}>Điểm TB</div>
@@ -83,7 +82,7 @@ export default function GPAPage() {
       )}
 
       {/* Subjects */}
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
           {subjects.map((s) => {
             const score = parseFloat(s.score);
@@ -105,7 +104,7 @@ export default function GPAPage() {
       </div>
 
       {/* Grade scale */}
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 12, padding: "1rem" }}>
         <div style={{ fontSize: "0.8rem", fontWeight: 700, color: textCol, marginBottom: "0.6rem" }}>{t(lang, "korean_grade_scale")}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
           {gradeScale.map((g) => (

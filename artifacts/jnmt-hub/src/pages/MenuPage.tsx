@@ -28,7 +28,6 @@ export default function MenuPage() {
   const [selectedDay, setSelectedDay] = useState<DayKey>(todayKey);
 
   const bg = isDark ? "#1a1a2e" : "#f0f4ff";
-  const card = isDark ? "#16213e" : "#fff";
   const text = isDark ? "#e0e0e0" : "#333";
   const sub = isDark ? "#888" : "#666";
   const border = isDark ? "#2d2d4e" : "#e0e0e0";
@@ -65,14 +64,14 @@ export default function MenuPage() {
           ))}
         </div>
 
-        <div style={{ background: card, borderRadius: 16, padding: 24, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+        <div className="glass" style={{ borderRadius: 16, padding: 24 }}>
           <p style={{ color: sub, fontSize: 13, marginBottom: 8 }}>{selectedDay} - {t(lang, MEAL_KEY[meal])}</p>
           <p style={{ color: text, fontSize: 20, fontWeight: 700, lineHeight: 1.5, margin: 0 }}>
             {MENU_DATA[selectedDay][meal]}
           </p>
         </div>
 
-        <div style={{ marginTop: 16, background: card, borderRadius: 16, padding: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
+        <div className="glass" style={{ marginTop: 16, borderRadius: 16, padding: 16 }}>
           <p style={{ color: text, fontSize: 14, fontWeight: 700, marginBottom: 12 }}>{t(lang, "weekly_menu_all")} — {t(lang, MEAL_KEY[meal])}</p>
           {DAYS.map(d => (
             <div key={d} style={{ padding: "10px 0", borderBottom: `1px solid ${border}`, display: "flex", gap: 12, alignItems: "center" }}>

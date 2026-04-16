@@ -50,7 +50,6 @@ export default function TimezonePage() {
     return () => clearInterval(id);
   }, []);
 
-  const cardBg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -60,7 +59,7 @@ export default function TimezonePage() {
 
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+      <div className="glass-hero" style={{ background: "rgba(14,165,233,0.50)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
         <div style={{ fontSize: "3rem" }}>{isDayKorea ? "☀️" : "🌙"}</div>
         <div>
           <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>🌍 {t(lang, "timezone_tool")}</h1>
@@ -73,7 +72,7 @@ export default function TimezonePage() {
         {TIMEZONES.map((tz) => {
           const isKorea = tz.id === "Asia/Seoul";
           return (
-            <div key={tz.id} style={{ background: cardBg, border: `1px solid ${isKorea ? "#2563eb" : border}`, borderRadius: 12, padding: "1rem", borderLeft: isKorea ? "4px solid #2563eb" : undefined }}>
+            <div key={tz.id} className="glass" style={{ borderRadius: 12, padding: "1rem", borderLeft: isKorea ? "4px solid #2563eb" : undefined }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <span style={{ fontSize: "1.5rem" }}>{tz.flag}</span>

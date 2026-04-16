@@ -131,7 +131,7 @@ function WeatherWidget({ lang }: { lang: LangCode }) {
 
 interface Announcement { id: number; title: string; content: string; authorUsername: string; isPinned: boolean; createdAt: string; }
 
-function AnnouncementsPreview({ isDark, border, text, text2, lang, setActivePage }: { isDark: boolean; border: string; text: string; text2: string; lang: LangCode; setActivePage: (p: string) => void }) {
+function AnnouncementsPreview({ isDark, text, text2, lang, setActivePage }: { isDark: boolean; text: string; text2: string; lang: LangCode; setActivePage: (p: string) => void }) {
   const [items, setItems] = useState<Announcement[]>([]);
   useEffect(() => {
     const ctrl = new AbortController();
@@ -143,7 +143,7 @@ function AnnouncementsPreview({ isDark, border, text, text2, lang, setActivePage
   }, []);
   if (items.length === 0) return null;
   return (
-    <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem", marginBottom: "1.5rem" }}>
+    <div className="glass" style={{ borderRadius: 12, padding: "1.25rem", marginBottom: "1.5rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.85rem" }}>
         <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#2563eb", margin: 0 }}>📢 {t(lang, "latest_announcements")}</h3>
         <button onClick={() => setActivePage("announcements")} style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}>{t(lang, "see_all")}</button>
@@ -166,14 +166,13 @@ function AnnouncementsPreview({ isDark, border, text, text2, lang, setActivePage
 export default function HomePage() {
   const { lang, setActivePage, currentUser, isDark } = useApp();
   const bg2 = isDark ? "#1e293b" : "#f8fafc";
-  const border = isDark ? "#334155" : "#e2e8f0";
   const text = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Banner */}
-      <div style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #7c3aed 100%)", color: "white", borderRadius: 16, padding: "2rem", marginBottom: "1.5rem", boxShadow: "0 4px 20px rgba(37,99,235,0.3)" }}>
+      <div className="glass-hero" style={{ background: "rgba(37,99,235,0.55)", borderRadius: 16, padding: "2rem", marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div style={{ flex: 1, minWidth: 220 }}>
             <h1 style={{ fontSize: "1.4rem", fontWeight: 900, marginBottom: "0.25rem" }}>전남미래국제고등학교</h1>
@@ -200,7 +199,7 @@ export default function HomePage() {
       </div>
 
       {/* Multi-engine search bar */}
-      <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.5rem", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+      <div className="glass" style={{ borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.85rem" }}>
           <span style={{ fontSize: "1.1rem" }}>🔍</span>
           <h3 style={{ fontSize: "1rem", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", margin: 0 }}>{t(lang, "multi_search_title")}</h3>
@@ -220,9 +219,10 @@ export default function HomePage() {
           <button
             key={card.page}
             onClick={() => setActivePage(card.page)}
-            style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem", cursor: "pointer", textAlign: "center", transition: "transform 0.15s, box-shadow 0.15s", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 20px rgba(0,0,0,0.12)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.06)"; }}
+            className="glass"
+            style={{ borderRadius: 12, padding: "1.25rem", cursor: "pointer", textAlign: "center", transition: "transform 0.15s" }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; }}
           >
             <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>{card.icon}</div>
             <div style={{ fontWeight: 700, color: card.color, fontSize: "0.95rem" }}>{card.label}</div>
@@ -232,12 +232,12 @@ export default function HomePage() {
       </div>
 
       {/* Announcements preview */}
-      <AnnouncementsPreview isDark={isDark} border={border} text={text} text2={text2} lang={lang} setActivePage={setActivePage} />
+      <AnnouncementsPreview isDark={isDark} text={text} text2={text2} lang={lang} setActivePage={setActivePage} />
 
       {/* Info section */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
         {/* School info */}
-        <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem" }}>
+        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "1rem", fontSize: "1rem" }}>
             🏫 {t(lang, "school_info")}
           </h3>
@@ -258,7 +258,7 @@ export default function HomePage() {
         </div>
 
         {/* Student info */}
-        <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem" }}>
+        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "1rem", fontSize: "1rem" }}>
             👤 {t(lang, "student_info")}
           </h3>
@@ -283,7 +283,7 @@ export default function HomePage() {
         </div>
 
         {/* Creator */}
-        <div style={{ background: isDark ? "#1e293b" : "white", border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem" }}>
+        <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#2563eb", fontWeight: 700, marginBottom: "1rem", fontSize: "1rem" }}>
             💻 {t(lang, "creator")}
           </h3>

@@ -17,7 +17,6 @@ export default function TimerPage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
   const trackColor = isDark ? "#334155" : "#e2e8f0";
   const accent = isStudy ? "#2563eb" : "#10b981";
@@ -85,7 +84,7 @@ export default function TimerPage() {
         </p>
       </div>
 
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 20, padding: "2rem 1.5rem", textAlign: "center", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 20, padding: "2rem 1.5rem", textAlign: "center", marginBottom: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem", position: "relative" }}>
           <svg width={220} height={220} style={{ transform: "rotate(-90deg)" }}>
             <circle cx={110} cy={110} r={100} fill="none" stroke={trackColor} strokeWidth={10} />
@@ -113,7 +112,7 @@ export default function TimerPage() {
         </div>
       </div>
 
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem" }}>
+      <div className="glass" style={{ borderRadius: 16, padding: "1.25rem" }}>
         <p style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 1rem" }}>⚙️ {t(lang, "customize_time")}</p>
         <div style={{ display: "flex", gap: "0.75rem", marginBottom: "0.75rem" }}>
           <div style={{ flex: 1 }}>

@@ -83,7 +83,6 @@ export default function SchedulePage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
   const rowBg = isDark ? "#0f172a" : "#f8fafc";
   const nowBg = isDark ? "#1e3a5f" : "#eff6ff";
 
@@ -95,7 +94,7 @@ export default function SchedulePage() {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
       {/* Today's schedule */}
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem", marginBottom: "1rem" }}>
+      <div className="glass" style={{ borderRadius: 16, padding: "1.5rem", marginBottom: "1rem" }}>
         <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#2563eb", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
           📅 {t(lang, "schedule")}
         </h2>
@@ -159,13 +158,13 @@ export default function SchedulePage() {
       </div>
 
       {/* Full week */}
-      <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem" }}>
+      <div className="glass" style={{ borderRadius: 16, padding: "1.5rem" }}>
         <h3 style={{ fontWeight: 700, color: textCol, marginBottom: "1rem", fontSize: "1rem" }}>
           📆 {t(lang, "full_week_schedule")}
         </h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: "1rem" }}>
           {SCHEDULE_DATA.map((day, di) => (
-            <div key={day.dayKey} style={{ border: `1px solid ${border}`, borderRadius: 12, overflow: "hidden" }}>
+            <div key={day.dayKey} className="glass" style={{ borderRadius: 12, overflow: "hidden" }}>
               <div style={{
                 background: di === todayIdx ? "#2563eb" : isDark ? "#334155" : "#f1f5f9",
                 padding: "0.65rem 0.9rem",

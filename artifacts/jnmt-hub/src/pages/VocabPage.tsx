@@ -29,7 +29,6 @@ export default function VocabPage() {
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
-  const cardBg = isDark ? "#1e293b" : "white";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
 
   useEffect(() => {
@@ -72,8 +71,10 @@ export default function VocabPage() {
 
         <div
           onClick={() => setReviewFlipped(f => !f)}
+          className={reviewFlipped ? undefined : "glass"}
           style={{
-            background: reviewFlipped ? "#2563eb" : cardBg, border: `1px solid ${reviewFlipped ? "#2563eb" : border}`,
+            background: reviewFlipped ? "#2563eb" : undefined,
+            border: reviewFlipped ? `1px solid #2563eb` : undefined,
             borderRadius: 20, padding: "3rem 2rem", textAlign: "center", cursor: "pointer",
             minHeight: 220, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
             transition: "all 0.3s", marginBottom: "1rem",
@@ -95,7 +96,7 @@ export default function VocabPage() {
 
         <div style={{ display: "flex", gap: 10 }}>
           <button onClick={() => { setReviewIndex(i => (i - 1 + filtered.length) % filtered.length); setReviewFlipped(false); }}
-            style={{ flex: 1, padding: "0.85rem", background: cardBg, color: textCol, border: `1px solid ${border}`, borderRadius: 10, fontSize: "0.95rem", cursor: "pointer", fontWeight: 600 }}>
+            className="glass" style={{ flex: 1, padding: "0.85rem", color: textCol, borderRadius: 10, fontSize: "0.95rem", cursor: "pointer", fontWeight: 600 }}>
             ← {t(lang, "prev")}
           </button>
           <button onClick={() => { setReviewIndex(i => (i + 1) % filtered.length); setReviewFlipped(false); }}
@@ -127,7 +128,7 @@ export default function VocabPage() {
       <p style={{ color: text2, fontSize: "0.9rem", marginBottom: "1rem" }}>{items.length} {t(lang, "saved_words_count")}</p>
 
       {showAdd && (
-        <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.25rem", marginBottom: "1rem" }}>
+        <div className="glass" style={{ borderRadius: 16, padding: "1.25rem", marginBottom: "1rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <input value={word} onChange={e => setWord(e.target.value)} placeholder={t(lang, "vocab_word_ph")} style={{ padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 10, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none" }} />
             <input value={meaning} onChange={e => setMeaning(e.target.value)} placeholder={t(lang, "vocab_meaning_ph")} style={{ padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 10, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none" }} />
@@ -160,7 +161,7 @@ export default function VocabPage() {
         </div>
       ) : (
         filtered.map(item => (
-          <div key={item.id} style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 14, padding: "1rem 1.25rem", marginBottom: 8, cursor: "pointer" }}
+          <div key={item.id} className="glass" style={{ borderRadius: 14, padding: "1rem 1.25rem", marginBottom: 8, cursor: "pointer" }}
             onClick={() => setFlipped(prev => ({ ...prev, [item.id]: !prev[item.id] }))}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div style={{ flex: 1 }}>

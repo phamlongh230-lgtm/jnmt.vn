@@ -13,7 +13,6 @@ export default function QRCodePage() {
   const [text, setText] = useState("https://jnmt.kr");
   const [size, setSize] = useState(250);
 
-  const cardBg = isDark ? "#1e293b" : "white";
   const border = isDark ? "#334155" : "#e2e8f0";
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
@@ -31,7 +30,7 @@ export default function QRCodePage() {
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", borderRadius: 16, padding: "1.5rem", color: "white", marginBottom: "1.25rem" }}>
+      <div className="glass-hero" style={{ background: "rgba(15,23,42,0.65)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.25rem" }}>
         <h1 style={{ fontSize: "1.4rem", fontWeight: 900, margin: 0, marginBottom: "0.25rem" }}>📱 {t(lang, "qrcode")}</h1>
         <p style={{ margin: 0, opacity: 0.75, fontSize: "0.85rem" }}>Tạo QR code từ link, văn bản, số điện thoại...</p>
       </div>
@@ -39,7 +38,7 @@ export default function QRCodePage() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "1rem", alignItems: "start" }}>
         {/* Left: inputs */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1.25rem" }}>
+          <div className="glass" style={{ borderRadius: 12, padding: "1.25rem" }}>
             <label style={{ display: "block", fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.4rem" }}>{t(lang, "qr_content_label")}</label>
             <textarea
               value={text}
@@ -54,7 +53,7 @@ export default function QRCodePage() {
             </div>
           </div>
 
-          <div style={{ background: cardBg, border: `1px solid ${border}`, borderRadius: 12, padding: "1rem" }}>
+          <div className="glass" style={{ borderRadius: 12, padding: "1rem" }}>
             <div style={{ fontSize: "0.8rem", color: text2, fontWeight: 600, marginBottom: "0.6rem" }}>{t(lang, "quick_presets")}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               {PRESETS.map((p) => (
