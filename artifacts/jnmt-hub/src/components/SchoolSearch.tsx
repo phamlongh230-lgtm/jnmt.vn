@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 interface School {
   id: number;
@@ -63,7 +64,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function SchoolSearch() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<School[]>([]);
   const [loading, setLoading] = useState(false);
@@ -193,7 +194,7 @@ export default function SchoolSearch() {
             }}
             onKeyDown={handleKeyDown}
             onFocus={() => setOpen(true)}
-            placeholder="Tìm kiếm trường học... (ví dụ: Seoul, Bách Khoa, KAIST)"
+            placeholder={t(lang, "school_search_ph")}
             style={{
               flex: 1,
               border: "none",

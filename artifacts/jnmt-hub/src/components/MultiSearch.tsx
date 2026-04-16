@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 const ENGINES = [
   { id: "google",    label: "Google",     icon: "🌐", color: "#4285f4", url: (q: string) => `https://www.google.com/search?q=${q}` },
@@ -7,13 +8,13 @@ const ENGINES = [
   { id: "naver",     label: "Naver",      icon: "🟢", color: "#03c75a", url: (q: string) => `https://search.naver.com/search.naver?query=${q}` },
   { id: "naverdict", label: "Naver Dict", icon: "📖", color: "#03c75a", url: (q: string) => `https://dict.naver.com/search.naver?dicQuery=${q}` },
   { id: "scholar",   label: "Scholar",    icon: "🎓", color: "#1a73e8", url: (q: string) => `https://scholar.google.com/scholar?q=${q}` },
-  { id: "images",    label: "Hình ảnh",  icon: "🖼️",  color: "#ea4335", url: (q: string) => `https://www.google.com/search?q=${q}&tbm=isch` },
+  { id: "images",    label: "images",     icon: "🖼️",  color: "#ea4335", url: (q: string) => `https://www.google.com/search?q=${q}&tbm=isch` },
   { id: "perplexity",label: "Perplexity", icon: "🤖", color: "#7c3aed", url: (q: string) => `https://www.perplexity.ai/search?q=${q}` },
   { id: "github",    label: "GitHub",     icon: "🐙", color: "#24292f", url: (q: string) => `https://github.com/search?q=${q}` },
 ];
 
 export default function MultiSearch() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [query, setQuery] = useState("");
   const [engine, setEngine] = useState("google");
   const [focused, setFocused] = useState(false);
@@ -72,7 +73,7 @@ export default function MultiSearch() {
           onKeyDown={onKeyDown}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          placeholder={`Tìm trên ${selected.label}...`}
+          placeholder={`${t(lang, "search_on")} ${selected.id === "images" ? t(lang, "images_label") : selected.label}...`}
           style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontSize: "1.05rem", color: textCol, fontFamily: "inherit", minWidth: 0 }}
         />
 
@@ -98,7 +99,7 @@ export default function MultiSearch() {
           onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.85"; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
         >
-          Tìm →
+          {t(lang, "search_btn")}
         </button>
       </div>
 
@@ -122,7 +123,7 @@ export default function MultiSearch() {
             }}
           >
             <span style={{ fontSize: "0.9rem" }}>{eng.icon}</span>
-            {eng.label}
+            {eng.id === "images" ? t(lang, "images_label") : eng.label}
           </button>
         ))}
       </div>

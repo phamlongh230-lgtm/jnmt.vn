@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 
 interface TenorGif {
   id: string;
@@ -18,7 +19,7 @@ interface Props {
 const TENOR_KEY = "LIVDSRZULELA"; // Tenor public demo key
 
 export default function GifPicker({ onSelect, onClose }: Props) {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   const [query, setQuery] = useState("");
   const [gifs, setGifs] = useState<TenorGif[]>([]);
   const [loading, setLoading] = useState(false);
@@ -79,7 +80,7 @@ export default function GifPicker({ onSelect, onClose }: Props) {
           autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Tìm GIF..."
+          placeholder={t(lang, "gif_search_ph")}
           style={{
             width: "100%", padding: "0.5rem 0.75rem", border: `1px solid ${border}`,
             borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.85rem",
@@ -97,7 +98,7 @@ export default function GifPicker({ onSelect, onClose }: Props) {
           ))
         ) : gifs.length === 0 ? (
           <div style={{ gridColumn: "1/-1", textAlign: "center", color: isDark ? "#94a3b8" : "#64748b", padding: "1.5rem", fontSize: "0.85rem" }}>
-            Không tìm thấy GIF
+            {t(lang, "gif_not_found")}
           </div>
         ) : (
           gifs.map((gif) => (

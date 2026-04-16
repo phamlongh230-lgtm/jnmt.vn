@@ -129,7 +129,7 @@ export default function LoginPage() {
             <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
               <div>
                 <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "display_name")}</label>
-                <input type="text" required value={regUsername} onChange={(e) => setRegUsername(e.target.value)} placeholder="Nguyễn Văn A" style={inputStyle} autoComplete="username" minLength={2} maxLength={40} />
+                <input type="text" required value={regUsername} onChange={(e) => setRegUsername(e.target.value)} placeholder={t(lang, "name_ph")} style={inputStyle} autoComplete="username" minLength={2} maxLength={40} />
               </div>
               <div>
                 <label style={{ fontSize: "0.8rem", fontWeight: 600, color: text2, display: "block", marginBottom: "0.35rem" }}>{t(lang, "email")}</label>
