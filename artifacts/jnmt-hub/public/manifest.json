@@ -1,0 +1,20 @@
+{
+  "name": "전남미래국제고등학교 학생 허브",
+  "short_name": "JNMT.kr",
+  "description": "Portal học sinh JNMT - Dịch thuật, thời khóa biểu, chat đa ngôn ngữ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "utilities"],
+  "lang": "ko"
+}

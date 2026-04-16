@@ -1,4 +1,5 @@
-const CACHE = "jnmt-v1";
+// Bump this string on each deploy to force cache invalidation
+const CACHE = "jnmt-20260416";
 const STATIC = ["/", "/index.html"];
 
 self.addEventListener("install", (e) => {

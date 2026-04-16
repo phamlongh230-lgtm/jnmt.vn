@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { AppProvider, useApp } from "@/context/AppContext";
+import { t } from "@/lib/i18n";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
@@ -43,11 +44,11 @@ const queryClient = new QueryClient({
 });
 
 function PageLoader() {
-  const { isDark } = useApp();
+  const { isDark, lang } = useApp();
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4rem 1rem", color: isDark ? "#94a3b8" : "#64748b", fontSize: "0.9rem", gap: "0.5rem" }}>
       <span style={{ display: "inline-block", width: 18, height: 18, border: "2px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-      Đang tải...
+      {t(lang, "loading")}
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   );
