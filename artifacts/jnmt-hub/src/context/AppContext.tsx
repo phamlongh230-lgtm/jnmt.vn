@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
-import { LangCode, t } from "@/lib/i18n";
+import { LangCode, t, loadLang } from "@/lib/i18n";
 import { User, getStoredUser, setStoredUser, getToken, setToken, removeToken } from "@/lib/auth";
 import Toast, { ToastType } from "@/components/Toast";
 
@@ -30,6 +30,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<LangCode>(() => {
     return (localStorage.getItem("jnmt_lang") as LangCode) || "vi";
   });
+  const [langReady, setLangReady] = useState(() => {
+    // vi is pre-loaded synchronously, others need async load
+    const stored = (localStorage.getItem("jnmt_lang") as LangCode) || "vi";
+    return stored === "vi";
+  });
   const [isDark, setIsDark] = useState(() => {
     return localStorage.getItem("jnmt_theme") === "dark";
   });
@@ -42,6 +47,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const activePageRef = useRef(activePage);
   const wsRef = useRef<WebSocket | null>(null);
   const currentUserRef = useRef(currentUser);
+
+  // Load initial non-vi language bundle before first render
+  useEffect(() => {
+    if (!langReady) {
+      loadLang(lang).then(() => setLangReady(true));
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { activePageRef.current = activePage; }, [activePage]);
   useEffect(() => { currentUserRef.current = currentUser; }, [currentUser]);
@@ -119,8 +131,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [isDark]);
 
   function setLang(l: LangCode) {
-    setLangState(l);
-    localStorage.setItem("jnmt_lang", l);
+    loadLang(l).then(() => {
+      setLangState(l);
+      localStorage.setItem("jnmt_lang", l);
+    });
   }
 
   function toggleDark() {
@@ -144,6 +158,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     removeToken();
     showToast(t(lang, "logout_success"), "success");
   }
+
+  if (!langReady) return null;
 
   return (
     <AppContext.Provider
