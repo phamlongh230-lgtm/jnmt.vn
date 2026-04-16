@@ -142,7 +142,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)", color: "white", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
+      <header className="glass-nav" style={{ color: "white", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem", minHeight: 60 }}>
 
           {/* ☰ Hamburger + Logo */}
@@ -190,9 +190,9 @@ export default function Navbar() {
               {toolsOpen && (
                 <>
                   <div onClick={() => { setToolsOpen(false); setToolSearch(""); }} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
-                  <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 240, maxHeight: "80vh", overflowY: "auto", boxShadow: "0 4px 20px rgba(0,0,0,0.2)", zIndex: 200 }}>
+                  <div className="glass-panel" style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, borderRadius: 16, minWidth: 240, maxHeight: "80vh", overflowY: "auto", zIndex: 200 }}>
                     {/* Search box */}
-                    <div style={{ padding: "0.6rem 0.75rem", borderBottom: `1px solid ${border}`, position: "sticky", top: 0, background: bg, zIndex: 1 }}>
+                    <div style={{ padding: "0.6rem 0.75rem", borderBottom: `1px solid ${border}`, position: "sticky", top: 0, background: "transparent", backdropFilter: "none", zIndex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: isDark ? "#0f172a" : "#f1f5f9", borderRadius: 8, padding: "0.4rem 0.65rem" }}>
                         <span style={{ fontSize: "0.85rem" }}>🔍</span>
                         <input
@@ -261,7 +261,7 @@ export default function Navbar() {
               {userMenuOpen && (
                 <>
                   <div onClick={() => setUserMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150 }} />
-                  <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: bg, border: `1px solid ${border}`, borderRadius: 12, minWidth: 220, boxShadow: "0 4px 16px rgba(0,0,0,0.15)", zIndex: 200 }}>
+                  <div className="glass-panel" style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, borderRadius: 16, minWidth: 220, zIndex: 200 }}>
                     {currentUser ? (
                       <>
                         <div style={{ padding: "0.75rem 1rem", borderBottom: `1px solid ${border}` }}>
@@ -327,10 +327,10 @@ export default function Navbar() {
             style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 300, backdropFilter: "blur(2px)" }} />
 
           {/* Panel */}
-          <div style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 310, background: bg, zIndex: 400, boxShadow: "4px 0 24px rgba(0,0,0,0.2)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
+          <div className="glass-panel" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 310, borderRadius: "0 20px 20px 0", zIndex: 400, boxShadow: "4px 0 40px rgba(0,0,0,0.25)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
 
             {/* Header */}
-            <div style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)", color: "white", padding: "1.5rem 1.25rem 1.25rem" }}>
+            <div style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.85), rgba(124,58,237,0.80))", backdropFilter: "blur(10px)", color: "white", padding: "1.5rem 1.25rem 1.25rem", borderRadius: "0 20px 0 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
                   <img src="/favicon.svg" alt="logo" width={44} height={44} style={{ borderRadius: 11, marginBottom: "0.3rem", boxShadow: "0 2px 8px rgba(0,0,0,0.25)" }} />
@@ -440,7 +440,7 @@ export default function Navbar() {
         @media (min-width: 640px) { .mobile-bottom-nav { display: none !important; } }
         @media (max-width: 639px) { .mobile-bottom-nav { display: flex !important; } }
       `}</style>
-      <nav className="mobile-bottom-nav" style={{ display: "none", position: "fixed", bottom: 0, left: 0, right: 0, background: bg, borderTop: `1px solid ${border}`, zIndex: 200, justifyContent: "space-around", alignItems: "center", padding: "0.3rem 0 calc(0.3rem + env(safe-area-inset-bottom))", boxShadow: "0 -2px 12px rgba(0,0,0,0.08)" }}>
+      <nav className="mobile-bottom-nav glass-bottom" style={{ display: "none", position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, justifyContent: "space-around", alignItems: "center", padding: "0.3rem 0 calc(0.3rem + env(safe-area-inset-bottom))" }}>
         {[
           { page: "home",       icon: "🏠", labelKey: "home",       badge: 0 },
           { page: "chat",       icon: "💬", labelKey: "chat",       badge: chatUnread },
@@ -471,7 +471,7 @@ export default function Navbar() {
       {pwOpen && (
         <>
           <div onClick={() => { setPwOpen(false); setOldPw(""); setNewPw(""); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 500, backdropFilter: "blur(2px)" }} />
-          <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", background: bg, border: `1px solid ${border}`, borderRadius: 16, padding: "1.5rem", width: "min(400px, 90vw)", zIndex: 600, boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
+          <div className="glass-panel" style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", borderRadius: 20, padding: "1.5rem", width: "min(400px, 90vw)", zIndex: 600 }}>
             <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: textCol, marginBottom: "1rem" }}>🔒 {t(lang, "change_password")}</h2>
             <input type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} placeholder={t(lang, "current_password_ph")} style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "0.75rem", outline: "none", boxSizing: "border-box" }} />
             <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder={t(lang, "new_password_ph")} style={{ width: "100%", padding: "0.65rem", border: `1px solid ${border}`, borderRadius: 8, background: isDark ? "#0f172a" : "#f8fafc", color: textCol, fontSize: "0.9rem", marginBottom: "1rem", outline: "none", boxSizing: "border-box" }} />
