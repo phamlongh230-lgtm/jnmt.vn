@@ -16,3 +16,8 @@ artifacts/jnmt-hub/node_modules/.vite/
 lib/api-client-react/dist/
 lib/api-zod/dist/
 lib/db/dist/
+
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
