@@ -12,7 +12,9 @@ interface Route {
   price: string;
   durationKey: string;
   noteKey: string;
-  mapsUrl: string;
+  kakaoUrl: string;
+  icon: string;
+  color: string;
 }
 
 const ROUTES: Route[] = [
@@ -24,7 +26,9 @@ const ROUTES: Route[] = [
     price: "8,400 KRW",
     durationKey: "duration_2h",
     noteKey: "route_1_note",
-    mapsUrl: "https://maps.google.com/?q=Gangjin+Express+Bus+Terminal",
+    kakaoUrl: `https://map.kakao.com/link/to/${encodeURIComponent("광주버스터미널")},35.1456,126.9183`,
+    icon: "🚌",
+    color: "#2563eb",
   },
   {
     id: "2",
@@ -34,7 +38,9 @@ const ROUTES: Route[] = [
     price: "5,500 KRW",
     durationKey: "duration_1h30",
     noteKey: "route_2_note",
-    mapsUrl: "https://maps.google.com/?q=Mokpo+Bus+Terminal",
+    kakaoUrl: `https://map.kakao.com/link/to/${encodeURIComponent("목포버스터미널")},34.8118,126.3923`,
+    icon: "🚌",
+    color: "#7c3aed",
   },
   {
     id: "3",
@@ -44,7 +50,9 @@ const ROUTES: Route[] = [
     price: "7,200 KRW",
     durationKey: "duration_1h30",
     noteKey: "route_3_note",
-    mapsUrl: "https://maps.google.com/?q=Suncheon+Bus+Terminal",
+    kakaoUrl: `https://map.kakao.com/link/to/${encodeURIComponent("순천버스터미널")},34.9496,127.4875`,
+    icon: "🚌",
+    color: "#059669",
   },
   {
     id: "4",
@@ -55,7 +63,9 @@ const ROUTES: Route[] = [
     price: "1,500 KRW",
     durationKey: "duration_20min",
     noteKey: "route_4_note",
-    mapsUrl: "https://maps.google.com/?q=Gangjin+County+Office",
+    kakaoUrl: `https://map.kakao.com/link/to/${encodeURIComponent("강진군청")},34.6427,126.7673`,
+    icon: "🚐",
+    color: "#d97706",
   },
   {
     id: "5",
@@ -66,7 +76,9 @@ const ROUTES: Route[] = [
     price: "4,000~7,000 KRW",
     durationKey: "duration_10min",
     noteKey: "route_5_note",
-    mapsUrl: "https://maps.google.com/?q=Gangjin",
+    kakaoUrl: "kakaoT://taxi",
+    icon: "🚕",
+    color: "#FEE500",
   },
 ];
 
@@ -75,60 +87,87 @@ export default function TransportPage() {
   const [expanded, setExpanded] = useState<string | null>("1");
 
   const textCol = isDark ? "#f1f5f9" : "#0f172a";
-  const text2 = isDark ? "#94a3b8" : "#64748b";
-  const border = isDark ? "#334155" : "#e2e8f0";
-  const accent = "#4361ee";
+  const text2   = isDark ? "#94a3b8" : "#64748b";
+  const border  = isDark ? "#334155" : "#e2e8f0";
 
   return (
-    <div style={{ padding: "20px 16px 80px" }}>
-      <div style={{ maxWidth: 480, margin: "0 auto" }}>
-        <h2 style={{ color: textCol, fontSize: 20, fontWeight: 700, marginBottom: 4 }}>🚌 {t(lang, "transport_title")}</h2>
-        <p style={{ color: text2, fontSize: 13, marginBottom: 20 }}>Gangjin-gun, Jeollanam-do</p>
+    <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
 
+      {/* Header */}
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem", marginBottom: "1.25rem" }}>
+        <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#2563eb", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          🚌 {t(lang, "transport_title")}
+        </h2>
+        <p style={{ color: text2, fontSize: "0.82rem", marginTop: "0.2rem", marginBottom: 0 }}>
+          Gangjin-gun, Jeollanam-do
+        </p>
+      </div>
+
+      {/* Routes */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "1.25rem" }}>
         {ROUTES.map(route => {
           const name = route.nameKey ? t(lang, route.nameKey) : route.nameLiteral ?? "";
           const destination = route.destKey ? t(lang, route.destKey) : route.destination;
+          const isOpen = expanded === route.id;
           return (
-            <div key={route.id} className="glass" style={{ borderRadius: 14, marginBottom: 10, overflow: "hidden" }}>
-              <button
-                onClick={() => setExpanded(expanded === route.id ? null : route.id)}
-                style={{ width: "100%", padding: "14px 16px", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}
-              >
-                <div style={{ textAlign: "left" }}>
-                  <p style={{ color: accent, fontWeight: 700, fontSize: 15, margin: 0 }}>{name}</p>
-                  <p style={{ color: text2, fontSize: 13, margin: "2px 0 0" }}>{destination}</p>
+            <div key={route.id} className="glass" style={{ borderRadius: 18, overflow: "hidden", borderLeft: `4px solid ${route.color}` }}>
+              <button onClick={() => setExpanded(isOpen ? null : route.id)}
+                style={{ width: "100%", padding: "1rem 1.25rem", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", textAlign: "left" }}>
+                  <span style={{ fontSize: "1.5rem", flexShrink: 0 }}>{route.icon}</span>
+                  <div>
+                    <p style={{ color: route.color, fontWeight: 700, fontSize: "0.95rem", margin: 0 }}>{name}</p>
+                    <p style={{ color: text2, fontSize: "0.78rem", margin: "0.1rem 0 0" }}>{destination}</p>
+                  </div>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <p style={{ color: textCol, fontWeight: 700, fontSize: 14, margin: 0 }}>{route.price}</p>
-                  <p style={{ color: text2, fontSize: 12, margin: 0 }}>{t(lang, route.durationKey)}</p>
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <p style={{ color: textCol, fontWeight: 700, fontSize: "0.88rem", margin: 0 }}>{route.price}</p>
+                  <p style={{ color: text2, fontSize: "0.75rem", margin: 0 }}>{t(lang, route.durationKey)}</p>
                 </div>
               </button>
 
-              {expanded === route.id && (
-                <div style={{ borderTop: `1px solid ${border}`, padding: "14px 16px" }}>
-                  <p style={{ color: textCol, fontSize: 13, fontWeight: 600, marginBottom: 6 }}>{t(lang, "bus_schedule")}</p>
-                  <p style={{ color: text2, fontSize: 13, lineHeight: 1.7, marginBottom: 12 }}>{route.schedule}</p>
-                  <p style={{ color: textCol, fontSize: 13, marginBottom: 12 }}>
-                    <span style={{ fontWeight: 600 }}>{t(lang, "note_label")} </span>{t(lang, route.noteKey)}
+              {isOpen && (
+                <div style={{ borderTop: `1px solid ${border}`, padding: "1rem 1.25rem" }}>
+                  <p style={{ color: textCol, fontSize: "0.82rem", fontWeight: 700, marginBottom: "0.4rem" }}>{t(lang, "bus_schedule")}</p>
+                  <div style={{ background: isDark ? "#0f172a" : "#f8fafc", borderRadius: 10, padding: "0.65rem 0.85rem", marginBottom: "0.75rem", border: `1px solid ${border}` }}>
+                    <p style={{ color: text2, fontSize: "0.82rem", lineHeight: 1.8, margin: 0 }}>{route.schedule}</p>
+                  </div>
+                  <p style={{ color: text2, fontSize: "0.82rem", marginBottom: "0.75rem", lineHeight: 1.5 }}>
+                    <span style={{ fontWeight: 600, color: textCol }}>{t(lang, "note_label")} </span>
+                    {t(lang, route.noteKey)}
                   </p>
-                  <a href={route.mapsUrl} target="_blank" rel="noopener noreferrer"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: accent, color: "#fff", borderRadius: 8, textDecoration: "none", fontSize: 13, fontWeight: 600 }}>
-                    🗺️ {t(lang, "view_map")}
+                  <a href={route.kakaoUrl} target="_blank" rel="noopener noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", padding: "0.5rem 1rem", background: "#FEE500", color: "#3A1D1D", borderRadius: 10, textDecoration: "none", fontSize: "0.82rem", fontWeight: 700, boxShadow: "0 2px 6px rgba(254,229,0,0.3)" }}>
+                    🗺️ 카카오맵으로 길찾기
                   </a>
                 </div>
               )}
             </div>
           );
         })}
+      </div>
 
-        <div className="glass" style={{ borderRadius: 14, padding: 16, marginTop: 4 }}>
-          <p style={{ color: textCol, fontSize: 14, fontWeight: 700, marginBottom: 10 }}>{t(lang, "useful_info")}</p>
-          <p style={{ color: text2, fontSize: 13, lineHeight: 1.7, margin: 0 }}>
-            • {t(lang, "transport_info_check")} <strong style={{ color: textCol }}>naver.com/map</strong> / <strong style={{ color: textCol }}>kakaomap.com</strong><br/>
-            • {t(lang, "transport_info_buy")}<br/>
-            • {t(lang, "transport_info_taxi")}<br/>
-            • {t(lang, "transport_info_hotline")} <strong style={{ color: accent }}>1330</strong>
-          </p>
+      {/* Useful info */}
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem" }}>
+        <p style={{ color: textCol, fontSize: "0.9rem", fontWeight: 700, marginBottom: "0.85rem" }}>ℹ️ {t(lang, "useful_info")}</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+          {[
+            { icon: "🗺️", text: t(lang, "transport_info_check"), highlight: ["kakaomap.com", "naver.com/map"] },
+            { icon: "🎫", text: t(lang, "transport_info_buy"), highlight: [] },
+            { icon: "🚕", text: t(lang, "transport_info_taxi"), highlight: [] },
+            { icon: "📞", text: `${t(lang, "transport_info_hotline")} 1330`, highlight: ["1330"] },
+          ].map((item, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem" }}>
+              <span style={{ fontSize: "1rem", flexShrink: 0, marginTop: "0.1rem" }}>{item.icon}</span>
+              <p style={{ color: text2, fontSize: "0.85rem", lineHeight: 1.6, margin: 0 }}>
+                {item.text.split(new RegExp(`(${item.highlight.join("|")})`, "g")).map((part, j) =>
+                  item.highlight.includes(part)
+                    ? <strong key={j} style={{ color: "#2563eb" }}>{part}</strong>
+                    : <span key={j}>{part}</span>
+                )}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

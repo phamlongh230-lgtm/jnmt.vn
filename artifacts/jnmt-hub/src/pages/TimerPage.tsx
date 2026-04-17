@@ -2,16 +2,27 @@ import { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
 
+const PRESETS = [
+  { label: "Pomodoro", study: 25, break: 5, longBreak: 15 },
+  { label: "Tập trung sâu", study: 50, break: 10, longBreak: 30 },
+  { label: "Ôn nhanh", study: 15, break: 3, longBreak: 10 },
+];
+
+type Phase = "study" | "break" | "longBreak";
+
 export default function TimerPage() {
   const { isDark, lang } = useApp();
   const [studyMin, setStudyMin] = useState(25);
   const [breakMin, setBreakMin] = useState(5);
-  const [isStudy, setIsStudy] = useState(true);
+  const [longBreakMin, setLongBreakMin] = useState(15);
+  const [phase, setPhase] = useState<Phase>("study");
   const [seconds, setSeconds] = useState(25 * 60);
   const [running, setRunning] = useState(false);
   const [rounds, setRounds] = useState(0);
   const [customStudy, setCustomStudy] = useState("25");
   const [customBreak, setCustomBreak] = useState("5");
+  const [customLong, setCustomLong] = useState("15");
+  const [activePreset, setActivePreset] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const border = isDark ? "#334155" : "#e2e8f0";
@@ -19,11 +30,18 @@ export default function TimerPage() {
   const text2 = isDark ? "#94a3b8" : "#64748b";
   const inputBg = isDark ? "#0f172a" : "#f8fafc";
   const trackColor = isDark ? "#334155" : "#e2e8f0";
-  const accent = isStudy ? "#2563eb" : "#10b981";
+
+  const phaseConfig: Record<Phase, { label: string; color: string; mins: number }> = {
+    study:     { label: t(lang, "study_label"),  color: "#2563eb", mins: studyMin },
+    break:     { label: t(lang, "break_label"),  color: "#10b981", mins: breakMin },
+    longBreak: { label: "Nghỉ dài",              color: "#7c3aed", mins: longBreakMin },
+  };
+
+  const accent = phaseConfig[phase].color;
 
   useEffect(() => {
-    setSeconds((isStudy ? studyMin : breakMin) * 60);
-  }, [isStudy, studyMin, breakMin]);
+    setSeconds(phaseConfig[phase].mins * 60);
+  }, [phase, studyMin, breakMin, longBreakMin]);
 
   useEffect(() => {
     if (running) {
@@ -33,8 +51,13 @@ export default function TimerPage() {
             clearInterval(intervalRef.current!);
             playBeep();
             setRunning(false);
-            if (isStudy) { setRounds(r => r + 1); setIsStudy(false); }
-            else setIsStudy(true);
+            if (phase === "study") {
+              const newRounds = rounds + 1;
+              setRounds(newRounds);
+              setPhase(newRounds % 4 === 0 ? "longBreak" : "break");
+            } else {
+              setPhase("study");
+            }
             return 0;
           }
           return s - 1;
@@ -44,7 +67,7 @@ export default function TimerPage() {
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [running, isStudy]);
+  }, [running, phase, rounds]);
 
   function playBeep() {
     try {
@@ -59,32 +82,64 @@ export default function TimerPage() {
     } catch {}
   }
 
-  function reset() { setRunning(false); setIsStudy(true); setSeconds(studyMin * 60); }
+  function reset() { setRunning(false); setPhase("study"); setRounds(0); setSeconds(studyMin * 60); }
 
   function applyCustom() {
     const s = Math.max(1, Math.min(99, parseInt(customStudy) || 25));
     const b = Math.max(1, Math.min(99, parseInt(customBreak) || 5));
-    setStudyMin(s); setBreakMin(b); setRunning(false); setIsStudy(true); setSeconds(s * 60);
+    const l = Math.max(1, Math.min(99, parseInt(customLong) || 15));
+    setStudyMin(s); setBreakMin(b); setLongBreakMin(l);
+    setRunning(false); setPhase("study"); setRounds(0); setSeconds(s * 60);
+    setActivePreset(-1);
   }
 
-  const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
-  const secs = (seconds % 60).toString().padStart(2, "0");
-  const total = (isStudy ? studyMin : breakMin) * 60;
+  function applyPreset(idx: number) {
+    const p = PRESETS[idx];
+    setStudyMin(p.study); setBreakMin(p.break); setLongBreakMin(p.longBreak);
+    setCustomStudy(String(p.study)); setCustomBreak(String(p.break)); setCustomLong(String(p.longBreak));
+    setRunning(false); setPhase("study"); setRounds(0); setSeconds(p.study * 60);
+    setActivePreset(idx);
+  }
+
+  const total = phaseConfig[phase].mins * 60;
   const progress = 1 - seconds / total;
   const circumference = 2 * Math.PI * 100;
+  const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const secs = (seconds % 60).toString().padStart(2, "0");
+
+  // Pomodoro dots (4 per cycle)
+  const dotsInCycle = rounds % 4;
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
-      <div style={{ marginBottom: "1.5rem", textAlign: "center" }}>
-        <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
-          ⏱️ Pomodoro Timer
-        </h2>
-        <p style={{ color: text2, fontSize: "0.9rem", marginTop: "0.25rem" }}>
-          {isStudy ? t(lang, "study_phase") : t(lang, "break_phase")} · {t(lang, "rounds_completed")}: <strong style={{ color: "#2563eb" }}>{rounds}</strong> {t(lang, "rounds_unit")}
-        </p>
+
+      {/* Presets */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.65rem", marginBottom: "1.25rem" }}>
+        {PRESETS.map((p, i) => (
+          <button key={p.label} onClick={() => applyPreset(i)}
+            style={{ padding: "0.75rem", borderRadius: 14, border: `1.5px solid ${activePreset === i ? "#2563eb" : border}`, background: activePreset === i ? (isDark ? "#1e3a5f22" : "#eff6ff") : "transparent", cursor: "pointer", textAlign: "center", transition: "all 0.15s" }}>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700, color: activePreset === i ? "#2563eb" : textCol }}>{p.label}</div>
+            <div style={{ fontSize: "0.72rem", color: text2, marginTop: "0.2rem" }}>{p.study}/{p.break}/{p.longBreak} phút</div>
+          </button>
+        ))}
       </div>
 
-      <div className="glass" style={{ borderRadius: 20, padding: "2rem 1.5rem", textAlign: "center", marginBottom: "1rem" }}>
+      {/* Phase tabs */}
+      <div style={{ display: "flex", gap: "0.4rem", marginBottom: "1.25rem", justifyContent: "center" }}>
+        {(["study", "break", "longBreak"] as Phase[]).map(p => {
+          const cfg = phaseConfig[p];
+          const isActive = phase === p;
+          return (
+            <button key={p} onClick={() => { setRunning(false); setPhase(p); }}
+              style={{ padding: "0.45rem 1rem", borderRadius: 100, border: `1.5px solid ${isActive ? cfg.color : border}`, background: isActive ? cfg.color : "transparent", color: isActive ? "white" : text2, cursor: "pointer", fontSize: "0.82rem", fontWeight: isActive ? 700 : 400, transition: "all 0.15s" }}>
+              {cfg.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Timer ring */}
+      <div className="glass" style={{ borderRadius: 22, padding: "2rem 1.5rem", textAlign: "center", marginBottom: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem", position: "relative" }}>
           <svg width={220} height={220} style={{ transform: "rotate(-90deg)" }}>
             <circle cx={110} cy={110} r={100} fill="none" stroke={trackColor} strokeWidth={10} />
@@ -96,13 +151,24 @@ export default function TimerPage() {
           </svg>
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center" }}>
             <div style={{ fontSize: "3rem", fontWeight: 900, color: textCol, fontVariantNumeric: "tabular-nums", letterSpacing: 2 }}>{mins}:{secs}</div>
-            <div style={{ fontSize: "0.85rem", color: text2, marginTop: 4, fontWeight: 600 }}>{isStudy ? t(lang, "study_label") : t(lang, "break_label")}</div>
+            <div style={{ fontSize: "0.85rem", color: accent, marginTop: 4, fontWeight: 700 }}>{phaseConfig[phase].label}</div>
+            {/* Pomodoro progress dots */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 8 }}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: i < dotsInCycle ? accent : trackColor, transition: "background 0.3s" }} />
+              ))}
+            </div>
           </div>
+        </div>
+
+        <div style={{ fontSize: "0.78rem", color: text2, marginBottom: "1.25rem" }}>
+          {t(lang, "rounds_completed")}: <strong style={{ color: accent }}>{rounds}</strong> {t(lang, "rounds_unit")}
+          {rounds > 0 && ` · 🏆 ${Math.floor(rounds / 4)} chu kỳ hoàn thành`}
         </div>
 
         <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
           <button onClick={() => setRunning(r => !r)}
-            style={{ padding: "0.85rem 2.5rem", background: accent, color: "white", border: "none", borderRadius: 12, fontSize: "1rem", fontWeight: 700, cursor: "pointer" }}>
+            style={{ padding: "0.85rem 2.5rem", background: accent, color: "white", border: "none", borderRadius: 12, fontSize: "1rem", fontWeight: 700, cursor: "pointer", transition: "opacity 0.15s" }}>
             {running ? `⏸ ${t(lang, "pause")}` : seconds === 0 ? `▶ ${t(lang, "start_new")}` : `▶ ${t(lang, "start")}`}
           </button>
           <button onClick={reset}
@@ -112,19 +178,21 @@ export default function TimerPage() {
         </div>
       </div>
 
+      {/* Custom time */}
       <div className="glass" style={{ borderRadius: 22, padding: "1.25rem" }}>
         <p style={{ color: textCol, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 1rem" }}>⚙️ {t(lang, "customize_time")}</p>
-        <div style={{ display: "flex", gap: "0.75rem", marginBottom: "0.75rem" }}>
-          <div style={{ flex: 1 }}>
-            <label style={{ color: text2, fontSize: "0.78rem", display: "block", marginBottom: 4 }}>{t(lang, "study_minutes")}</label>
-            <input type="number" value={customStudy} onChange={e => setCustomStudy(e.target.value)} min={1} max={99}
-              style={{ width: "100%", padding: "0.65rem", borderRadius: 8, border: `1px solid ${border}`, background: inputBg, color: textCol, fontSize: "1.1rem", outline: "none", boxSizing: "border-box", textAlign: "center", fontWeight: 700 }} />
-          </div>
-          <div style={{ flex: 1 }}>
-            <label style={{ color: text2, fontSize: "0.78rem", display: "block", marginBottom: 4 }}>{t(lang, "break_minutes")}</label>
-            <input type="number" value={customBreak} onChange={e => setCustomBreak(e.target.value)} min={1} max={99}
-              style={{ width: "100%", padding: "0.65rem", borderRadius: 8, border: `1px solid ${border}`, background: inputBg, color: textCol, fontSize: "1.1rem", outline: "none", boxSizing: "border-box", textAlign: "center", fontWeight: 700 }} />
-          </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.65rem", marginBottom: "0.75rem" }}>
+          {[
+            { label: t(lang, "study_minutes"), val: customStudy, set: setCustomStudy },
+            { label: t(lang, "break_minutes"), val: customBreak, set: setCustomBreak },
+            { label: "Nghỉ dài (phút)", val: customLong, set: setCustomLong },
+          ].map(({ label, val, set }) => (
+            <div key={label}>
+              <label style={{ color: text2, fontSize: "0.72rem", display: "block", marginBottom: 4 }}>{label}</label>
+              <input type="number" value={val} onChange={e => set(e.target.value)} min={1} max={99}
+                style={{ width: "100%", padding: "0.65rem", borderRadius: 8, border: `1px solid ${border}`, background: inputBg, color: textCol, fontSize: "1.1rem", outline: "none", boxSizing: "border-box", textAlign: "center", fontWeight: 700 }} />
+            </div>
+          ))}
         </div>
         <button onClick={applyCustom} style={{ width: "100%", padding: "0.7rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, fontSize: "0.9rem", fontWeight: 700, cursor: "pointer" }}>
           {t(lang, "apply")}

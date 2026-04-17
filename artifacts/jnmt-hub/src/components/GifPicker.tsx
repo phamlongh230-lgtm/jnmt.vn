@@ -5,10 +5,10 @@ import { t } from "@/lib/i18n";
 interface TenorGif {
   id: string;
   title: string;
-  media_formats: {
+  media: Array<{
     tinygif: { url: string };
     gif: { url: string };
-  };
+  }>;
 }
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   onClose: () => void;
 }
 
-const TENOR_KEY = "LIVDSRZULELA"; // Tenor public demo key
+const TENOR_KEY = "LIVDSRZULELA";
 
 export default function GifPicker({ onSelect, onClose }: Props) {
   const { isDark, lang } = useApp();
@@ -34,8 +34,8 @@ export default function GifPicker({ onSelect, onClose }: Props) {
     setLoading(true);
     try {
       const endpoint = q.trim()
-        ? `https://tenor.googleapis.com/v2/search?q=${encodeURIComponent(q)}&key=${TENOR_KEY}&limit=20&media_filter=tinygif,gif`
-        : `https://tenor.googleapis.com/v2/featured?key=${TENOR_KEY}&limit=20&media_filter=tinygif,gif`;
+        ? `https://api.tenor.com/v1/search?q=${encodeURIComponent(q)}&key=${TENOR_KEY}&limit=20&media_filter=minimal`
+        : `https://api.tenor.com/v1/trending?key=${TENOR_KEY}&limit=20&media_filter=minimal`;
       const res = await fetch(endpoint);
       const data = await res.json();
       setGifs(data.results || []);
@@ -103,12 +103,12 @@ export default function GifPicker({ onSelect, onClose }: Props) {
           gifs.map((gif) => (
             <button
               key={gif.id}
-              onClick={() => { onSelect(gif.media_formats.gif.url); onClose(); }}
+              onClick={() => { onSelect(gif.media[0].gif.url); onClose(); }}
               style={{ padding: 0, border: "none", borderRadius: 6, overflow: "hidden", cursor: "pointer", aspectRatio: "1", background: "transparent" }}
               title={gif.title}
             >
               <img
-                src={gif.media_formats.tinygif.url}
+                src={gif.media[0].tinygif.url}
                 alt={gif.title}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 loading="lazy"
