@@ -541,6 +541,7 @@ const kk: Record<string, string> = {
   avatar_too_large: "Файл тым үлкен! Максимум 5MB",
   avatar_removed: "Профиль фотосы жойылды",
   avatar_upload_error: "Жүктеу қатесі, кейінірек қайталаңыз",
+  avatar_format_unsupported: "Қолдау көрсетілмейтін сурет форматы. JPG/PNG/WebP қолданыңыз (iPhone HEIC емес).",
 };
 
 export default kk;

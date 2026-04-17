@@ -541,6 +541,7 @@ const mn: Record<string, string> = {
   avatar_too_large: "Файл хэт том! Хамгийн их 5MB",
   avatar_removed: "Профайл зураг устгагдлаа",
   avatar_upload_error: "Байршуулах алдаа, дараа дахин оролдоно уу",
+  avatar_format_unsupported: "Дэмжигдээгүй зургийн формат. JPG/PNG/WebP ашиглана уу (iPhone HEIC биш).",
 };
 
 export default mn;

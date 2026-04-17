@@ -583,6 +583,7 @@ const vi: Record<string, string> = {
   avatar_too_large: "Ảnh quá lớn! Tối đa 5MB",
   avatar_removed: "Đã xoá ảnh đại diện",
   avatar_upload_error: "Lỗi tải ảnh, thử lại sau",
+  avatar_format_unsupported: "Định dạng ảnh không hỗ trợ. Hãy dùng JPG/PNG/WebP (không dùng HEIC từ iPhone).",
 };
 
 export default vi;

@@ -541,6 +541,7 @@ const ko: Record<string, string> = {
   avatar_too_large: "파일이 너무 큽니다! 최대 5MB",
   avatar_removed: "프로필 사진이 삭제되었습니다",
   avatar_upload_error: "업로드 오류, 나중에 다시 시도하세요",
+  avatar_format_unsupported: "지원하지 않는 이미지 형식. JPG/PNG/WebP를 사용하세요 (아이폰 HEIC 제외).",
 };
 
 export default ko;

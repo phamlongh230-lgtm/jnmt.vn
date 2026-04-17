@@ -175,10 +175,12 @@ body {
 }
 
 /* ── Liquid water-shine sweep ─────────────────────────────────
-   NOTE: animation is opt-in via `.glass-shine` to avoid forcing
-   every glass card on the page to repaint + recalc backdrop blur.
-   Animating box-shadow on a backdrop-filtered element is extremely
-   expensive and caused visible flicker/stutter on list pages.
+   Applied to all .glass/.glass-panel cards.
+   NOTE: we intentionally do NOT animate box-shadow here — animating
+   box-shadow on a backdrop-filtered element causes full-card repaint
+   every frame and was the source of visible flicker. This shimmer
+   only animates `transform` + `opacity` on a ::after pseudo element,
+   which is GPU-accelerated and cheap even on long lists.
 ──────────────────────────────────────────────────────────────── */
 @keyframes water-shine {
   0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
@@ -191,12 +193,7 @@ body {
   position: relative;
   overflow: hidden;
 }
-
-.glass-shine {
-  position: relative;
-  overflow: hidden;
-}
-.glass-shine::after {
+.glass::after, .glass-panel::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -204,18 +201,24 @@ body {
   background: linear-gradient(
     105deg,
     transparent          30%,
-    rgba(255,255,255,0.38) 48%,
-    rgba(255,255,255,0.55) 52%,
+    rgba(255,255,255,0.32) 48%,
+    rgba(255,255,255,0.48) 52%,
     transparent          70%
   );
   transform: translateX(-120%) skewX(-18deg);
   will-change: transform, opacity;
-  animation: water-shine 7s cubic-bezier(0.4,0,0.6,1) infinite;
+  animation: water-shine 8s cubic-bezier(0.4,0,0.6,1) infinite;
   border-radius: inherit;
 }
 
+/* stagger so cards don't all flash at the same moment */
+.glass:nth-child(2n)::after       { animation-delay: 1.6s; }
+.glass:nth-child(3n)::after       { animation-delay: 3.2s; }
+.glass:nth-child(5n)::after       { animation-delay: 4.8s; }
+.glass-panel:nth-child(2n)::after { animation-delay: 2.4s; }
+
 @media (prefers-reduced-motion: reduce) {
-  .glass-shine::after { animation: none; display: none; }
+  .glass::after, .glass-panel::after { animation: none; display: none; }
 }
 
 .animate-fade-in {

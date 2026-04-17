@@ -541,6 +541,7 @@ const en: Record<string, string> = {
   avatar_too_large: "File too large! Max 5MB",
   avatar_removed: "Profile photo removed",
   avatar_upload_error: "Upload error, please try again",
+  avatar_format_unsupported: "Unsupported image format. Use JPG/PNG/WebP (not HEIC from iPhone).",
 };
 
 export default en;

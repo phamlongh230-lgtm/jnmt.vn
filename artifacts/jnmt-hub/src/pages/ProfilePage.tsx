@@ -47,25 +47,30 @@ function getDdayCount(): number {
   catch { return 0; }
 }
 
+const SUPPORTED_MIME = /^image\/(jpe?g|png|webp|gif|bmp|avif)$/i;
+const UNSUPPORTED_EXT = /\.(heic|heif|tiff?|raw|cr2|nef|arw|dng)$/i;
+
 function resizeImage(file: File, size = 160): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
+        if (!img.width || !img.height) { reject(new Error("image has zero dimensions")); return; }
         const canvas = document.createElement("canvas");
         canvas.width = size; canvas.height = size;
-        const ctx = canvas.getContext("2d")!;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { reject(new Error("canvas 2d context unavailable")); return; }
         const min = Math.min(img.width, img.height);
         const sx = (img.width - min) / 2;
         const sy = (img.height - min) / 2;
         ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
         resolve(canvas.toDataURL("image/jpeg", 0.82));
       };
-      img.onerror = reject;
+      img.onerror = () => reject(new Error("browser could not decode image — unsupported format (HEIC/HEIF/TIFF?) — save as JPEG or PNG and try again"));
       img.src = e.target?.result as string;
     };
-    reader.onerror = reject;
+    reader.onerror = () => reject(new Error("could not read file"));
     reader.readAsDataURL(file);
   });
 }
@@ -124,7 +129,12 @@ export default function ProfilePage() {
   async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { showToast(t(lang, "avatar_too_large"), "error"); return; }
+    if (file.size > 5 * 1024 * 1024) { showToast(t(lang, "avatar_too_large"), "error"); e.target.value = ""; return; }
+    if (UNSUPPORTED_EXT.test(file.name) || (file.type && !SUPPORTED_MIME.test(file.type))) {
+      showToast(t(lang, "avatar_format_unsupported"), "error");
+      e.target.value = "";
+      return;
+    }
     setUploadingAvatar(true);
     try {
       const base64 = await resizeImage(file);
@@ -133,12 +143,17 @@ export default function ProfilePage() {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("jnmt_token")}` },
         body: JSON.stringify({ avatarUrl: base64 }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await res.text().catch(() => "");
+        throw new Error(`server ${res.status}: ${msg.slice(0, 200)}`);
+      }
       const updated = await res.json();
       if (currentUser) updateUser({ ...currentUser, avatarUrl: updated.avatarUrl ?? base64 });
       showToast(t(lang, "avatar_updated"), "success");
-    } catch {
-      showToast(t(lang, "avatar_upload_error"), "error");
+    } catch (err) {
+      console.error("[avatar upload]", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      showToast(`${t(lang, "avatar_upload_error")} — ${msg}`, "error");
     } finally {
       setUploadingAvatar(false);
       e.target.value = "";
@@ -213,7 +228,7 @@ export default function ProfilePage() {
               style={{ position: "absolute", bottom: 0, right: 0, width: 26, height: 26, borderRadius: "50%", background: "white", border: "2px solid rgba(255,255,255,0.6)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: "0.75rem", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}>
               📷
             </button>
-            <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleAvatarUpload} />
+            <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" style={{ display: "none" }} onChange={handleAvatarUpload} />
           </div>
 
           {/* Info */}

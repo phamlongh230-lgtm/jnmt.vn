@@ -541,6 +541,7 @@ const ru: Record<string, string> = {
   avatar_too_large: "Файл слишком большой! Максимум 5MB",
   avatar_removed: "Фото профиля удалено",
   avatar_upload_error: "Ошибка загрузки, попробуйте позже",
+  avatar_format_unsupported: "Неподдерживаемый формат. Используйте JPG/PNG/WebP (не HEIC с iPhone).",
 };
 
 export default ru;
