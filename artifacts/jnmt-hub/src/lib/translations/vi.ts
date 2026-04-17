@@ -247,6 +247,9 @@ const vi: Record<string, string> = {
   weather_3day: "Dự báo 3 ngày tới",
   loading_weather: "Đang tải thời tiết...",
   weather_error: "Không thể tải thời tiết!",
+  krw_vnd_widget: "Đổi tiền Hàn ↔ Việt",
+  open_currency: "Mở đổi tiền",
+  rate_updated: "Tỷ giá cập nhật",
   weather_source: "Dữ liệu từ wttr.in · Cập nhật mỗi lần tải trang",
   // Vocab
   tap_to_see_meaning: "Nhấn để xem nghĩa",

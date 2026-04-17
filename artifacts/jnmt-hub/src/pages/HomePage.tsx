@@ -78,6 +78,94 @@ const Clock = memo(function Clock({ lang }: { lang: LangCode }) {
   );
 });
 
+function CurrencyWidget({ lang, setActivePage }: { lang: LangCode; setActivePage: (p: string) => void }) {
+  const [rate, setRate] = useState<number | null>(null);
+  const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [krwInput, setKrwInput] = useState("10000");
+  const [vndInput, setVndInput] = useState("");
+
+  useEffect(() => {
+    fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.json")
+      .then((r) => r.json())
+      .then((d) => {
+        const r: number = d.krw?.vnd;
+        if (r) {
+          setRate(r);
+          setDate(d.date ?? "");
+          const n = parseFloat("10000");
+          setVndInput(Math.round(n * r).toLocaleString("vi-VN"));
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  function onKrw(v: string) {
+    setKrwInput(v);
+    const n = parseFloat(v) || 0;
+    setVndInput(rate && n > 0 ? Math.round(n * rate).toLocaleString("vi-VN") : "");
+  }
+
+  function onVnd(v: string) {
+    const raw = v.replace(/\D/g, "");
+    setVndInput(raw ? parseInt(raw).toLocaleString("vi-VN") : "");
+    const n = parseInt(raw) || 0;
+    setKrwInput(rate && rate > 0 && n > 0 ? String(Math.round(n / rate)) : "");
+  }
+
+  return (
+    <div>
+      <div style={{ fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.5rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>
+        {t(lang, "krw_vnd_widget")} 💱
+      </div>
+      {loading ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem" }}>
+          <div className="spinner" style={{ borderColor: "rgba(255,255,255,0.3)", borderTopColor: "white" }} />
+          <span style={{ opacity: 0.85 }}>{t(lang, "loading")}</span>
+        </div>
+      ) : (
+        <div>
+          {rate && (
+            <div style={{ fontSize: "0.75rem", opacity: 0.75, marginBottom: "0.6rem" }}>
+              1 ₩ = {rate.toFixed(2)} ₫ {date ? `· ${date}` : ""}
+            </div>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <span style={{ fontSize: "1rem", flexShrink: 0 }}>🇰🇷</span>
+              <input
+                type="number"
+                value={krwInput}
+                onChange={(e) => onKrw(e.target.value)}
+                placeholder="₩"
+                style={{ flex: 1, padding: "0.4rem 0.5rem", borderRadius: 7, border: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.15)", color: "white", fontSize: "0.9rem", fontWeight: 700, outline: "none", minWidth: 0 }}
+              />
+              <span style={{ fontSize: "0.75rem", opacity: 0.8, flexShrink: 0 }}>₩</span>
+            </div>
+            <div style={{ textAlign: "center", opacity: 0.7, fontSize: "0.8rem" }}>⇅</div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <span style={{ fontSize: "1rem", flexShrink: 0 }}>🇻🇳</span>
+              <input
+                type="text"
+                value={vndInput}
+                onChange={(e) => onVnd(e.target.value)}
+                placeholder="₫"
+                style={{ flex: 1, padding: "0.4rem 0.5rem", borderRadius: 7, border: "1px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.15)", color: "white", fontSize: "0.9rem", fontWeight: 700, outline: "none", minWidth: 0 }}
+              />
+              <span style={{ fontSize: "0.75rem", opacity: 0.8, flexShrink: 0 }}>₫</span>
+            </div>
+          </div>
+          <button onClick={() => setActivePage("currency")}
+            style={{ marginTop: "0.6rem", width: "100%", padding: "0.35rem", borderRadius: 7, border: "1px solid rgba(255,255,255,0.35)", background: "rgba(255,255,255,0.15)", color: "white", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer" }}>
+            {t(lang, "open_currency")} →
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function WeatherWidget({ lang }: { lang: LangCode }) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -330,11 +418,16 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-          <div style={{ minWidth: 200, background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem", border: "1px solid rgba(255,255,255,0.2)" }}>
-            <div style={{ fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.5rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>
-              {t(lang, "weather")} 🌡️
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ minWidth: 200, background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem", border: "1px solid rgba(255,255,255,0.2)" }}>
+              <div style={{ fontSize: "0.75rem", opacity: 0.7, marginBottom: "0.5rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: 1 }}>
+                {t(lang, "weather")} 🌡️
+              </div>
+              <WeatherWidget lang={lang} />
             </div>
-            <WeatherWidget lang={lang} />
+            <div style={{ minWidth: 200, background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "1rem", border: "1px solid rgba(255,255,255,0.2)" }}>
+              <CurrencyWidget lang={lang} setActivePage={setActivePage} />
+            </div>
           </div>
         </div>
       </div>
