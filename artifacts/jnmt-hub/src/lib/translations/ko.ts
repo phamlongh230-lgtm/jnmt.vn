@@ -527,6 +527,12 @@ const ko: Record<string, string> = {
   class_starts_in: "시작까지",
   mins_label: "분",
   hrs_label: "시간",
+  about: "앱 소개",
+  features: "기능",
+  languages: "개 언어",
+  accent_color: "앱 테마 색상",
+  accent_color_hint: "색상 변경은 앱 전체에 적용됩니다",
+  accent_updated: "테마 색상이 변경되었습니다",
 };
 
 export default ko;

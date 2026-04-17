@@ -567,6 +567,14 @@ const vi: Record<string, string> = {
   class_starts_in: "Bắt đầu sau",
   mins_label: "phút",
   hrs_label: "giờ",
+  // About page
+  about: "Về app",
+  features: "Tính năng",
+  languages: "ngôn ngữ",
+  // Accent color
+  accent_color: "Màu chủ đề app",
+  accent_color_hint: "Đổi màu sẽ áp dụng cho toàn bộ app",
+  accent_updated: "Đã đổi màu chủ đề",
 };
 
 export default vi;

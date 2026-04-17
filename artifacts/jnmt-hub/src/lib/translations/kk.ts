@@ -527,6 +527,12 @@ const kk: Record<string, string> = {
   class_starts_in: "Басталуына",
   mins_label: "мин",
   hrs_label: "сағ",
+  about: "Қолданба туралы",
+  features: "Мүмкіндіктер",
+  languages: "тіл",
+  accent_color: "Қолданба түсі",
+  accent_color_hint: "Түс өзгерісі бүкіл қолданбаға қолданылады",
+  accent_updated: "Тақырып түсі жаңартылды",
 };
 
 export default kk;

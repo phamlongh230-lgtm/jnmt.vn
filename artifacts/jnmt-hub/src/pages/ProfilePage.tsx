@@ -6,6 +6,17 @@ const AVATAR_COLORS = [
   "#2563eb","#7c3aed","#059669","#d97706",
   "#dc2626","#0891b2","#db2777","#65a30d",
 ];
+
+const ACCENT_PRESETS = [
+  { color: "#2563eb", name: "Blue" },
+  { color: "#7c3aed", name: "Purple" },
+  { color: "#059669", name: "Green" },
+  { color: "#d97706", name: "Amber" },
+  { color: "#dc2626", name: "Red" },
+  { color: "#0891b2", name: "Cyan" },
+  { color: "#db2777", name: "Pink" },
+  { color: "#0f172a", name: "Dark" },
+];
 const GRADIENT_PAIRS: Record<string, [string,string]> = {
   "#2563eb": ["#2563eb","#0891b2"],
   "#7c3aed": ["#7c3aed","#db2777"],
@@ -37,7 +48,7 @@ function getDdayCount(): number {
 }
 
 export default function ProfilePage() {
-  const { lang, setLang, isDark, toggleDark, currentUser, updateUser, showToast } = useApp();
+  const { lang, setLang, isDark, toggleDark, accentColor, setAccentColor, currentUser, updateUser, showToast } = useApp();
 
   const [avatarColor, setAvatarColorState] = useState(getAvatarColor);
   const [vocabCount] = useState(getVocabCount);
@@ -252,6 +263,31 @@ export default function ProfilePage() {
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* ── Accent color ── */}
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem", marginBottom: "1.25rem" }}>
+        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: text, marginBottom: "0.3rem" }}>
+          🎨 {t(lang, "accent_color")}
+        </h3>
+        <p style={{ fontSize: "0.75rem", color: text2, marginBottom: "0.85rem" }}>{t(lang, "accent_color_hint")}</p>
+        <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+          {ACCENT_PRESETS.map(({ color, name }) => (
+            <button
+              key={color}
+              title={name}
+              onClick={() => { setAccentColor(color); showToast(t(lang, "accent_updated"), "success"); }}
+              style={{
+                width: 36, height: 36, borderRadius: "50%",
+                background: color,
+                border: accentColor === color ? `3px solid ${text}` : "3px solid transparent",
+                cursor: "pointer",
+                boxShadow: accentColor === color ? `0 0 0 2px ${color}` : "none",
+                transition: "all 0.15s",
+              }}
+            />
+          ))}
         </div>
       </div>
 

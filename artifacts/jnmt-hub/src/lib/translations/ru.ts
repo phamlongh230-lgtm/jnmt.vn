@@ -527,6 +527,12 @@ const ru: Record<string, string> = {
   class_starts_in: "Начало через",
   mins_label: "мин",
   hrs_label: "ч",
+  about: "О приложении",
+  features: "Функции",
+  languages: "языков",
+  accent_color: "Цвет темы",
+  accent_color_hint: "Изменение цвета применится ко всему приложению",
+  accent_updated: "Цвет темы обновлён",
 };
 
 export default ru;

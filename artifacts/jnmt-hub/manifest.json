@@ -1,10 +1,10 @@
 {
-  "name": "전남미래국제고등학교 학생 허브",
-  "short_name": "JNMT.kr-학새",
-  "description": "전남미래국제고등학교 학생 포털 - Portal học sinh JNMT",
+  "name": "JNMT Student — 전남미래국제고등학교",
+  "short_name": "JNMT Student",
+  "description": "App học sinh 전남미래국제고등학교 — Từ điển, thời khóa biểu, chat, sổ từ vựng và nhiều hơn nữa.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#2563eb",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "lang": "ko",
@@ -16,5 +16,25 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["education", "productivity"]
+  "categories": ["education", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Từ điển",
+      "short_name": "Dictionary",
+      "url": "/?page=dictionary",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Thời khóa biểu",
+      "short_name": "Schedule",
+      "url": "/?page=schedule",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Chat",
+      "short_name": "Chat",
+      "url": "/?page=chat",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
 }

@@ -37,6 +37,7 @@ const LinksPage         = lazy(() => import("@/pages/LinksPage"));
 const AdminPage         = lazy(() => import("@/pages/AdminPage"));
 const NotesPage         = lazy(() => import("@/pages/NotesPage"));
 const ProfilePage       = lazy(() => import("@/pages/ProfilePage"));
+const AboutPage         = lazy(() => import("@/pages/AboutPage"));
 
 setAuthTokenGetter(() => getToken());
 
@@ -85,6 +86,7 @@ function CurrentPage({ page }: { page: string }) {
     case "admin":         return <AdminPage />;
     case "notes":         return <NotesPage />;
     case "profile":       return <ProfilePage />;
+    case "about":         return <AboutPage />;
     default:              return <HomePage />;
   }
 }

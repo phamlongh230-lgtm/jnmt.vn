@@ -10,6 +10,8 @@ interface AppContextType {
   setLang: (lang: LangCode) => void;
   isDark: boolean;
   toggleDark: () => void;
+  accentColor: string;
+  setAccentColor: (color: string) => void;
   currentUser: User | null;
   token: string | null;
   login: (user: User, token: string) => void;
@@ -35,6 +37,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const stored = (localStorage.getItem("jnmt_lang") as LangCode) || "vi";
     return stored === "vi";
   });
+  const [accentColor, setAccentColorState] = useState(() => localStorage.getItem("jnmt_accent") || "#2563eb");
+
+  const setAccentColor = useCallback((color: string) => {
+    setAccentColorState(color);
+    localStorage.setItem("jnmt_accent", color);
+    document.documentElement.style.setProperty("--primary", color);
+  }, []);
+
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem("jnmt_theme");
     if (saved) return saved === "dark";
@@ -167,7 +177,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider
-      value={{ lang, setLang, isDark, toggleDark, currentUser, token, login, logout, activePage, setActivePage, showToast, chatUnread, resetChatUnread, sendWsMessage, onlineUsers, updateUser }}
+      value={{ lang, setLang, isDark, toggleDark, accentColor, setAccentColor, currentUser, token, login, logout, activePage, setActivePage, showToast, chatUnread, resetChatUnread, sendWsMessage, onlineUsers, updateUser }}
     >
       {children}
       {toast && (

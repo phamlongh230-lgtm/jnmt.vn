@@ -382,6 +382,7 @@ export default function HomePage() {
   const { lang, setActivePage, currentUser, isDark } = useApp();
   const [pinned, setPinned] = useState<string[]>(loadPinned);
   const [customizeOpen, setCustomizeOpen] = useState(false);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
 
   const bg2 = isDark ? "#1e293b" : "#f8fafc";
   const text = isDark ? "#f1f5f9" : "#0f172a";
@@ -396,7 +397,21 @@ export default function HomePage() {
     savePinned(next);
   }
 
-  const pinnedTools = ALL_PINNABLE.filter((t) => pinned.includes(t.page));
+  function onDragStart(idx: number) { setDragIdx(idx); }
+  function onDragOver(e: React.DragEvent, idx: number) {
+    e.preventDefault();
+    if (dragIdx === null || dragIdx === idx) return;
+    const next = [...pinned];
+    const [moved] = next.splice(dragIdx, 1);
+    next.splice(idx, 0, moved);
+    setPinned(next);
+    savePinned(next);
+    setDragIdx(idx);
+  }
+  function onDragEnd() { setDragIdx(null); }
+
+  const pinnedTools = ALL_PINNABLE.filter((t) => pinned.includes(t.page))
+    .sort((a, b) => pinned.indexOf(a.page) - pinned.indexOf(b.page));
 
   return (
     <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1.5rem 1rem" }} className="animate-fade-in">
@@ -461,10 +476,14 @@ export default function HomePage() {
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: "0.7rem" }}>
-            {pinnedTools.map((card) => (
+            {pinnedTools.map((card, idx) => (
               <button key={card.page} onClick={() => setActivePage(card.page)}
                 className="glass"
-                style={{ borderRadius: 12, padding: "0.9rem 0.5rem", cursor: "pointer", textAlign: "center", border: "none", transition: "transform 0.15s" }}
+                draggable
+                onDragStart={() => onDragStart(idx)}
+                onDragOver={(e) => onDragOver(e, idx)}
+                onDragEnd={onDragEnd}
+                style={{ borderRadius: 12, padding: "0.9rem 0.5rem", cursor: "grab", textAlign: "center", border: "none", transition: "transform 0.15s, opacity 0.15s", opacity: dragIdx === idx ? 0.45 : 1 }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; }}>
                 <div style={{ fontSize: "1.8rem", marginBottom: "0.4rem" }}>{card.icon}</div>

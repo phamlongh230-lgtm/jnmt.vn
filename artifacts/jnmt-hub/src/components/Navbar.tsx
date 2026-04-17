@@ -319,6 +319,9 @@ export default function Navbar() {
                         <button onClick={() => { setUserMenuOpen(false); setActivePage("profile"); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: textCol, background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem", borderBottom: `1px solid ${border}` }}>
                           👤 {t(lang, "profile")}
                         </button>
+                        <button onClick={() => { setUserMenuOpen(false); setActivePage("about"); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: textCol, background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem", borderBottom: `1px solid ${border}` }}>
+                          ℹ️ {t(lang, "about")}
+                        </button>
                         <button onClick={() => { setUserMenuOpen(false); setPwOpen(true); }} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.65rem 1rem", color: textCol, background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, fontSize: "0.88rem", borderBottom: `1px solid ${border}` }}>
                           🔒 {t(lang, "change_password")}
                         </button>

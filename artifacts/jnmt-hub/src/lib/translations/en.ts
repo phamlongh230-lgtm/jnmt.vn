@@ -527,6 +527,12 @@ const en: Record<string, string> = {
   class_starts_in: "Starts in",
   mins_label: "min",
   hrs_label: "hr",
+  about: "About",
+  features: "Features",
+  languages: "languages",
+  accent_color: "App theme color",
+  accent_color_hint: "Color change applies to the whole app",
+  accent_updated: "Theme color updated",
 };
 
 export default en;

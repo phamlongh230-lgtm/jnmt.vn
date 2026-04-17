@@ -527,6 +527,12 @@ const mn: Record<string, string> = {
   class_starts_in: "Эхлэхэд",
   mins_label: "мин",
   hrs_label: "цаг",
+  about: "Аппийн тухай",
+  features: "Боломжууд",
+  languages: "хэл",
+  accent_color: "Аппын өнгө",
+  accent_color_hint: "Өнгө өөрчлөхөд бүх апп дээр хэрэгжинэ",
+  accent_updated: "Өнгө шинэчлэгдлээ",
 };
 
 export default mn;
