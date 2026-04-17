@@ -88,7 +88,7 @@ export default function LoginPage() {
       {/* Logo / Branding */}
       <div style={{ marginBottom: "1.75rem", textAlign: "center" }}>
         <div style={{ fontSize: "3rem", marginBottom: "0.25rem" }}>🏫</div>
-        <h1 style={{ fontSize: "1.6rem", fontWeight: 900, color: textCol, margin: 0 }}>JNMT.vn</h1>
+        <h1 style={{ fontSize: "1.6rem", fontWeight: 900, color: textCol, margin: 0 }}>JNMT Student</h1>
         <p style={{ margin: "0.35rem 0 0", fontSize: "0.85rem", color: text2 }}>전남미래국제고등학교 · 학생 포털</p>
       </div>
 
