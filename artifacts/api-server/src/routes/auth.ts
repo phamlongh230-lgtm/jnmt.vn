@@ -159,6 +159,8 @@ router.get("/auth/me", async (req, res): Promise<void> => {
       username: user.username,
       email: user.email,
       role: user.role,
+      avatarColor: user.avatarColor,
+      avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,
     }));
   } catch (err) {
@@ -201,7 +203,7 @@ router.put("/auth/profile", async (req, res): Promise<void> => {
 
     const body = z.object({
       avatarColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
-      avatarUrl: z.string().max(200000).optional(),
+      avatarUrl: z.string().max(200000).nullable().optional(),
     }).safeParse(req.body);
     if (!body.success) { res.status(400).json({ error: "Dữ liệu không hợp lệ!" }); return; }
 

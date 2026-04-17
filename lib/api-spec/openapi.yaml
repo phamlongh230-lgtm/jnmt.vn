@@ -208,6 +208,11 @@ components:
           type: string
         role:
           type: string
+        avatarColor:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time

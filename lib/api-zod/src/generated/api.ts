@@ -48,6 +48,8 @@ export const LoginUserResponse = zod.object({
     username: zod.string(),
     email: zod.string(),
     role: zod.string(),
+    avatarColor: zod.string().optional(),
+    avatarUrl: zod.string().nullish(),
     createdAt: zod.coerce.date().optional(),
   }),
 });
@@ -60,6 +62,8 @@ export const GetMeResponse = zod.object({
   username: zod.string(),
   email: zod.string(),
   role: zod.string(),
+  avatarColor: zod.string().optional(),
+  avatarUrl: zod.string().nullish(),
   createdAt: zod.coerce.date().optional(),
 });
 

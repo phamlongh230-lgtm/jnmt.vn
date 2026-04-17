@@ -4,7 +4,7 @@ export interface User {
   email: string;
   role: string;
   avatarColor?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   displayName?: string;
   createdAt?: string;
 }

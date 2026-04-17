@@ -30,6 +30,8 @@ export interface User {
   username: string;
   email: string;
   role: string;
+  avatarColor?: string;
+  avatarUrl?: string | null;
   createdAt?: string;
 }
 
