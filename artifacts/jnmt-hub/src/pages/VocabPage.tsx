@@ -63,6 +63,8 @@ export default function VocabPage() {
     localStorage.setItem("jnmt_vocab", JSON.stringify(newItems));
   }
 
+  const filtered = items.filter(i => filterLang === "all" || i.lang === filterLang);
+
   const startQuiz = useCallback(() => {
     if (filtered.length < 4) return;
     const qs = buildQuiz(filtered);
@@ -80,8 +82,6 @@ export default function VocabPage() {
     save([{ id: Date.now().toString(), word, meaning, example, lang: wordLang }, ...items]);
     setWord(""); setMeaning(""); setExample(""); setShowAdd(false);
   }
-
-  const filtered = items.filter(i => filterLang === "all" || i.lang === filterLang);
 
   // Get display name for a language filter button
   const filterName = (code: string) => {

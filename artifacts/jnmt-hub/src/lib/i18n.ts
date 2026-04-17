@@ -14,8 +14,8 @@ export type LangCode = "vi" | "ko" | "en" | "mn" | "kk" | "ru";
 // Registry — vi is pre-loaded synchronously, others loaded on demand
 const registry: Partial<Record<LangCode, Record<string, string>>> = { vi };
 
-const loaders: Record<LangCode, () => Promise<{ default: Record<string, string> }>> = {
-  vi: () => import("./translations/vi"),
+// vi is pre-loaded statically above; only non-default langs have dynamic loaders
+const loaders: Record<Exclude<LangCode, "vi">, () => Promise<{ default: Record<string, string> }>> = {
   ko: () => import("./translations/ko"),
   en: () => import("./translations/en"),
   mn: () => import("./translations/mn"),
@@ -26,7 +26,7 @@ const loaders: Record<LangCode, () => Promise<{ default: Record<string, string> 
 /** Load a language bundle. No-op if already loaded. */
 export async function loadLang(lang: LangCode): Promise<void> {
   if (registry[lang]) return;
-  const mod = await loaders[lang]();
+  const mod = await loaders[lang as Exclude<LangCode, "vi">]();
   registry[lang] = mod.default;
 }
 
