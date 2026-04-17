@@ -533,6 +533,14 @@ const kk: Record<string, string> = {
   accent_color: "Қолданба түсі",
   accent_color_hint: "Түс өзгерісі бүкіл қолданбаға қолданылады",
   accent_updated: "Тақырып түсі жаңартылды",
+  avatar_photo: "Профиль фотосы",
+  avatar_photo_hint: "Құрылғыдан фото таңдаңыз (автоматты шаршы кесу)",
+  choose_photo: "Фото таңдау",
+  remove_photo: "Фотоны жою",
+  uploading: "Жүктелуде...",
+  avatar_too_large: "Файл тым үлкен! Максимум 5MB",
+  avatar_removed: "Профиль фотосы жойылды",
+  avatar_upload_error: "Жүктеу қатесі, кейінірек қайталаңыз",
 };
 
 export default kk;

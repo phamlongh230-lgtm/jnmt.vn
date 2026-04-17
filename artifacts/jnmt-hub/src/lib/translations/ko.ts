@@ -533,6 +533,14 @@ const ko: Record<string, string> = {
   accent_color: "앱 테마 색상",
   accent_color_hint: "색상 변경은 앱 전체에 적용됩니다",
   accent_updated: "테마 색상이 변경되었습니다",
+  avatar_photo: "프로필 사진",
+  avatar_photo_hint: "기기에서 사진 선택 (자동 정사각형 크롭)",
+  choose_photo: "사진 선택",
+  remove_photo: "사진 삭제",
+  uploading: "업로드 중...",
+  avatar_too_large: "파일이 너무 큽니다! 최대 5MB",
+  avatar_removed: "프로필 사진이 삭제되었습니다",
+  avatar_upload_error: "업로드 오류, 나중에 다시 시도하세요",
 };
 
 export default ko;

@@ -277,8 +277,10 @@ export default function Navbar() {
             </select>
             <div style={{ position: "relative" }}>
               <button onClick={() => setUserMenuOpen((p) => !p)}
-                style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", padding: "0.4rem 0.6rem", borderRadius: 100, cursor: "pointer", fontSize: "1rem", backdropFilter: "blur(10px)" }}>
-                {currentUser ? currentUser.username.charAt(0).toUpperCase() : "👤"}
+                style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", padding: currentUser?.avatarUrl ? "0" : "0.4rem 0.6rem", borderRadius: 100, cursor: "pointer", fontSize: "1rem", backdropFilter: "blur(10px)", overflow: "hidden", width: currentUser?.avatarUrl ? 36 : undefined, height: currentUser?.avatarUrl ? 36 : undefined }}>
+                {currentUser?.avatarUrl
+                  ? <img src={currentUser.avatarUrl} alt="avatar" style={{ width: 36, height: 36, objectFit: "cover", display: "block" }} />
+                  : currentUser ? currentUser.username.charAt(0).toUpperCase() : "👤"}
               </button>
               {userMenuOpen && (
                 <>
@@ -288,8 +290,10 @@ export default function Navbar() {
                       <>
                         <div style={{ padding: "0.75rem 1rem", borderBottom: `1px solid ${border}` }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                            <div style={{ width: 32, height: 32, borderRadius: "50%", background: currentUser.avatarColor || "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0 }}>
-                              {currentUser.username.charAt(0).toUpperCase()}
+                            <div style={{ width: 32, height: 32, borderRadius: "50%", background: currentUser.avatarColor || "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0, overflow: "hidden" }}>
+                              {currentUser.avatarUrl
+                                ? <img src={currentUser.avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                : currentUser.username.charAt(0).toUpperCase()}
                             </div>
                             <div>
                               <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>

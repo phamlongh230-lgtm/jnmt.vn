@@ -533,6 +533,14 @@ const mn: Record<string, string> = {
   accent_color: "Аппын өнгө",
   accent_color_hint: "Өнгө өөрчлөхөд бүх апп дээр хэрэгжинэ",
   accent_updated: "Өнгө шинэчлэгдлээ",
+  avatar_photo: "Профайл зураг",
+  avatar_photo_hint: "Төхөөрөмжөөс зураг сонгох (автомат дөрвөлжин таслах)",
+  choose_photo: "Зураг сонгох",
+  remove_photo: "Зураг устгах",
+  uploading: "Байршуулж байна...",
+  avatar_too_large: "Файл хэт том! Хамгийн их 5MB",
+  avatar_removed: "Профайл зураг устгагдлаа",
+  avatar_upload_error: "Байршуулах алдаа, дараа дахин оролдоно уу",
 };
 
 export default mn;

@@ -575,6 +575,14 @@ const vi: Record<string, string> = {
   accent_color: "Màu chủ đề app",
   accent_color_hint: "Đổi màu sẽ áp dụng cho toàn bộ app",
   accent_updated: "Đã đổi màu chủ đề",
+  avatar_photo: "Ảnh đại diện",
+  avatar_photo_hint: "Chọn ảnh từ thiết bị (tự động crop vuông)",
+  choose_photo: "Chọn ảnh",
+  remove_photo: "Xoá ảnh",
+  uploading: "Đang tải lên...",
+  avatar_too_large: "Ảnh quá lớn! Tối đa 5MB",
+  avatar_removed: "Đã xoá ảnh đại diện",
+  avatar_upload_error: "Lỗi tải ảnh, thử lại sau",
 };
 
 export default vi;

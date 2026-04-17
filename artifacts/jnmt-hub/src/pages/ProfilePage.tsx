@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useApp } from "@/context/AppContext";
 import { t, LANGUAGES, LangCode } from "@/lib/i18n";
 
@@ -47,8 +47,33 @@ function getDdayCount(): number {
   catch { return 0; }
 }
 
+function resizeImage(file: File, size = 160): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext("2d")!;
+        const min = Math.min(img.width, img.height);
+        const sx = (img.width - min) / 2;
+        const sy = (img.height - min) / 2;
+        ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = reject;
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function ProfilePage() {
   const { lang, setLang, isDark, toggleDark, accentColor, setAccentColor, currentUser, updateUser, showToast } = useApp();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const [avatarColor, setAvatarColorState] = useState(getAvatarColor);
   const [vocabCount] = useState(getVocabCount);
@@ -96,6 +121,47 @@ export default function ProfilePage() {
     }
   }
 
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast(t(lang, "avatar_too_large"), "error"); return; }
+    setUploadingAvatar(true);
+    try {
+      const base64 = await resizeImage(file);
+      const res = await fetch("/api/auth/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("jnmt_token")}` },
+        body: JSON.stringify({ avatarUrl: base64 }),
+      });
+      if (!res.ok) throw new Error();
+      const updated = await res.json();
+      if (currentUser) updateUser({ ...currentUser, avatarUrl: updated.avatarUrl ?? base64 });
+      showToast(t(lang, "avatar_updated"), "success");
+    } catch {
+      showToast(t(lang, "avatar_upload_error"), "error");
+    } finally {
+      setUploadingAvatar(false);
+      e.target.value = "";
+    }
+  }
+
+  async function handleRemoveAvatar() {
+    setUploadingAvatar(true);
+    try {
+      await fetch("/api/auth/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("jnmt_token")}` },
+        body: JSON.stringify({ avatarUrl: null }),
+      });
+      if (currentUser) updateUser({ ...currentUser, avatarUrl: undefined });
+      showToast(t(lang, "avatar_removed"), "success");
+    } catch {
+      showToast(t(lang, "avatar_upload_error"), "error");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
+
   function handleSaveName() {
     if (!displayName.trim() || !currentUser) return;
     updateUser({ ...currentUser, displayName: displayName.trim() });
@@ -132,9 +198,22 @@ export default function ProfilePage() {
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: "2rem", fontWeight: 900, color: "white",
               boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
-            }}>
-              {avatarInitial}
+              overflow: "hidden", cursor: "pointer",
+            }} onClick={() => fileInputRef.current?.click()}>
+              {currentUser?.avatarUrl
+                ? <img src={currentUser.avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : avatarInitial}
+              {uploadingAvatar && (
+                <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div className="spinner" />
+                </div>
+              )}
             </div>
+            <button onClick={() => fileInputRef.current?.click()}
+              style={{ position: "absolute", bottom: 0, right: 0, width: 26, height: 26, borderRadius: "50%", background: "white", border: "2px solid rgba(255,255,255,0.6)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: "0.75rem", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}>
+              📷
+            </button>
+            <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleAvatarUpload} />
           </div>
 
           {/* Info */}
@@ -208,6 +287,27 @@ export default function ProfilePage() {
               <div style={{ fontSize: "0.72rem", color: text2, marginTop: "0.25rem", lineHeight: 1.3 }}>{s.label}</div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Avatar photo ── */}
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem", marginBottom: "1.25rem" }}>
+        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: text, marginBottom: "0.3rem" }}>
+          📷 {t(lang, "avatar_photo")}
+        </h3>
+        <p style={{ fontSize: "0.75rem", color: text2, marginBottom: "0.85rem" }}>{t(lang, "avatar_photo_hint")}</p>
+        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
+          <button onClick={() => fileInputRef.current?.click()} disabled={uploadingAvatar}
+            style={{ padding: "0.55rem 1.1rem", borderRadius: 10, border: `1px solid ${border}`, background: isDark ? "#1e293b" : "#f1f5f9", color: text, cursor: "pointer", fontWeight: 600, fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            📁 {t(lang, "choose_photo")}
+          </button>
+          {currentUser?.avatarUrl && (
+            <button onClick={handleRemoveAvatar} disabled={uploadingAvatar}
+              style={{ padding: "0.55rem 1.1rem", borderRadius: 10, border: "1px solid #fecaca", background: isDark ? "#2a1010" : "#fef2f2", color: "#ef4444", cursor: "pointer", fontWeight: 600, fontSize: "0.85rem" }}>
+              🗑 {t(lang, "remove_photo")}
+            </button>
+          )}
+          {uploadingAvatar && <span style={{ fontSize: "0.8rem", color: text2 }}>{t(lang, "uploading")}</span>}
         </div>
       </div>
 

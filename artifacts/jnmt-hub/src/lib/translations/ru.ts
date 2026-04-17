@@ -533,6 +533,14 @@ const ru: Record<string, string> = {
   accent_color: "Цвет темы",
   accent_color_hint: "Изменение цвета применится ко всему приложению",
   accent_updated: "Цвет темы обновлён",
+  avatar_photo: "Фото профиля",
+  avatar_photo_hint: "Выберите фото с устройства (автоматическая квадратная обрезка)",
+  choose_photo: "Выбрать фото",
+  remove_photo: "Удалить фото",
+  uploading: "Загрузка...",
+  avatar_too_large: "Файл слишком большой! Максимум 5MB",
+  avatar_removed: "Фото профиля удалено",
+  avatar_upload_error: "Ошибка загрузки, попробуйте позже",
 };
 
 export default ru;

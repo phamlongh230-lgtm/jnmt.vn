@@ -533,6 +533,14 @@ const en: Record<string, string> = {
   accent_color: "App theme color",
   accent_color_hint: "Color change applies to the whole app",
   accent_updated: "Theme color updated",
+  avatar_photo: "Profile photo",
+  avatar_photo_hint: "Choose a photo from your device (auto square crop)",
+  choose_photo: "Choose photo",
+  remove_photo: "Remove photo",
+  uploading: "Uploading...",
+  avatar_too_large: "File too large! Max 5MB",
+  avatar_removed: "Profile photo removed",
+  avatar_upload_error: "Upload error, please try again",
 };
 
 export default en;
