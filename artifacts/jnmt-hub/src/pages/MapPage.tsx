@@ -43,7 +43,7 @@ const BUILDINGS = [
 const QUICK_INFO = [
   { icon: "📍", label: "Địa chỉ", value: "Gangjin-gun, Jeollanam-do, South Korea" },
   { icon: "🚌", label: "Giao thông", value: "Xe buýt nội thị + taxi Kakao T" },
-  { icon: "🌐", label: "Website", value: "www.jnmt.kr", isLink: true, href: "https://www.jnmt.kr" },
+  { icon: "🌐", label: "Website", value: "www.jnmt.vn", isLink: true, href: "https://www.jnmt.vn" },
   { icon: "📞", label: "Điện thoại", value: "010-6315-8995", isLink: true, href: "tel:01063158995" },
 ];
 

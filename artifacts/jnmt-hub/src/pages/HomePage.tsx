@@ -408,7 +408,7 @@ export default function HomePage() {
             <p style={{ opacity: 0.85, marginBottom: "1rem", fontSize: "0.9rem" }}>Jeonnam Future International High School</p>
             <Clock lang={lang} />
             <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", marginTop: "1rem" }}>
-              <a href="https://www.jnmt.kr" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.jnmt.vn" target="_blank" rel="noopener noreferrer"
                 style={{ background: "rgba(255,255,255,0.2)", color: "white", border: "1px solid rgba(255,255,255,0.35)", padding: "0.5rem 1rem", borderRadius: 8, textDecoration: "none", fontSize: "0.85rem", fontWeight: 600 }}>
                 🌐 {t(lang, "website")}
               </a>

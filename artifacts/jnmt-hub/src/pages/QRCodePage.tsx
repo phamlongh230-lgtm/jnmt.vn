@@ -3,14 +3,14 @@ import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
 
 const PRESETS = [
-  { label: "Link trường", value: "https://jnmt.kr" },
+  { label: "Link trường", value: "https://jnmt.vn" },
   { label: "WiFi trường", value: "WIFI:T:WPA;S:JNMT_SCHOOL;P:password123;;" },
   { label: "Số điện thoại Admin", value: "tel:01063158995" },
 ];
 
 export default function QRCodePage() {
   const { isDark, lang } = useApp();
-  const [text, setText] = useState("https://jnmt.kr");
+  const [text, setText] = useState("https://jnmt.vn");
   const [size, setSize] = useState(250);
 
   const border = isDark ? "#334155" : "#e2e8f0";

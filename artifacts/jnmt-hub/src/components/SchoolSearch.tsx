@@ -22,7 +22,7 @@ const PINNED: School = {
   nameKo: "전남미래국제고등학교",
   nameEn: "Jeonnam Future International High School",
   slug: "jnmt",
-  link: "https://www.jnmt.kr",
+  link: "https://www.jnmt.vn",
   type: "high_school",
   city: "Gangjin-gun, Jeollanam-do",
   country: "KR",

@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://jnmt.kr/</loc>
+    <loc>https://jnmt.vn/</loc>
     <lastmod>2026-04-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://jnmt.kr/"/>
-    <xhtml:link rel="alternate" hreflang="vi" href="https://jnmt.kr/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://jnmt.kr/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://jnmt.vn/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://jnmt.vn/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jnmt.vn/"/>
   </url>
 </urlset>
