@@ -137,9 +137,18 @@ export default function AIChatPage() {
              "Trợ lý AI hỗ trợ học đường"}
           </div>
         </div>
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.75rem", opacity: 0.85 }}>
-          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80" }} />
-          Online
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.75rem", opacity: 0.85 }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80" }} />
+            Online
+          </div>
+          {messages.length > 0 && (
+            <button onClick={() => setMessages([])}
+              title="Xóa cuộc trò chuyện"
+              style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "white", borderRadius: 8, padding: "0.25rem 0.6rem", cursor: "pointer", fontSize: "0.75rem", fontWeight: 600 }}>
+              🗑 {t(lang, "clear")}
+            </button>
+          )}
         </div>
       </div>
 

@@ -517,19 +517,26 @@ export default function ChatPage() {
                   🔑 {t(lang, "must_login_to_chat")}
                 </div>
               ) : (
-                <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
-                  <textarea
-                    value={localText}
-                    onChange={(e) => setLocalText(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendLocalMsg(); } }}
-                    placeholder={t(lang, "message_placeholder")}
-                    rows={1}
-                    style={{ flex: 1, padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 14, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none", resize: "none", fontFamily: "inherit", lineHeight: 1.4 }}
-                  />
-                  <button onClick={sendLocalMsg} disabled={!localText.trim()}
-                    style={{ padding: "0.65rem 1.1rem", background: "#2563eb", color: "white", border: "none", borderRadius: 14, cursor: localText.trim() ? "pointer" : "default", fontSize: "0.9rem", fontWeight: 700, opacity: localText.trim() ? 1 : 0.45, flexShrink: 0 }}>
-                    {t(lang, "send")}
-                  </button>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                  <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+                    <textarea
+                      value={localText}
+                      onChange={(e) => setLocalText(e.target.value.slice(0, 2000))}
+                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendLocalMsg(); } }}
+                      placeholder={t(lang, "message_placeholder")}
+                      rows={1}
+                      style={{ flex: 1, padding: "0.65rem 0.85rem", border: `1px solid ${border}`, borderRadius: 14, background: inputBg, color: textCol, fontSize: "0.9rem", outline: "none", resize: "none", fontFamily: "inherit", lineHeight: 1.4 }}
+                    />
+                    <button onClick={sendLocalMsg} disabled={!localText.trim()}
+                      style={{ padding: "0.65rem 1.1rem", background: "#2563eb", color: "white", border: "none", borderRadius: 14, cursor: localText.trim() ? "pointer" : "default", fontSize: "0.9rem", fontWeight: 700, opacity: localText.trim() ? 1 : 0.45, flexShrink: 0 }}>
+                      {t(lang, "send")}
+                    </button>
+                  </div>
+                  {localText.length > 1800 && (
+                    <div style={{ fontSize: "0.72rem", color: localText.length >= 2000 ? "#ef4444" : text2, textAlign: "right" }}>
+                      {localText.length}/2000
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -623,6 +630,13 @@ export default function ChatPage() {
                               style={{ width: 22, height: 22, borderRadius: "50%", background: isDark ? "#334155" : "#e2e8f0", border: "none", cursor: "pointer", fontSize: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}
                             >😊</button>
                           )}
+                          {/* Copy button */}
+                          <button
+                            className="reaction-btn"
+                            onClick={() => { navigator.clipboard.writeText(msg.content); }}
+                            title={t(lang, "copy_msg")}
+                            style={{ width: 22, height: 22, borderRadius: "50%", background: isDark ? "#334155" : "#e2e8f0", border: "none", cursor: "pointer", fontSize: "0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}
+                          >📋</button>
                           {/* Reply button */}
                           {currentUser && (
                             <button

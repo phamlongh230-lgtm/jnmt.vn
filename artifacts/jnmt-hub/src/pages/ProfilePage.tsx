@@ -437,6 +437,12 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* ── Change password ── */}
+      <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem", marginBottom: "1.25rem" }}>
+        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: text, marginBottom: "1rem" }}>🔐 {t(lang, "change_password")}</h3>
+        <ChangePasswordForm lang={lang} isDark={isDark} border={border} text={text} text2={text2} showToast={showToast} />
+      </div>
+
       {/* ── Account info (read-only) ── */}
       <div className="glass" style={{ borderRadius: 22, padding: "1.25rem 1.5rem" }}>
         <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: text, marginBottom: "1rem" }}>
@@ -458,5 +464,60 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ChangePasswordForm({ lang, isDark, border, text, text2, showToast }: {
+  lang: LangCode; isDark: boolean; border: string; text: string; text2: string;
+  showToast: (msg: string, type: "success" | "error") => void;
+}) {
+  const [cur, setCur] = useState("");
+  const [next, setNext] = useState("");
+  const [showCur, setShowCur] = useState(false);
+  const [showNext, setShowNext] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const inputBg = isDark ? "#0f172a" : "#f8fafc";
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (next.length < 6) { showToast(t(lang, "password_too_short"), "error"); return; }
+    setSaving(true);
+    try {
+      const res = await fetch("/api/auth/password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("jnmt_token")}` },
+        body: JSON.stringify({ currentPassword: cur, newPassword: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || t(lang, "error_generic"), "error"); return; }
+      showToast(t(lang, "password_changed"), "success");
+      setCur(""); setNext("");
+    } catch { showToast(t(lang, "error_generic"), "error"); }
+    finally { setSaving(false); }
+  }
+
+  const pwField = (label: string, val: string, setVal: (v: string) => void, show: boolean, setShow: (v: boolean) => void) => (
+    <div style={{ marginBottom: "0.75rem" }}>
+      <label style={{ display: "block", fontSize: "0.78rem", color: text2, marginBottom: "0.35rem", fontWeight: 600 }}>{label}</label>
+      <div style={{ position: "relative" }}>
+        <input type={show ? "text" : "password"} value={val} onChange={(e) => setVal(e.target.value)} required
+          style={{ width: "100%", padding: "0.6rem 2.5rem 0.6rem 0.75rem", border: `1px solid ${border}`, borderRadius: 8, background: inputBg, color: text, fontSize: "0.88rem", boxSizing: "border-box", outline: "none" }} />
+        <button type="button" onClick={() => setShow(!show)}
+          style={{ position: "absolute", right: "0.6rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: "1rem", color: text2, padding: 0 }}>
+          {show ? "🙈" : "👁️"}
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {pwField(t(lang, "current_password"), cur, setCur, showCur, setShowCur)}
+      {pwField(t(lang, "new_password"), next, setNext, showNext, setShowNext)}
+      <button type="submit" disabled={saving || !cur || !next}
+        style={{ padding: "0.6rem 1.25rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, cursor: saving || !cur || !next ? "not-allowed" : "pointer", fontWeight: 700, fontSize: "0.88rem", opacity: saving || !cur || !next ? 0.6 : 1 }}>
+        {saving ? "..." : t(lang, "save")}
+      </button>
+    </form>
   );
 }
