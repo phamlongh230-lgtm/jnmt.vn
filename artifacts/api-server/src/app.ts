@@ -11,6 +11,9 @@ import { logger } from "./lib/logger";
 
 const app: Express = express();
 
+// Trust Render's proxy (required for rate limiting + correct IP)
+app.set("trust proxy", 1);
+
 // Security headers
 app.use(helmet({
   crossOriginEmbedderPolicy: false, // allow Tinkercad/KakaoMap embeds
