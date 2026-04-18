@@ -95,7 +95,7 @@ if (existsSync(frontendDist)) {
   app.use(express.static(frontendDist));
 
   // SPA fallback — serve index.html for all non-API routes
-  app.get("{/*path}", (_req, res) => {
+  app.use((_req, res) => {
     res.sendFile(path.join(frontendDist, "index.html"));
   });
 } else {
