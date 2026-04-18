@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: jnmt-vn
+    name: jnmt-student
     runtime: node
     buildCommand: bash render-build.sh
     startCommand: NODE_ENV=production node artifacts/api-server/dist/index.mjs
