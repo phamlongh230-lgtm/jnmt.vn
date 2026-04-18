@@ -228,9 +228,11 @@ export default function Navbar() {
                       </div>
                     </div>
                     {(() => {
+                      const isAdmin = currentUser?.role === "admin";
+                      const visibleTool = (tool: { page: string }) => tool.page !== "admin" || isAdmin;
                       const q = toolSearch.toLowerCase();
                       if (q) {
-                        const flat = TOOL_GROUPS.flatMap((g) => g.tools).filter((tool) => t(lang, tool.key).toLowerCase().includes(q) || tool.page.includes(q));
+                        const flat = TOOL_GROUPS.flatMap((g) => g.tools).filter(visibleTool).filter((tool) => t(lang, tool.key).toLowerCase().includes(q) || tool.page.includes(q));
                         return flat.length === 0
                           ? <div style={{ padding: "1rem", fontSize: "0.83rem", color: text2, textAlign: "center" }}>{t(lang, "no_results")}</div>
                           : flat.map((tool) => (
@@ -241,12 +243,15 @@ export default function Navbar() {
                             </button>
                           ));
                       }
-                      return TOOL_GROUPS.map((group, gi) => (
+                      return TOOL_GROUPS.map((group, gi) => {
+                        const tools = group.tools.filter(visibleTool);
+                        if (tools.length === 0) return null;
+                        return (
                         <div key={group.labelKey}>
                           <div style={{ padding: "0.45rem 1rem 0.25rem", fontSize: "0.65rem", fontWeight: 800, color: text2, textTransform: "uppercase", letterSpacing: 1, borderTop: gi > 0 ? `1px solid ${border}` : undefined }}>
                             {t(lang, group.labelKey)}
                           </div>
-                          {group.tools.map((tool) => (
+                          {tools.map((tool) => (
                             <button key={tool.page} onClick={() => { haptic(); setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
                               style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
                               <span>{tool.icon}</span>
@@ -254,7 +259,8 @@ export default function Navbar() {
                             </button>
                           ))}
                         </div>
-                      ));
+                        );
+                      });
                     })()}
                   </div>
                 </>
