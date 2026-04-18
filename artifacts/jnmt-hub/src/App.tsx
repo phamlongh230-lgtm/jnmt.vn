@@ -38,6 +38,10 @@ const AdminPage         = lazy(() => import("@/pages/AdminPage"));
 const NotesPage         = lazy(() => import("@/pages/NotesPage"));
 const ProfilePage       = lazy(() => import("@/pages/ProfilePage"));
 const AboutPage         = lazy(() => import("@/pages/AboutPage"));
+const CalculatorPage    = lazy(() => import("@/pages/CalculatorPage"));
+const ExpensePage       = lazy(() => import("@/pages/ExpensePage"));
+const KoreanKeyboardPage = lazy(() => import("@/pages/KoreanKeyboardPage"));
+const StudySoundsPage   = lazy(() => import("@/pages/StudySoundsPage"));
 
 setAuthTokenGetter(() => getToken());
 
@@ -87,6 +91,10 @@ function CurrentPage({ page }: { page: string }) {
     case "notes":         return <NotesPage />;
     case "profile":       return <ProfilePage />;
     case "about":         return <AboutPage />;
+    case "calculator":    return <CalculatorPage />;
+    case "expense":       return <ExpensePage />;
+    case "koreankey":     return <KoreanKeyboardPage />;
+    case "studysounds":   return <StudySoundsPage />;
     default:              return <HomePage />;
   }
 }

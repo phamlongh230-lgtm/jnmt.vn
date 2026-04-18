@@ -547,6 +547,13 @@ const ko: Record<string, string> = {
   avatar_removed: "프로필 사진이 삭제되었습니다",
   avatar_upload_error: "업로드 오류, 나중에 다시 시도하세요",
   avatar_format_unsupported: "지원하지 않는 이미지 형식. JPG/PNG/WebP를 사용하세요 (아이폰 HEIC 제외).",
+  calculator: "계산기", calc_basic: "기본", calc_scientific: "공학용", calc_history: "계산 기록",
+  expense_tracker: "지출 관리", expense_add: "항목 추가", expense_amount: "금액", expense_note: "메모",
+  expense_category: "카테고리", expense_total: "총 지출", expense_this_month: "이번 달",
+  expense_food: "식비", expense_transport: "교통비", expense_study: "학용품", expense_other: "기타",
+  expense_empty: "지출 내역이 없습니다", expense_currency: "통화",
+  korean_keyboard: "한글 키보드", korean_type_here: "여기에 한글을 입력하세요...", korean_copy: "복사", korean_clear: "지우기", korean_copied: "복사됨!",
+  study_sounds: "학습 사운드", study_sounds_desc: "집중력 향상을 위한 배경음", sound_rain: "빗소리", sound_cafe: "카페", sound_forest: "숲속", sound_white: "화이트 노이즈", sound_lofi: "Lo-fi", sound_ocean: "파도소리", sound_playing: "재생 중", sound_volume: "볼륨",
 };
 
 export default ko;

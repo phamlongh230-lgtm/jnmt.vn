@@ -547,6 +547,13 @@ const kk: Record<string, string> = {
   avatar_removed: "Профиль фотосы жойылды",
   avatar_upload_error: "Жүктеу қатесі, кейінірек қайталаңыз",
   avatar_format_unsupported: "Қолдау көрсетілмейтін сурет форматы. JPG/PNG/WebP қолданыңыз (iPhone HEIC емес).",
+  calculator: "Калькулятор", calc_basic: "Негізгі", calc_scientific: "Ғылыми", calc_history: "Тарих",
+  expense_tracker: "Шығын бақылау", expense_add: "Қосу", expense_amount: "Сома", expense_note: "Ескертпе",
+  expense_category: "Санат", expense_total: "Жалпы", expense_this_month: "Осы ай",
+  expense_food: "Тамақ", expense_transport: "Көлік", expense_study: "Оқу", expense_other: "Басқа",
+  expense_empty: "Шығын жоқ", expense_currency: "Валюта",
+  korean_keyboard: "Кәріс пернетақта", korean_type_here: "Кәрісше жазыңыз...", korean_copy: "Көшіру", korean_clear: "Тазалау", korean_copied: "Көшірілді!",
+  study_sounds: "Оқу дыбыстары", study_sounds_desc: "Зейінді арттыру үшін фон дыбыстары", sound_rain: "Жаңбыр", sound_cafe: "Кафе", sound_forest: "Орман", sound_white: "Ақ шу", sound_lofi: "Lo-fi", sound_ocean: "Мұхит", sound_playing: "Ойнатылуда", sound_volume: "Дыбыс",
 };
 
 export default kk;

@@ -547,6 +547,13 @@ const mn: Record<string, string> = {
   avatar_removed: "Профайл зураг устгагдлаа",
   avatar_upload_error: "Байршуулах алдаа, дараа дахин оролдоно уу",
   avatar_format_unsupported: "Дэмжигдээгүй зургийн формат. JPG/PNG/WebP ашиглана уу (iPhone HEIC биш).",
+  calculator: "Тооны машин", calc_basic: "Үндсэн", calc_scientific: "Шинжлэх ухааны", calc_history: "Түүх",
+  expense_tracker: "Зардал бүртгэл", expense_add: "Нэмэх", expense_amount: "Дүн", expense_note: "Тэмдэглэл",
+  expense_category: "Ангилал", expense_total: "Нийт", expense_this_month: "Энэ сар",
+  expense_food: "Хоол", expense_transport: "Тээвэр", expense_study: "Сурлага", expense_other: "Бусад",
+  expense_empty: "Зардал байхгүй", expense_currency: "Валют",
+  korean_keyboard: "Солонгос гар", korean_type_here: "Солонгосоор бич...", korean_copy: "Хуулах", korean_clear: "Цэвэрлэх", korean_copied: "Хуулагдлаа!",
+  study_sounds: "Сурлагын дуу", study_sounds_desc: "Анхаарлаа төвлөрүүлэх дуу", sound_rain: "Бороо", sound_cafe: "Кафе", sound_forest: "Ой", sound_white: "Цагаан чимээ", sound_lofi: "Lo-fi", sound_ocean: "Далай", sound_playing: "Тоглуулж байна", sound_volume: "Дуу хэмжээ",
 };
 
 export default mn;

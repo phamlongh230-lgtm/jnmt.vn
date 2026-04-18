@@ -589,6 +589,42 @@ const vi: Record<string, string> = {
   avatar_removed: "Đã xoá ảnh đại diện",
   avatar_upload_error: "Lỗi tải ảnh, thử lại sau",
   avatar_format_unsupported: "Định dạng ảnh không hỗ trợ. Hãy dùng JPG/PNG/WebP (không dùng HEIC từ iPhone).",
+  // Calculator
+  calculator: "Máy tính",
+  calc_basic: "Cơ bản",
+  calc_scientific: "Khoa học",
+  calc_history: "Lịch sử",
+  // Expense tracker
+  expense_tracker: "Chi tiêu",
+  expense_add: "Thêm khoản",
+  expense_amount: "Số tiền",
+  expense_note: "Ghi chú",
+  expense_category: "Danh mục",
+  expense_total: "Tổng chi",
+  expense_this_month: "Tháng này",
+  expense_food: "Ăn uống",
+  expense_transport: "Di chuyển",
+  expense_study: "Học tập",
+  expense_other: "Khác",
+  expense_empty: "Chưa có khoản chi nào",
+  expense_currency: "Tiền tệ",
+  // Korean keyboard
+  korean_keyboard: "Bàn phím tiếng Hàn",
+  korean_type_here: "Nhập tiếng Hàn tại đây...",
+  korean_copy: "Sao chép",
+  korean_clear: "Xóa",
+  korean_copied: "Đã sao chép!",
+  // Study sounds
+  study_sounds: "Âm thanh học tập",
+  study_sounds_desc: "Âm thanh nền giúp tập trung",
+  sound_rain: "Mưa nhẹ",
+  sound_cafe: "Quán cà phê",
+  sound_forest: "Rừng xanh",
+  sound_white: "Tiếng ồn trắng",
+  sound_lofi: "Lo-fi",
+  sound_ocean: "Biển cả",
+  sound_playing: "Đang phát",
+  sound_volume: "Âm lượng",
 };
 
 export default vi;

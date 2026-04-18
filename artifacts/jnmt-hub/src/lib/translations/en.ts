@@ -547,6 +547,13 @@ const en: Record<string, string> = {
   avatar_removed: "Profile photo removed",
   avatar_upload_error: "Upload error, please try again",
   avatar_format_unsupported: "Unsupported image format. Use JPG/PNG/WebP (not HEIC from iPhone).",
+  calculator: "Calculator", calc_basic: "Basic", calc_scientific: "Scientific", calc_history: "History",
+  expense_tracker: "Expense Tracker", expense_add: "Add Entry", expense_amount: "Amount", expense_note: "Note",
+  expense_category: "Category", expense_total: "Total", expense_this_month: "This Month",
+  expense_food: "Food", expense_transport: "Transport", expense_study: "Study", expense_other: "Other",
+  expense_empty: "No expenses yet", expense_currency: "Currency",
+  korean_keyboard: "Korean Keyboard", korean_type_here: "Type Korean here...", korean_copy: "Copy", korean_clear: "Clear", korean_copied: "Copied!",
+  study_sounds: "Study Sounds", study_sounds_desc: "Background sounds to help focus", sound_rain: "Rain", sound_cafe: "Cafe", sound_forest: "Forest", sound_white: "White Noise", sound_lofi: "Lo-fi", sound_ocean: "Ocean", sound_playing: "Playing", sound_volume: "Volume",
 };
 
 export default en;

@@ -547,6 +547,13 @@ const ru: Record<string, string> = {
   avatar_removed: "Фото профиля удалено",
   avatar_upload_error: "Ошибка загрузки, попробуйте позже",
   avatar_format_unsupported: "Неподдерживаемый формат. Используйте JPG/PNG/WebP (не HEIC с iPhone).",
+  calculator: "Калькулятор", calc_basic: "Обычный", calc_scientific: "Научный", calc_history: "История",
+  expense_tracker: "Учёт расходов", expense_add: "Добавить", expense_amount: "Сумма", expense_note: "Заметка",
+  expense_category: "Категория", expense_total: "Итого", expense_this_month: "Этот месяц",
+  expense_food: "Еда", expense_transport: "Транспорт", expense_study: "Учёба", expense_other: "Прочее",
+  expense_empty: "Расходов нет", expense_currency: "Валюта",
+  korean_keyboard: "Корейская клавиатура", korean_type_here: "Введите текст по-корейски...", korean_copy: "Копировать", korean_clear: "Очистить", korean_copied: "Скопировано!",
+  study_sounds: "Звуки для учёбы", study_sounds_desc: "Фоновые звуки для концентрации", sound_rain: "Дождь", sound_cafe: "Кафе", sound_forest: "Лес", sound_white: "Белый шум", sound_lofi: "Lo-fi", sound_ocean: "Океан", sound_playing: "Воспроизводится", sound_volume: "Громкость",
 };
 
 export default ru;

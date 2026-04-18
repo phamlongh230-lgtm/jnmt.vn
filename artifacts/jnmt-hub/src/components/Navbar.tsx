@@ -32,6 +32,10 @@ const TOOL_GROUPS = [
       { page: "currency",     icon: "💱", key: "currency" },
       { page: "qrcode",       icon: "📱", key: "qrcode" },
       { page: "timezone",     icon: "🌍", key: "timezone_tool" },
+      { page: "calculator",   icon: "🧮", key: "calculator" },
+      { page: "expense",      icon: "💰", key: "expense_tracker" },
+      { page: "koreankey",    icon: "⌨️", key: "korean_keyboard" },
+      { page: "studysounds",  icon: "🎵", key: "study_sounds" },
     ],
   },
   {
