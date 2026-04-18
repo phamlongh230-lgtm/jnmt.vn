@@ -12,6 +12,7 @@ export default function LoginModal({ onClose, onRegister }: Props) {
   const { lang, login, isDark, showToast } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
 
   const loginMutation = useLoginUser({
@@ -63,14 +64,20 @@ export default function LoginModal({ onClose, onRegister }: Props) {
           </div>
           <div style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", marginBottom: "0.4rem", fontWeight: 600, color: textCol, fontSize: "0.9rem" }}>{t(lang, "password")}</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ width: "100%", padding: "0.7rem", border: `1px solid ${borderCol}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.95rem" }}
-              placeholder="••••••"
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPw ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{ width: "100%", padding: "0.7rem 2.5rem 0.7rem 0.7rem", border: `1px solid ${borderCol}`, borderRadius: 8, background: inputBg, color: textCol, fontSize: "0.95rem", boxSizing: "border-box" }}
+                placeholder="••••••"
+              />
+              <button type="button" onClick={() => setShowPw(v => !v)}
+                style={{ position: "absolute", right: "0.6rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", color: "#64748b", padding: 0 }}>
+                {showPw ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
 
           {error && (
