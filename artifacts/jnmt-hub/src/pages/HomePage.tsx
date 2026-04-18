@@ -312,7 +312,7 @@ function AnnouncementsPreview({ isDark, text, text2, lang, setActivePage }: { is
   );
 }
 
-function DdayWidget({ lang, isDark, text, text2, border, setActivePage }: { lang: LangCode; isDark: boolean; text: string; text2: string; border: string; setActivePage: (p: string) => void }) {
+function DdayWidget({ lang, isDark, text, border, setActivePage }: { lang: LangCode; isDark: boolean; text: string; border: string; setActivePage: (p: string) => void }) {
   const ddays = useMemo(() => loadDdays(), []);
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -423,7 +423,7 @@ export default function HomePage() {
             <p style={{ opacity: 0.85, marginBottom: "1rem", fontSize: "0.9rem" }}>Jeonnam Future International High School</p>
             <Clock lang={lang} />
             <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", marginTop: "1rem" }}>
-              <a href="https://www.jnmt.vn" target="_blank" rel="noopener noreferrer"
+              <a href="https://jnmt.hs.jne.kr/jnmt_hs/main.do?sysId=jnmt_hs" target="_blank" rel="noopener noreferrer"
                 style={{ background: "rgba(255,255,255,0.2)", color: "white", border: "1px solid rgba(255,255,255,0.35)", padding: "0.5rem 1rem", borderRadius: 8, textDecoration: "none", fontSize: "0.85rem", fontWeight: 600 }}>
                 🌐 {t(lang, "website")}
               </a>
@@ -520,7 +520,7 @@ export default function HomePage() {
       {/* ── Widgets row: D-Day + Homework ── */}
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
         <HomeworkWidget lang={lang} isDark={isDark} text={text} text2={text2} border={border} setActivePage={setActivePage} />
-        <DdayWidget lang={lang} isDark={isDark} text={text} text2={text2} border={border} setActivePage={setActivePage} />
+        <DdayWidget lang={lang} isDark={isDark} text={text} border={border} setActivePage={setActivePage} />
       </div>
 
       {/* Info section */}

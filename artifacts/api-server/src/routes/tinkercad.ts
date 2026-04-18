@@ -40,6 +40,7 @@ router.get("/tinkercad/classes", async (req, res): Promise<void> => {
     const classes = await db.select().from(tinkercadClassesTable);
     res.json(classes);
   } catch (err) {
+    req.log.error({ err }, "Tinkercad list classes error");
     res.status(500).json({ error: "Lỗi server!" });
   }
 });
@@ -73,12 +74,14 @@ router.put("/tinkercad/classes/:id", async (req, res): Promise<void> => {
     if (!decoded || decoded.role !== "admin") { res.status(403).json({ error: "Chỉ Admin!" }); return; }
 
     const id = parseInt(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "ID không hợp lệ!" }); return; }
     const body = z.object({ name: z.string().min(1).optional(), tinkercadUrl: z.string().url().optional() }).safeParse(req.body);
     if (!body.success) { res.status(400).json({ error: "Dữ liệu không hợp lệ!" }); return; }
 
     const [cls] = await db.update(tinkercadClassesTable).set(body.data).where(eq(tinkercadClassesTable.id, id)).returning();
     res.json(cls);
   } catch (err) {
+    req.log.error({ err }, "Tinkercad update class error");
     res.status(500).json({ error: "Lỗi server!" });
   }
 });
@@ -92,9 +95,11 @@ router.delete("/tinkercad/classes/:id", async (req, res): Promise<void> => {
     if (!decoded || decoded.role !== "admin") { res.status(403).json({ error: "Chỉ Admin!" }); return; }
 
     const id = parseInt(req.params.id);
+    if (isNaN(id)) { res.status(400).json({ error: "ID không hợp lệ!" }); return; }
     await db.delete(tinkercadClassesTable).where(eq(tinkercadClassesTable.id, id));
     res.json({ ok: true });
   } catch (err) {
+    req.log.error({ err }, "Tinkercad delete class error");
     res.status(500).json({ error: "Lỗi server!" });
   }
 });

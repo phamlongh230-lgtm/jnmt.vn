@@ -96,7 +96,6 @@ export default function ProfilePage() {
   const text  = isDark ? "#f1f5f9" : "#0f172a";
   const text2 = isDark ? "#94a3b8" : "#64748b";
   const border = isDark ? "#334155" : "#e2e8f0";
-  const inputBg = isDark ? "#0f172a" : "#f8fafc";
 
   const avatarInitial = (currentUser?.username || "?").charAt(0).toUpperCase();
   const [c1, c2] = GRADIENT_PAIRS[avatarColor] ?? [avatarColor, avatarColor];
@@ -163,11 +162,12 @@ export default function ProfilePage() {
   async function handleRemoveAvatar() {
     setUploadingAvatar(true);
     try {
-      await fetch("/api/auth/profile", {
+      const res = await fetch("/api/auth/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("jnmt_token")}` },
         body: JSON.stringify({ avatarUrl: null }),
       });
+      if (!res.ok) throw new Error("Server error");
       if (currentUser) updateUser({ ...currentUser, avatarUrl: undefined });
       showToast(t(lang, "avatar_removed"), "success");
     } catch {

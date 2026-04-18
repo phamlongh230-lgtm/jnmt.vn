@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
 import { getToken } from "@/lib/auth";
@@ -61,12 +61,18 @@ export default function AdminPage() {
 
   const loadUsers = () => {
     fetch("/api/admin/users", { headers: authHeaders })
-      .then((r) => r.json()).then((d) => { setUsers(Array.isArray(d) ? d : []); setLoadingUsers(false); });
+      .then((r) => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+      .then((d) => { setUsers(Array.isArray(d) ? d : []); })
+      .catch(() => { setUsers([]); })
+      .finally(() => setLoadingUsers(false));
   };
 
   const loadClasses = () => {
     fetch("/api/tinkercad/classes", { headers: authHeaders })
-      .then((r) => r.json()).then((d) => { setClasses(Array.isArray(d) ? d : []); setLoadingClasses(false); });
+      .then((r) => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+      .then((d) => { setClasses(Array.isArray(d) ? d : []); })
+      .catch(() => { setClasses([]); })
+      .finally(() => setLoadingClasses(false));
   };
 
   useEffect(() => { loadUsers(); loadClasses(); }, []);
@@ -96,7 +102,7 @@ export default function AdminPage() {
 
   const formatDate = (d: string | null) => d ? new Date(d).toLocaleDateString("vi-VN") : "—";
 
-  const createClass = async (e: FormEvent) => {
+  const createClass = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setClassErr("");
     setClassSaving(true);
@@ -114,7 +120,7 @@ export default function AdminPage() {
     } finally { setClassSaving(false); }
   };
 
-  const saveEditClass = async (e: FormEvent) => {
+  const saveEditClass = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!editingClass) return;
     setClassSaving(true);

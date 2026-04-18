@@ -372,11 +372,15 @@ export default function ChatPage() {
   const handleReaction = async (messageId: number, emoji: string) => {
     if (!currentUser || !token) return;
     setReactionPickerFor(null);
-    await fetch(`/api/messages/${messageId}/reactions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ emoji }),
-    });
+    try {
+      await fetch(`/api/messages/${messageId}/reactions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ emoji }),
+      });
+    } catch {
+      // reaction is best-effort, silent fail is acceptable
+    }
   };
 
   const formatTime = (dateStr: string) => {
