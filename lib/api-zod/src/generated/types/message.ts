@@ -3,13 +3,22 @@
  * Do not edit manually.
  * Api
  * JNMT Student Hub API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
+import type { MessageReactions } from "./messageReactions";
 
 export interface Message {
   id: number;
   content: string;
   username: string;
   userId: number;
+  userRole?: string | null;
+  avatarColor?: string | null;
+  isEdited?: boolean;
+  editedAt?: Date | null;
+  replyToId?: number | null;
+  replyToContent?: string | null;
+  replyToUsername?: string | null;
+  reactions?: MessageReactions;
   createdAt: Date;
 }

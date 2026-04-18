@@ -3,16 +3,39 @@
  * Do not edit manually.
  * Api
  * JNMT Student Hub API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
+export * from "./adminUpdateUserBody";
+export * from "./adminUpdateUserBodyRole";
+export * from "./adminUser";
+export * from "./aiChatBody";
+export * from "./aiChatBodyHistoryItem";
+export * from "./aiChatBodyHistoryItemRole";
+export * from "./aiChatResponse";
+export * from "./announcement";
 export * from "./authResponse";
+export * from "./changePasswordBody";
+export * from "./createAnnouncementBody";
 export * from "./createMessageBody";
+export * from "./createTinkercadClassBody";
+export * from "./editMessageBody";
 export * from "./getMessagesParams";
 export * from "./healthStatus";
 export * from "./loginBody";
 export * from "./message";
+export * from "./messageReactions";
 export * from "./registerBody";
+export * from "./school";
+export * from "./schoolType";
+export * from "./searchSchoolsParams";
+export * from "./tinkercadClass";
+export * from "./toggleReactionBody";
 export * from "./translateBody";
+export * from "./translateBodySourceLang";
+export * from "./translateBodyTargetLang";
 export * from "./translateResponse";
+export * from "./updateProfileBody";
+export * from "./updateTinkercadClassBody";
 export * from "./user";
+export * from "./userRole";

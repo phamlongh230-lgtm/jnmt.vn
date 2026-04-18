@@ -6,11 +6,12 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface CreateMessageBody {
-  /**
-   * @minLength 1
-   * @maxLength 2000
-   */
+export interface Announcement {
+  id: number;
+  title: string;
   content: string;
-  replyToId?: number | null;
+  isPinned: boolean;
+  authorId: number;
+  authorUsername: string;
+  createdAt: Date;
 }

@@ -5,12 +5,9 @@
  * JNMT Student Hub API specification
  * OpenAPI spec version: 0.2.0
  */
+import type { AiChatBodyHistoryItemRole } from "./aiChatBodyHistoryItemRole";
 
-export interface CreateMessageBody {
-  /**
-   * @minLength 1
-   * @maxLength 2000
-   */
+export type AiChatBodyHistoryItem = {
+  role: AiChatBodyHistoryItemRole;
   content: string;
-  replyToId?: number | null;
-}
+};

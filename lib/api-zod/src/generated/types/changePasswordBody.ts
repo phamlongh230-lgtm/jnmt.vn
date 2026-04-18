@@ -6,9 +6,8 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export type GetMessagesParams = {
-  /**
-   * @maximum 200
-   */
-  limit?: number;
-};
+export interface ChangePasswordBody {
+  currentPassword: string;
+  /** @minLength 6 */
+  newPassword: string;
+}

@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
+  version: 0.2.0
   description: JNMT Student Hub API specification
 servers:
   - url: /api
@@ -16,16 +16,39 @@ tags:
     description: Chat message operations
   - name: translate
     description: Translation operations
+  - name: announcements
+    description: School announcement operations
+  - name: ai
+    description: AI chat operations
+  - name: schools
+    description: School directory operations
+  - name: tinkercad
+    description: Tinkercad class management
+  - name: admin
+    description: Admin user management
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /healthz/db:
+    get:
+      operationId: healthCheckDb
+      tags: [health]
+      summary: Database health check
+      responses:
+        "200":
+          description: Database healthy
           content:
             application/json:
               schema:
@@ -50,13 +73,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
         "400":
-          description: Bad request
+          description: Bad request (validation or duplicate)
 
   /auth/login:
     post:
       operationId: loginUser
       tags: [auth]
-      summary: Login
+      summary: Login with email and password
       requestBody:
         required: true
         content:
@@ -71,13 +94,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
         "401":
-          description: Unauthorized
+          description: Invalid credentials
 
   /auth/me:
     get:
       operationId: getMe
       tags: [auth]
-      summary: Get current user
+      summary: Get current authenticated user
       security:
         - bearerAuth: []
       responses:
@@ -90,20 +113,65 @@ paths:
         "401":
           description: Unauthorized
 
+  /auth/password:
+    put:
+      operationId: changePassword
+      tags: [auth]
+      summary: Change password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordBody"
+      responses:
+        "200":
+          description: Password changed
+        "400":
+          description: Wrong current password or invalid input
+        "401":
+          description: Unauthorized
+
+  /auth/profile:
+    put:
+      operationId: updateProfile
+      tags: [auth]
+      summary: Update avatar color, avatar URL, or display name
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileBody"
+      responses:
+        "200":
+          description: Updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+
   /messages:
     get:
       operationId: getMessages
       tags: [messages]
-      summary: Get chat messages
+      summary: Get chat messages (newest last)
       parameters:
         - name: limit
           in: query
           schema:
             type: integer
             default: 50
+            maximum: 200
       responses:
         "200":
-          description: List of messages
+          description: List of messages with reactions
           content:
             application/json:
               schema:
@@ -113,7 +181,7 @@ paths:
     post:
       operationId: createMessage
       tags: [messages]
-      summary: Create a message
+      summary: Send a chat message
       security:
         - bearerAuth: []
       requestBody:
@@ -132,11 +200,92 @@ paths:
         "401":
           description: Unauthorized
 
+  /messages/{id}:
+    put:
+      operationId: editMessage
+      tags: [messages]
+      summary: Edit a message (owner only, within 5 minutes)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+              required: [content]
+      responses:
+        "200":
+          description: Updated message
+        "403":
+          description: Not owner or edit window expired
+        "404":
+          description: Message not found
+    delete:
+      operationId: deleteMessage
+      tags: [messages]
+      summary: Delete a message (owner, mod, or admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "403":
+          description: Insufficient permissions
+
+  /messages/{id}/reactions:
+    post:
+      operationId: toggleReaction
+      tags: [messages]
+      summary: Toggle emoji reaction on a message
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emoji:
+                  type: string
+                  minLength: 1
+                  maxLength: 10
+              required: [emoji]
+      responses:
+        "200":
+          description: Updated reactions map
+        "401":
+          description: Unauthorized
+
   /translate:
     post:
       operationId: translateText
       tags: [translate]
-      summary: Translate text between languages
+      summary: Translate text between supported languages
       requestBody:
         required: true
         content:
@@ -151,6 +300,270 @@ paths:
               schema:
                 $ref: "#/components/schemas/TranslateResponse"
 
+  /announcements:
+    get:
+      operationId: getAnnouncements
+      tags: [announcements]
+      summary: Get announcements (pinned first)
+      responses:
+        "200":
+          description: List of announcements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Announcement"
+    post:
+      operationId: createAnnouncement
+      tags: [announcements]
+      summary: Create announcement (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAnnouncementBody"
+      responses:
+        "201":
+          description: Created announcement
+        "403":
+          description: Admin only
+
+  /announcements/{id}/pin:
+    put:
+      operationId: toggleAnnouncementPin
+      tags: [announcements]
+      summary: Toggle pin status (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated announcement
+        "403":
+          description: Admin only
+
+  /announcements/{id}:
+    delete:
+      operationId: deleteAnnouncement
+      tags: [announcements]
+      summary: Delete announcement (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "403":
+          description: Admin only
+
+  /ai/chat:
+    post:
+      operationId: aiChat
+      tags: [ai]
+      summary: Chat with AI assistant (Groq llama-3.3-70b)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiChatBody"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiChatResponse"
+        "503":
+          description: AI not configured
+
+  /schools/search:
+    get:
+      operationId: searchSchools
+      tags: [schools]
+      summary: Search schools by name or city
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Matching schools (max 8)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/School"
+
+  /schools/{slug}:
+    get:
+      operationId: getSchool
+      tags: [schools]
+      summary: Get school by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: School
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/School"
+        "404":
+          description: Not found
+
+  /tinkercad/my-class:
+    get:
+      operationId: getMyTinkercadClass
+      tags: [tinkercad]
+      summary: Get logged-in user's Tinkercad class URL
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Class info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TinkercadClass"
+        "404":
+          description: Class not assigned
+
+  /tinkercad/classes:
+    get:
+      operationId: listTinkercadClasses
+      tags: [tinkercad]
+      summary: List all Tinkercad classes (admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TinkercadClass"
+    post:
+      operationId: createTinkercadClass
+      tags: [tinkercad]
+      summary: Create a Tinkercad class (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTinkercadClassBody"
+      responses:
+        "201":
+          description: Created class
+
+  /tinkercad/classes/{id}:
+    put:
+      operationId: updateTinkercadClass
+      tags: [tinkercad]
+      summary: Update a Tinkercad class (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTinkercadClassBody"
+      responses:
+        "200":
+          description: Updated class
+    delete:
+      operationId: deleteTinkercadClass
+      tags: [tinkercad]
+      summary: Delete a Tinkercad class (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  /admin/users:
+    get:
+      operationId: adminGetUsers
+      tags: [admin]
+      summary: List all users (admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminUser"
+
+  /admin/users/{id}:
+    put:
+      operationId: adminUpdateUser
+      tags: [admin]
+      summary: Update user role, active status, or class group (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUpdateUserBody"
+      responses:
+        "200":
+          description: Updated user
+        "403":
+          description: Admin only
+        "404":
+          description: User not found
+
 components:
   securitySchemes:
     bearerAuth:
@@ -164,8 +577,7 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
     RegisterBody:
       type: object
@@ -180,10 +592,7 @@ components:
         password:
           type: string
           minLength: 6
-      required:
-        - username
-        - email
-        - password
+      required: [username, email, password]
 
     LoginBody:
       type: object
@@ -193,9 +602,31 @@ components:
           format: email
         password:
           type: string
-      required:
-        - email
-        - password
+      required: [email, password]
+
+    ChangePasswordBody:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+          minLength: 6
+      required: [currentPassword, newPassword]
+
+    UpdateProfileBody:
+      type: object
+      properties:
+        avatarColor:
+          type: string
+          pattern: "^#[0-9a-fA-F]{6}$"
+        avatarUrl:
+          type: string
+          nullable: true
+        displayName:
+          type: string
+          maxLength: 50
+          nullable: true
 
     User:
       type: object
@@ -208,19 +639,34 @@ components:
           type: string
         role:
           type: string
+          enum: [user, moderator, admin]
         avatarColor:
           type: string
         avatarUrl:
           type: string
           nullable: true
+        displayName:
+          type: string
+          nullable: true
         createdAt:
           type: string
           format: date-time
-      required:
-        - id
-        - username
-        - email
-        - role
+      required: [id, username, email, role]
+
+    AdminUser:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            isActive:
+              type: boolean
+            classGroup:
+              type: string
+              nullable: true
+            lastLogin:
+              type: string
+              format: date-time
+              nullable: true
 
     AuthResponse:
       type: object
@@ -231,10 +677,7 @@ components:
           type: string
         user:
           $ref: "#/components/schemas/User"
-      required:
-        - message
-        - token
-        - user
+      required: [message, token, user]
 
     Message:
       type: object
@@ -247,15 +690,42 @@ components:
           type: string
         userId:
           type: integer
+        userRole:
+          type: string
+          nullable: true
+        avatarColor:
+          type: string
+          nullable: true
+        isEdited:
+          type: boolean
+        editedAt:
+          type: string
+          format: date-time
+          nullable: true
+        replyToId:
+          type: integer
+          nullable: true
+        replyToContent:
+          type: string
+          nullable: true
+        replyToUsername:
+          type: string
+          nullable: true
+        reactions:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              count:
+                type: integer
+              userIds:
+                type: array
+                items:
+                  type: integer
         createdAt:
           type: string
           format: date-time
-      required:
-        - id
-        - content
-        - username
-        - userId
-        - createdAt
+      required: [id, content, username, userId, createdAt]
 
     CreateMessageBody:
       type: object
@@ -263,8 +733,11 @@ components:
         content:
           type: string
           minLength: 1
-      required:
-        - content
+          maxLength: 2000
+        replyToId:
+          type: integer
+          nullable: true
+      required: [content]
 
     TranslateBody:
       type: object
@@ -273,12 +746,11 @@ components:
           type: string
         sourceLang:
           type: string
+          enum: [vi, ko, en, mn, kk, ru]
         targetLang:
           type: string
-      required:
-        - text
-        - sourceLang
-        - targetLang
+          enum: [vi, ko, en, mn, kk, ru]
+      required: [text, sourceLang, targetLang]
 
     TranslateResponse:
       type: object
@@ -291,8 +763,148 @@ components:
           type: string
         targetLang:
           type: string
-      required:
-        - originalText
-        - translatedText
-        - sourceLang
-        - targetLang
+      required: [originalText, translatedText, sourceLang, targetLang]
+
+    Announcement:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        isPinned:
+          type: boolean
+        authorId:
+          type: integer
+        authorUsername:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, content, isPinned, authorId, authorUsername, createdAt]
+
+    CreateAnnouncementBody:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+          maxLength: 5000
+      required: [title, content]
+
+    AiChatBody:
+      type: object
+      properties:
+        message:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        history:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum: [user, assistant]
+              content:
+                type: string
+            required: [role, content]
+      required: [message]
+
+    AiChatResponse:
+      type: object
+      properties:
+        reply:
+          type: string
+      required: [reply]
+
+    School:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        nameKo:
+          type: string
+          nullable: true
+        nameEn:
+          type: string
+          nullable: true
+        slug:
+          type: string
+        link:
+          type: string
+          nullable: true
+        type:
+          type: string
+          enum: [high_school, university, language_school]
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+        description:
+          type: string
+          nullable: true
+      required: [id, name, slug, type, country]
+
+    TinkercadClass:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        classCode:
+          type: string
+        tinkercadUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, name, classCode, tinkercadUrl]
+
+    CreateTinkercadClassBody:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        classCode:
+          type: string
+          minLength: 1
+        tinkercadUrl:
+          type: string
+          format: uri
+      required: [name, classCode, tinkercadUrl]
+
+    UpdateTinkercadClassBody:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        tinkercadUrl:
+          type: string
+          format: uri
+
+    AdminUpdateUserBody:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, moderator, admin]
+        isActive:
+          type: boolean
+        classGroup:
+          type: string
+          nullable: true

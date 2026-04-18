@@ -6,9 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export type GetMessagesParams = {
-  /**
-   * @maximum 200
-   */
-  limit?: number;
-};
+export interface TinkercadClass {
+  id: number;
+  name: string;
+  classCode: string;
+  tinkercadUrl: string;
+  createdAt?: Date;
+}

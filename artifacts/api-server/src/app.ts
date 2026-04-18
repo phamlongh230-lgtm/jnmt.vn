@@ -1,5 +1,7 @@
 import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
+import helmet from "helmet";
+import compression from "compression";
 import pinoHttp from "pino-http";
 import path from "path";
 import { existsSync } from "fs";
@@ -8,6 +10,15 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
+
+// Security headers
+app.use(helmet({
+  crossOriginEmbedderPolicy: false, // allow Tinkercad/KakaoMap embeds
+  contentSecurityPolicy: false,     // SPA handles its own CSP
+}));
+
+// Gzip compression for all responses
+app.use(compression());
 
 app.use(
   pinoHttp({
@@ -33,18 +44,47 @@ app.use(cors());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true, limit: "2mb" }));
 
-// Rate limiting cho auth endpoints
+// Auth: 20 req / 15 phút
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 phút
+  windowMs: 15 * 60 * 1000,
   max: 20,
   message: { error: "Quá nhiều yêu cầu, vui lòng thử lại sau 15 phút!" },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-// API routes
+// AI chat: 30 req / phút (Groq rate limit protection)
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  message: { error: "Quá nhiều yêu cầu AI, vui lòng thử lại sau!" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Translate: 60 req / phút
+const translateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  message: { error: "Quá nhiều yêu cầu dịch thuật, vui lòng thử lại!" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Messages & reactions: 120 req / phút
+const messageLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  message: { error: "Gửi quá nhiều tin nhắn, vui lòng chờ!" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
+app.use("/api/ai/chat", aiLimiter);
+app.use("/api/translate", translateLimiter);
+app.use("/api/messages", messageLimiter);
 app.use("/api", router);
 
 // Serve frontend static files (production only)

@@ -6,9 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export type GetMessagesParams = {
+export type EditMessageBody = {
   /**
-   * @maximum 200
+   * @minLength 1
+   * @maxLength 2000
    */
-  limit?: number;
+  content: string;
 };

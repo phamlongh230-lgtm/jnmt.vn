@@ -6,9 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export type GetMessagesParams = {
+export type ToggleReactionBody = {
   /**
-   * @maximum 200
+   * @minLength 1
+   * @maxLength 10
    */
-  limit?: number;
+  emoji: string;
 };

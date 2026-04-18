@@ -5,15 +5,11 @@
  * JNMT Student Hub API specification
  * OpenAPI spec version: 0.2.0
  */
-import type { UserRole } from "./userRole";
 
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: UserRole;
+export interface UpdateProfileBody {
+  /** @pattern ^#[0-9a-fA-F]{6}$ */
   avatarColor?: string;
   avatarUrl?: string | null;
+  /** @maxLength 50 */
   displayName?: string | null;
-  createdAt?: Date;
 }

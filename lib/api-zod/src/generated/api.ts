@@ -3,15 +3,21 @@
  * Do not edit manually.
  * Api
  * JNMT Student Hub API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from "zod";
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
+  status: zod.string(),
+});
+
+/**
+ * @summary Database health check
+ */
+export const HealthCheckDbResponse = zod.object({
   status: zod.string(),
 });
 
@@ -33,7 +39,7 @@ export const RegisterUserBody = zod.object({
 });
 
 /**
- * @summary Login
+ * @summary Login with email and password
  */
 export const LoginUserBody = zod.object({
   email: zod.string().email(),
@@ -47,33 +53,77 @@ export const LoginUserResponse = zod.object({
     id: zod.number(),
     username: zod.string(),
     email: zod.string(),
-    role: zod.string(),
+    role: zod.enum(["user", "moderator", "admin"]),
     avatarColor: zod.string().optional(),
     avatarUrl: zod.string().nullish(),
+    displayName: zod.string().nullish(),
     createdAt: zod.coerce.date().optional(),
   }),
 });
 
 /**
- * @summary Get current user
+ * @summary Get current authenticated user
  */
 export const GetMeResponse = zod.object({
   id: zod.number(),
   username: zod.string(),
   email: zod.string(),
-  role: zod.string(),
+  role: zod.enum(["user", "moderator", "admin"]),
   avatarColor: zod.string().optional(),
   avatarUrl: zod.string().nullish(),
+  displayName: zod.string().nullish(),
   createdAt: zod.coerce.date().optional(),
 });
 
 /**
- * @summary Get chat messages
+ * @summary Change password
+ */
+export const changePasswordBodyNewPasswordMin = 6;
+
+export const ChangePasswordBody = zod.object({
+  currentPassword: zod.string(),
+  newPassword: zod.string().min(changePasswordBodyNewPasswordMin),
+});
+
+/**
+ * @summary Update avatar color, avatar URL, or display name
+ */
+export const updateProfileBodyAvatarColorRegExp = new RegExp(
+  "^#[0-9a-fA-F]{6}$",
+);
+export const updateProfileBodyDisplayNameMax = 50;
+
+export const UpdateProfileBody = zod.object({
+  avatarColor: zod
+    .string()
+    .regex(updateProfileBodyAvatarColorRegExp)
+    .optional(),
+  avatarUrl: zod.string().nullish(),
+  displayName: zod.string().max(updateProfileBodyDisplayNameMax).nullish(),
+});
+
+export const UpdateProfileResponse = zod.object({
+  id: zod.number(),
+  username: zod.string(),
+  email: zod.string(),
+  role: zod.enum(["user", "moderator", "admin"]),
+  avatarColor: zod.string().optional(),
+  avatarUrl: zod.string().nullish(),
+  displayName: zod.string().nullish(),
+  createdAt: zod.coerce.date().optional(),
+});
+
+/**
+ * @summary Get chat messages (newest last)
  */
 export const getMessagesQueryLimitDefault = 50;
+export const getMessagesQueryLimitMax = 200;
 
 export const GetMessagesQueryParams = zod.object({
-  limit: zod.coerce.number().default(getMessagesQueryLimitDefault),
+  limit: zod.coerce
+    .number()
+    .max(getMessagesQueryLimitMax)
+    .default(getMessagesQueryLimitDefault),
 });
 
 export const GetMessagesResponseItem = zod.object({
@@ -81,25 +131,76 @@ export const GetMessagesResponseItem = zod.object({
   content: zod.string(),
   username: zod.string(),
   userId: zod.number(),
+  userRole: zod.string().nullish(),
+  avatarColor: zod.string().nullish(),
+  isEdited: zod.boolean().optional(),
+  editedAt: zod.coerce.date().nullish(),
+  replyToId: zod.number().nullish(),
+  replyToContent: zod.string().nullish(),
+  replyToUsername: zod.string().nullish(),
+  reactions: zod
+    .record(
+      zod.string(),
+      zod.object({
+        count: zod.number().optional(),
+        userIds: zod.array(zod.number()).optional(),
+      }),
+    )
+    .optional(),
   createdAt: zod.coerce.date(),
 });
 export const GetMessagesResponse = zod.array(GetMessagesResponseItem);
 
 /**
- * @summary Create a message
+ * @summary Send a chat message
  */
+export const createMessageBodyContentMax = 2000;
 
 export const CreateMessageBody = zod.object({
-  content: zod.string().min(1),
+  content: zod.string().min(1).max(createMessageBodyContentMax),
+  replyToId: zod.number().nullish(),
 });
 
 /**
- * @summary Translate text between languages
+ * @summary Edit a message (owner only, within 5 minutes)
+ */
+export const EditMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const editMessageBodyContentMax = 2000;
+
+export const EditMessageBody = zod.object({
+  content: zod.string().min(1).max(editMessageBodyContentMax),
+});
+
+/**
+ * @summary Delete a message (owner, mod, or admin)
+ */
+export const DeleteMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Toggle emoji reaction on a message
+ */
+export const ToggleReactionParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const toggleReactionBodyEmojiMax = 10;
+
+export const ToggleReactionBody = zod.object({
+  emoji: zod.string().min(1).max(toggleReactionBodyEmojiMax),
+});
+
+/**
+ * @summary Translate text between supported languages
  */
 export const TranslateTextBody = zod.object({
   text: zod.string(),
-  sourceLang: zod.string(),
-  targetLang: zod.string(),
+  sourceLang: zod.enum(["vi", "ko", "en", "mn", "kk", "ru"]),
+  targetLang: zod.enum(["vi", "ko", "en", "mn", "kk", "ru"]),
 });
 
 export const TranslateTextResponse = zod.object({
@@ -107,4 +208,199 @@ export const TranslateTextResponse = zod.object({
   translatedText: zod.string(),
   sourceLang: zod.string(),
   targetLang: zod.string(),
+});
+
+/**
+ * @summary Get announcements (pinned first)
+ */
+export const GetAnnouncementsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  content: zod.string(),
+  isPinned: zod.boolean(),
+  authorId: zod.number(),
+  authorUsername: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const GetAnnouncementsResponse = zod.array(GetAnnouncementsResponseItem);
+
+/**
+ * @summary Create announcement (admin only)
+ */
+export const createAnnouncementBodyTitleMax = 200;
+
+export const createAnnouncementBodyContentMax = 5000;
+
+export const CreateAnnouncementBody = zod.object({
+  title: zod.string().min(1).max(createAnnouncementBodyTitleMax),
+  content: zod.string().min(1).max(createAnnouncementBodyContentMax),
+});
+
+/**
+ * @summary Toggle pin status (admin only)
+ */
+export const ToggleAnnouncementPinParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Delete announcement (admin only)
+ */
+export const DeleteAnnouncementParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Chat with AI assistant (Groq llama-3.3-70b)
+ */
+export const aiChatBodyMessageMax = 1000;
+
+export const aiChatBodyHistoryMax = 10;
+
+export const AiChatBody = zod.object({
+  message: zod.string().min(1).max(aiChatBodyMessageMax),
+  history: zod
+    .array(
+      zod.object({
+        role: zod.enum(["user", "assistant"]),
+        content: zod.string(),
+      }),
+    )
+    .max(aiChatBodyHistoryMax)
+    .optional(),
+});
+
+export const AiChatResponse = zod.object({
+  reply: zod.string(),
+});
+
+/**
+ * @summary Search schools by name or city
+ */
+export const SearchSchoolsQueryParams = zod.object({
+  q: zod.coerce.string(),
+});
+
+export const SearchSchoolsResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  nameKo: zod.string().nullish(),
+  nameEn: zod.string().nullish(),
+  slug: zod.string(),
+  link: zod.string().nullish(),
+  type: zod.enum(["high_school", "university", "language_school"]),
+  city: zod.string().nullish(),
+  country: zod.string(),
+  description: zod.string().nullish(),
+});
+export const SearchSchoolsResponse = zod.array(SearchSchoolsResponseItem);
+
+/**
+ * @summary Get school by slug
+ */
+export const GetSchoolParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetSchoolResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  nameKo: zod.string().nullish(),
+  nameEn: zod.string().nullish(),
+  slug: zod.string(),
+  link: zod.string().nullish(),
+  type: zod.enum(["high_school", "university", "language_school"]),
+  city: zod.string().nullish(),
+  country: zod.string(),
+  description: zod.string().nullish(),
+});
+
+/**
+ * @summary Get logged-in user's Tinkercad class URL
+ */
+export const GetMyTinkercadClassResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  classCode: zod.string(),
+  tinkercadUrl: zod.string(),
+  createdAt: zod.coerce.date().optional(),
+});
+
+/**
+ * @summary List all Tinkercad classes (admin only)
+ */
+export const ListTinkercadClassesResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  classCode: zod.string(),
+  tinkercadUrl: zod.string(),
+  createdAt: zod.coerce.date().optional(),
+});
+export const ListTinkercadClassesResponse = zod.array(
+  ListTinkercadClassesResponseItem,
+);
+
+/**
+ * @summary Create a Tinkercad class (admin only)
+ */
+
+export const CreateTinkercadClassBody = zod.object({
+  name: zod.string().min(1),
+  classCode: zod.string().min(1),
+  tinkercadUrl: zod.string().url(),
+});
+
+/**
+ * @summary Update a Tinkercad class (admin only)
+ */
+export const UpdateTinkercadClassParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateTinkercadClassBody = zod.object({
+  name: zod.string().min(1).optional(),
+  tinkercadUrl: zod.string().url().optional(),
+});
+
+/**
+ * @summary Delete a Tinkercad class (admin only)
+ */
+export const DeleteTinkercadClassParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List all users (admin only)
+ */
+export const AdminGetUsersResponseItem = zod
+  .object({
+    id: zod.number(),
+    username: zod.string(),
+    email: zod.string(),
+    role: zod.enum(["user", "moderator", "admin"]),
+    avatarColor: zod.string().optional(),
+    avatarUrl: zod.string().nullish(),
+    displayName: zod.string().nullish(),
+    createdAt: zod.coerce.date().optional(),
+  })
+  .and(
+    zod.object({
+      isActive: zod.boolean().optional(),
+      classGroup: zod.string().nullish(),
+      lastLogin: zod.coerce.date().nullish(),
+    }),
+  );
+export const AdminGetUsersResponse = zod.array(AdminGetUsersResponseItem);
+
+/**
+ * @summary Update user role, active status, or class group (admin only)
+ */
+export const AdminUpdateUserParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const AdminUpdateUserBody = zod.object({
+  role: zod.enum(["user", "moderator", "admin"]).optional(),
+  isActive: zod.boolean().optional(),
+  classGroup: zod.string().nullish(),
 });

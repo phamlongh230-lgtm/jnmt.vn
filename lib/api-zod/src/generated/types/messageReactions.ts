@@ -6,9 +6,9 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export type GetMessagesParams = {
-  /**
-   * @maximum 200
-   */
-  limit?: number;
+export type MessageReactions = {
+  [key: string]: {
+    count?: number;
+    userIds?: number[];
+  };
 };

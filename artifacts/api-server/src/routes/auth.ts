@@ -72,7 +72,7 @@ router.post("/auth/register", async (req, res): Promise<void> => {
     res.status(201).json({
       message: "Đăng ký thành công!",
       token,
-      user: { id: user.id, username: user.username, email: user.email, role: user.role, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl, createdAt: user.createdAt },
+      user: { id: user.id, username: user.username, email: user.email, role: user.role, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl, displayName: user.displayName, createdAt: user.createdAt },
     });
   } catch (err) {
     req.log.error({ err }, "Register error");
@@ -119,7 +119,7 @@ router.post("/auth/login", async (req, res): Promise<void> => {
     res.json({
       message: "Đăng nhập thành công!",
       token,
-      user: { id: user.id, username: user.username, email: user.email, role: user.role, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl, createdAt: user.createdAt },
+      user: { id: user.id, username: user.username, email: user.email, role: user.role, avatarColor: user.avatarColor, avatarUrl: user.avatarUrl, displayName: user.displayName, createdAt: user.createdAt },
     });
   } catch (err) {
     req.log.error({ err }, "Login error");
@@ -161,6 +161,7 @@ router.get("/auth/me", async (req, res): Promise<void> => {
       role: user.role,
       avatarColor: user.avatarColor,
       avatarUrl: user.avatarUrl,
+      displayName: user.displayName,
       createdAt: user.createdAt,
     }));
   } catch (err) {
@@ -203,15 +204,17 @@ router.put("/auth/profile", async (req, res): Promise<void> => {
 
     const body = z.object({
       avatarColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
-      avatarUrl: z.string().max(200000).nullable().optional(),
+      avatarUrl: z.union([z.string().url().max(2048), z.string().max(300000).startsWith("data:image/"), z.null()]).optional(),
+      displayName: z.string().max(50).nullable().optional(),
     }).safeParse(req.body);
     if (!body.success) { res.status(400).json({ error: "Dữ liệu không hợp lệ!" }); return; }
 
     const updates: Record<string, unknown> = {};
     if (body.data.avatarColor !== undefined) updates.avatarColor = body.data.avatarColor;
     if (body.data.avatarUrl !== undefined) updates.avatarUrl = body.data.avatarUrl;
+    if (body.data.displayName !== undefined) updates.displayName = body.data.displayName;
 
-    const [user] = await db.update(usersTable).set(updates).where(eq(usersTable.id, decoded.id)).returning({ id: usersTable.id, username: usersTable.username, email: usersTable.email, role: usersTable.role, avatarColor: usersTable.avatarColor, avatarUrl: usersTable.avatarUrl, createdAt: usersTable.createdAt });
+    const [user] = await db.update(usersTable).set(updates).where(eq(usersTable.id, decoded.id)).returning({ id: usersTable.id, username: usersTable.username, email: usersTable.email, role: usersTable.role, avatarColor: usersTable.avatarColor, avatarUrl: usersTable.avatarUrl, displayName: usersTable.displayName, createdAt: usersTable.createdAt });
     res.json(user);
   } catch (err) {
     req.log.error({ err }, "Update profile error");

@@ -7,8 +7,8 @@
  */
 import type { User } from "./user";
 
-export interface AuthResponse {
-  message: string;
-  token: string;
-  user: User;
-}
+export type AdminUser = User & {
+  isActive?: boolean;
+  classGroup?: string | null;
+  lastLogin?: Date | null;
+};

@@ -2,10 +2,10 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  role: string;
+  role: "user" | "moderator" | "admin";
   avatarColor?: string;
   avatarUrl?: string | null;
-  displayName?: string;
+  displayName?: string | null;
   createdAt?: string;
 }
 

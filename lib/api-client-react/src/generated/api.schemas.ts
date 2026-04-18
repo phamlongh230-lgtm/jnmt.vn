@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * JNMT Student Hub API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
@@ -25,15 +25,44 @@ export interface LoginBody {
   password: string;
 }
 
+export interface ChangePasswordBody {
+  currentPassword: string;
+  /** @minLength 6 */
+  newPassword: string;
+}
+
+export interface UpdateProfileBody {
+  /** @pattern ^#[0-9a-fA-F]{6}$ */
+  avatarColor?: string;
+  avatarUrl?: string | null;
+  /** @maxLength 50 */
+  displayName?: string | null;
+}
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
+export const UserRole = {
+  user: "user",
+  moderator: "moderator",
+  admin: "admin",
+} as const;
+
 export interface User {
   id: number;
   username: string;
   email: string;
-  role: string;
+  role: UserRole;
   avatarColor?: string;
   avatarUrl?: string | null;
+  displayName?: string | null;
   createdAt?: string;
 }
+
+export type AdminUser = User & {
+  isActive?: boolean;
+  classGroup?: string | null;
+  lastLogin?: string | null;
+};
 
 export interface AuthResponse {
   message: string;
@@ -41,23 +70,66 @@ export interface AuthResponse {
   user: User;
 }
 
+export type MessageReactions = {
+  [key: string]: {
+    count?: number;
+    userIds?: number[];
+  };
+};
+
 export interface Message {
   id: number;
   content: string;
   username: string;
   userId: number;
+  userRole?: string | null;
+  avatarColor?: string | null;
+  isEdited?: boolean;
+  editedAt?: string | null;
+  replyToId?: number | null;
+  replyToContent?: string | null;
+  replyToUsername?: string | null;
+  reactions?: MessageReactions;
   createdAt: string;
 }
 
 export interface CreateMessageBody {
-  /** @minLength 1 */
+  /**
+   * @minLength 1
+   * @maxLength 2000
+   */
   content: string;
+  replyToId?: number | null;
 }
+
+export type TranslateBodySourceLang =
+  (typeof TranslateBodySourceLang)[keyof typeof TranslateBodySourceLang];
+
+export const TranslateBodySourceLang = {
+  vi: "vi",
+  ko: "ko",
+  en: "en",
+  mn: "mn",
+  kk: "kk",
+  ru: "ru",
+} as const;
+
+export type TranslateBodyTargetLang =
+  (typeof TranslateBodyTargetLang)[keyof typeof TranslateBodyTargetLang];
+
+export const TranslateBodyTargetLang = {
+  vi: "vi",
+  ko: "ko",
+  en: "en",
+  mn: "mn",
+  kk: "kk",
+  ru: "ru",
+} as const;
 
 export interface TranslateBody {
   text: string;
-  sourceLang: string;
-  targetLang: string;
+  sourceLang: TranslateBodySourceLang;
+  targetLang: TranslateBodyTargetLang;
 }
 
 export interface TranslateResponse {
@@ -67,6 +139,137 @@ export interface TranslateResponse {
   targetLang: string;
 }
 
+export interface Announcement {
+  id: number;
+  title: string;
+  content: string;
+  isPinned: boolean;
+  authorId: number;
+  authorUsername: string;
+  createdAt: string;
+}
+
+export interface CreateAnnouncementBody {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  title: string;
+  /**
+   * @minLength 1
+   * @maxLength 5000
+   */
+  content: string;
+}
+
+export type AiChatBodyHistoryItemRole =
+  (typeof AiChatBodyHistoryItemRole)[keyof typeof AiChatBodyHistoryItemRole];
+
+export const AiChatBodyHistoryItemRole = {
+  user: "user",
+  assistant: "assistant",
+} as const;
+
+export type AiChatBodyHistoryItem = {
+  role: AiChatBodyHistoryItemRole;
+  content: string;
+};
+
+export interface AiChatBody {
+  /**
+   * @minLength 1
+   * @maxLength 1000
+   */
+  message: string;
+  /** @maxItems 10 */
+  history?: AiChatBodyHistoryItem[];
+}
+
+export interface AiChatResponse {
+  reply: string;
+}
+
+export type SchoolType = (typeof SchoolType)[keyof typeof SchoolType];
+
+export const SchoolType = {
+  high_school: "high_school",
+  university: "university",
+  language_school: "language_school",
+} as const;
+
+export interface School {
+  id: number;
+  name: string;
+  nameKo?: string | null;
+  nameEn?: string | null;
+  slug: string;
+  link?: string | null;
+  type: SchoolType;
+  city?: string | null;
+  country: string;
+  description?: string | null;
+}
+
+export interface TinkercadClass {
+  id: number;
+  name: string;
+  classCode: string;
+  tinkercadUrl: string;
+  createdAt?: string;
+}
+
+export interface CreateTinkercadClassBody {
+  /** @minLength 1 */
+  name: string;
+  /** @minLength 1 */
+  classCode: string;
+  tinkercadUrl: string;
+}
+
+export interface UpdateTinkercadClassBody {
+  /** @minLength 1 */
+  name?: string;
+  tinkercadUrl?: string;
+}
+
+export type AdminUpdateUserBodyRole =
+  (typeof AdminUpdateUserBodyRole)[keyof typeof AdminUpdateUserBodyRole];
+
+export const AdminUpdateUserBodyRole = {
+  user: "user",
+  moderator: "moderator",
+  admin: "admin",
+} as const;
+
+export interface AdminUpdateUserBody {
+  role?: AdminUpdateUserBodyRole;
+  isActive?: boolean;
+  classGroup?: string | null;
+}
+
 export type GetMessagesParams = {
+  /**
+   * @maximum 200
+   */
   limit?: number;
+};
+
+export type EditMessageBody = {
+  /**
+   * @minLength 1
+   * @maxLength 2000
+   */
+  content: string;
+};
+
+export type ToggleReactionBody = {
+  /**
+   * @minLength 1
+   * @maxLength 10
+   */
+  emoji: string;
+};
+
+export type SearchSchoolsParams = {
+  q: string;
 };

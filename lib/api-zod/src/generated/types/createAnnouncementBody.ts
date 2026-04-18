@@ -6,11 +6,15 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface CreateMessageBody {
+export interface CreateAnnouncementBody {
   /**
    * @minLength 1
-   * @maxLength 2000
+   * @maxLength 200
+   */
+  title: string;
+  /**
+   * @minLength 1
+   * @maxLength 5000
    */
   content: string;
-  replyToId?: number | null;
 }
