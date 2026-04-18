@@ -427,6 +427,10 @@ export default function HomePage() {
                 style={{ background: "rgba(255,255,255,0.2)", color: "white", border: "1px solid rgba(255,255,255,0.35)", padding: "0.5rem 1rem", borderRadius: 8, textDecoration: "none", fontSize: "0.85rem", fontWeight: 600 }}>
                 🌐 {t(lang, "website")}
               </a>
+              <a href="https://jnmt.kr" target="_blank" rel="noopener noreferrer"
+                style={{ background: "rgba(255,255,255,0.2)", color: "white", border: "1px solid rgba(255,255,255,0.35)", padding: "0.5rem 1rem", borderRadius: 8, textDecoration: "none", fontSize: "0.85rem", fontWeight: 600 }}>
+                📚 jnmt.kr
+              </a>
               <a href="https://www.facebook.com/share/1AtjZfCMxM/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"
                 style={{ background: "rgba(255,255,255,0.2)", color: "white", border: "1px solid rgba(255,255,255,0.35)", padding: "0.5rem 1rem", borderRadius: 8, textDecoration: "none", fontSize: "0.85rem", fontWeight: 600 }}>
                 📘 {t(lang, "facebook")}
