@@ -88,18 +88,22 @@ app.use("/api/messages", messageLimiter);
 app.use("/api", router);
 
 // Serve frontend static files (production only)
-const frontendDist = path.resolve(process.cwd(), "artifacts/jnmt-hub/dist/public");
+// Try both: relative to cwd (Render) and relative to this file (local dev)
+const frontendDist = [
+  path.resolve(process.cwd(), "artifacts/jnmt-hub/dist/public"),
+  path.resolve(__dirname, "../../../jnmt-hub/dist/public"),
+].find(existsSync);
 
-if (existsSync(frontendDist)) {
+if (frontendDist) {
   logger.info({ frontendDist }, "Serving frontend static files");
-  app.use(express.static(frontendDist));
+  app.use(express.static(frontendDist, { maxAge: "1d", etag: true }));
 
   // SPA fallback — serve index.html for all non-API routes
   app.use((_req, res) => {
     res.sendFile(path.join(frontendDist, "index.html"));
   });
 } else {
-  logger.warn({ frontendDist }, "Frontend dist not found — skipping static serve");
+  logger.warn({ cwd: process.cwd() }, "Frontend dist not found — skipping static serve");
 }
 
 // Global error handler (must be last)
