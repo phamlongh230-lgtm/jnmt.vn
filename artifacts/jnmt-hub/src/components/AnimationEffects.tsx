@@ -133,8 +133,8 @@ export default function AnimationEffects() {
   }, [activePage]);
 
   const glowColor = isDark
-    ? "radial-gradient(circle, rgba(99,130,255,0.18) 0%, rgba(124,58,237,0.10) 40%, transparent 70%)"
-    : "radial-gradient(circle, rgba(37,99,235,0.13) 0%, rgba(124,58,237,0.07) 40%, transparent 70%)";
+    ? "radial-gradient(circle, rgba(232,121,160,0.22) 0%, rgba(56,189,248,0.12) 40%, transparent 70%)"
+    : "radial-gradient(circle, rgba(232,121,160,0.16) 0%, rgba(56,189,248,0.09) 40%, transparent 70%)";
 
   return (
     <>
