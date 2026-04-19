@@ -15,8 +15,8 @@
 
 - [ ] #001 — Thiết kế Prisma schema (trường, tài liệu, lịch thi, thông báo) [area: database] → [.tasks/001-prisma-schema.md](.tasks/001-prisma-schema.md)
 - [ ] #002 — Setup Next.js project với TypeScript, Tailwind, Prisma, ESLint, Prettier [area: setup] → [.tasks/002-nextjs-setup.md](.tasks/002-nextjs-setup.md)
-- [ ] #003 — Thiết kế UX/UI wireframe cho 4 trang chính (trường, tài liệu, lịch thi, thông báo) [area: design] → [.tasks/003-ux-wireframes.md](.tasks/003-ux-wireframes.md)
-- [ ] #004 — Viết landing page copy + meta tags cho Homepage, /tai-lieu, /lich-thi [area: content] → [.tasks/004-landing-copy.md](.tasks/004-landing-copy.md)
+- [x] #003 — Thiết kế UX/UI wireframe cho 4 trang chính (trường, tài liệu, lịch thi, thông báo) [area: design] → [.tasks/003-ux-wireframes.md](.tasks/003-ux-wireframes.md)
+- [x] #004 — Viết landing page copy + meta tags cho Homepage, /tai-lieu, /lich-thi [area: content] → [.tasks/004-landing-copy.md](.tasks/004-landing-copy.md)
 
 ---
 

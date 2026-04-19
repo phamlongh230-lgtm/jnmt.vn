@@ -1,14 +1,14 @@
 ---
 id: "003"
 title: "Wireframe UX/UI cho 4 trang chính"
-status: "todo"
+status: "completed"
 area: "design"
 agent: "@ui-ux-designer"
 priority: "high"
 created_at: "2026-04-19"
 due_date: null
 started_at: null
-completed_at: null
+completed_at: "2026-04-19"
 prd_refs: ["FR-001", "FR-010", "FR-020", "FR-030", "FR-041", "FR-042"]
 blocks: ["009", "010", "011", "012", "013"]
 blocked_by: []

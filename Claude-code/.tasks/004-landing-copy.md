@@ -1,14 +1,14 @@
 ---
 id: "004"
 title: "Viết landing page copy và meta tags"
-status: "todo"
+status: "completed"
 area: "content"
 agent: "@copywriter-seo"
 priority: "high"
 created_at: "2026-04-19"
 due_date: null
 started_at: null
-completed_at: null
+completed_at: "2026-04-19"
 prd_refs: ["FR-042"]
 blocks: ["009", "010", "011"]
 blocked_by: []
