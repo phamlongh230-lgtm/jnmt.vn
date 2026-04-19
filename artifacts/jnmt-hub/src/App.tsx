@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AppProvider, useApp } from "@/context/AppContext";
 import { t } from "@/lib/i18n";
@@ -112,6 +112,14 @@ const springTransition = {
 
 function AppContent() {
   const { activePage, currentUser } = useApp();
+
+  useEffect(() => {
+    if (!currentUser) return;
+    import("@/lib/notifications").then(({ checkDdayNotifications, checkNotesNotifications }) => {
+      checkDdayNotifications();
+      checkNotesNotifications();
+    });
+  }, [currentUser]);
 
   if (!currentUser) return <LoginPage />;
 
