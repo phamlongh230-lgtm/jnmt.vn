@@ -52,10 +52,10 @@ const TOOL_GROUPS = [
 // flat list for sidebar + active detection
 const TOOLS = TOOL_GROUPS.flatMap((g) => g.tools);
 
-const AVATAR_COLORS = ["#2563eb","#7c3aed","#059669","#d97706","#dc2626","#0891b2","#db2777","#65a30d"];
+const AVATAR_COLORS = ["#e879a0","#38bdf8","#7c3aed","#059669","#d97706","#dc2626","#0891b2","#65a30d"];
 const ROLE_BADGE: Record<string, { label: string; color: string }> = {
   admin: { label: "Admin", color: "#7c3aed" },
-  moderator: { label: "Mod", color: "#2563eb" },
+  moderator: { label: "Mod", color: "#38bdf8" },
 };
 
 // Thông tin hỗ trợ bằng 6 ngôn ngữ
@@ -242,7 +242,7 @@ export default function Navbar() {
                           ? <div style={{ padding: "1rem", fontSize: "0.83rem", color: text2, textAlign: "center" }}>{t(lang, "no_results")}</div>
                           : flat.map((tool) => (
                             <button key={tool.page} onClick={() => { haptic(); setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
-                              style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
+                              style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "rgba(232,121,160,0.15)" : "rgba(232,121,160,0.10)") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid var(--primary)" : "3px solid transparent" }}>
                               <span>{tool.icon}</span>
                               <span>{t(lang, tool.key)}</span>
                             </button>
@@ -258,7 +258,7 @@ export default function Navbar() {
                           </div>
                           {tools.map((tool) => (
                             <button key={tool.page} onClick={() => { haptic(); setActivePage(tool.page); setToolsOpen(false); setToolSearch(""); }}
-                              style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "#2563eb22" : "#eff6ff") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid #2563eb" : "3px solid transparent" }}>
+                              style={{ display: "flex", alignItems: "center", gap: "0.6rem", width: "100%", padding: "0.55rem 1rem", background: activePage === tool.page ? (isDark ? "rgba(232,121,160,0.15)" : "rgba(232,121,160,0.10)") : "none", border: "none", color: textCol, textAlign: "left", cursor: "pointer", fontSize: "0.88rem", fontWeight: activePage === tool.page ? 700 : 400, borderLeft: activePage === tool.page ? "3px solid var(--primary)" : "3px solid transparent" }}>
                               <span>{tool.icon}</span>
                               <span>{t(lang, tool.key)}</span>
                             </button>
@@ -283,7 +283,7 @@ export default function Navbar() {
             <select value={lang} onChange={(e) => setLang(e.target.value as LangCode)}
               style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.30)", color: "white", padding: "0.4rem 0.5rem", borderRadius: 100, cursor: "pointer", fontSize: "0.85rem" }}>
               {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code} style={{ background: "#1d4ed8", color: "white" }}>{l.flag} {l.name}</option>
+                <option key={l.code} value={l.code} style={{ background: "var(--primary-dark)", color: "white" }}>{l.flag} {l.name}</option>
               ))}
             </select>
             <div style={{ position: "relative" }}>
@@ -301,7 +301,7 @@ export default function Navbar() {
                       <>
                         <div style={{ padding: "0.75rem 1rem", borderBottom: `1px solid ${border}` }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                            <div style={{ width: 32, height: 32, borderRadius: "50%", background: currentUser.avatarColor || "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0, overflow: "hidden" }}>
+                            <div style={{ width: 32, height: 32, borderRadius: "50%", background: currentUser.avatarColor || "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 700, fontSize: "0.9rem", flexShrink: 0, overflow: "hidden" }}>
                               {currentUser.avatarUrl
                                 ? <img src={currentUser.avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                 : currentUser.username.charAt(0).toUpperCase()}
@@ -346,10 +346,10 @@ export default function Navbar() {
                       </>
                     ) : (
                       <>
-                        <button onClick={() => { setLoginOpen(true); setUserMenuOpen(false); }} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#2563eb", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, borderBottom: `1px solid ${border}` }}>
+                        <button onClick={() => { setLoginOpen(true); setUserMenuOpen(false); }} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "var(--primary)", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500, borderBottom: `1px solid ${border}` }}>
                           🔑 {t(lang, "login")}
                         </button>
-                        <button onClick={() => { setRegisterOpen(true); setUserMenuOpen(false); }} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "#2563eb", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500 }}>
+                        <button onClick={() => { setRegisterOpen(true); setUserMenuOpen(false); }} style={{ display: "block", width: "100%", padding: "0.75rem 1rem", color: "var(--primary)", background: "none", border: "none", textAlign: "left", cursor: "pointer", fontWeight: 500 }}>
                           ✨ {t(lang, "register")}
                         </button>
                       </>
@@ -373,7 +373,7 @@ export default function Navbar() {
           <div className="glass-panel" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 310, borderRadius: "0 28px 28px 0", zIndex: 400, boxShadow: "8px 0 60px rgba(0,0,0,0.22)", display: "flex", flexDirection: "column", overflowY: "auto" }}>
 
             {/* Header */}
-            <div style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.85), rgba(124,58,237,0.80))", backdropFilter: "blur(10px)", color: "white", padding: "1.5rem 1.25rem 1.25rem", borderRadius: "0 20px 0 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
+            <div style={{ background: "linear-gradient(135deg, rgba(232,121,160,0.85), rgba(56,189,248,0.75))", backdropFilter: "blur(10px)", color: "white", padding: "1.5rem 1.25rem 1.25rem", borderRadius: "0 20px 0 0", borderBottom: "1px solid rgba(255,255,255,0.15)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
                   <img src="/favicon.svg" alt="logo" width={44} height={44} style={{ borderRadius: 11, marginBottom: "0.3rem", boxShadow: "0 2px 8px rgba(0,0,0,0.25)" }} />
@@ -389,7 +389,7 @@ export default function Navbar() {
 
             {/* Support title */}
             <div style={{ padding: "1.25rem 1.25rem 0.5rem" }}>
-              <div style={{ fontWeight: 800, fontSize: "1rem", color: "#2563eb", marginBottom: "0.25rem" }}>
+              <div style={{ fontWeight: 800, fontSize: "1rem", color: "var(--primary)", marginBottom: "0.25rem" }}>
                 📞 {support.title}
               </div>
               <div style={{ fontSize: "0.8rem", color: text2 }}>{support.subtitle}</div>
@@ -400,7 +400,7 @@ export default function Navbar() {
               {/* Admin card */}
               <div style={{ background: isDark ? "#0f172a" : "#f8fafc", border: `1px solid ${border}`, borderRadius: 12, padding: "1rem", marginBottom: "0.75rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #2563eb, #7c3aed)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 900, fontSize: "1.1rem", flexShrink: 0 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #e879a0, #38bdf8)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 900, fontSize: "1.1rem", flexShrink: 0 }}>
                     VT
                   </div>
                   <div>
@@ -415,7 +415,7 @@ export default function Navbar() {
                   <span style={{ fontSize: "1.1rem" }}>📱</span>
                   <div>
                     <div style={{ fontSize: "0.7rem", color: text2, fontWeight: 600 }}>{support.phone}</div>
-                    <div style={{ fontSize: "0.9rem", color: "#2563eb", fontWeight: 700 }}>010-6315-8995</div>
+                    <div style={{ fontSize: "0.9rem", color: "var(--primary)", fontWeight: 700 }}>010-6315-8995</div>
                   </div>
                 </a>
 
@@ -424,7 +424,7 @@ export default function Navbar() {
                   <span style={{ fontSize: "1.1rem" }}>📧</span>
                   <div>
                     <div style={{ fontSize: "0.7rem", color: text2, fontWeight: 600 }}>Gmail</div>
-                    <div style={{ fontSize: "0.82rem", color: "#2563eb", fontWeight: 600 }}>phamlongh230@gmail.com</div>
+                    <div style={{ fontSize: "0.82rem", color: "var(--primary)", fontWeight: 600 }}>phamlongh230@gmail.com</div>
                   </div>
                 </a>
 
@@ -433,7 +433,7 @@ export default function Navbar() {
                   <span style={{ fontSize: "1.1rem" }}>🍎</span>
                   <div>
                     <div style={{ fontSize: "0.7rem", color: text2, fontWeight: 600 }}>iCloud</div>
-                    <div style={{ fontSize: "0.82rem", color: "#2563eb", fontWeight: 600 }}>phamlongh230@icloud.com</div>
+                    <div style={{ fontSize: "0.82rem", color: "var(--primary)", fontWeight: 600 }}>phamlongh230@icloud.com</div>
                   </div>
                 </a>
 
@@ -442,7 +442,7 @@ export default function Navbar() {
                   <span style={{ fontSize: "1.1rem" }}>📧</span>
                   <div>
                     <div style={{ fontSize: "0.7rem", color: text2, fontWeight: 600 }}>Gmail (phụ)</div>
-                    <div style={{ fontSize: "0.82rem", color: "#2563eb", fontWeight: 600 }}>duybui4680@gmail.com</div>
+                    <div style={{ fontSize: "0.82rem", color: "var(--primary)", fontWeight: 600 }}>duybui4680@gmail.com</div>
                   </div>
                 </a>
               </div>
@@ -462,7 +462,7 @@ export default function Navbar() {
                 {[...navItems, ...TOOLS].map((item) => (
                   <button key={item.page}
                     onClick={() => { haptic(); setActivePage(item.page); setSidebarOpen(false); }}
-                    style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.5rem 0.75rem", background: activePage === item.page ? "#eff6ff" : (isDark ? "#0f172a" : "#f8fafc"), border: `1px solid ${activePage === item.page ? "#bfdbfe" : border}`, borderRadius: 8, cursor: "pointer", color: activePage === item.page ? "#2563eb" : textCol, fontSize: "0.82rem", fontWeight: activePage === item.page ? 700 : 400, textAlign: "left" }}>
+                    style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.5rem 0.75rem", background: activePage === item.page ? "rgba(232,121,160,0.10)" : (isDark ? "#0f172a" : "#f8fafc"), border: `1px solid ${activePage === item.page ? "rgba(232,121,160,0.35)" : border}`, borderRadius: 8, cursor: "pointer", color: activePage === item.page ? "var(--primary)" : textCol, fontSize: "0.82rem", fontWeight: activePage === item.page ? 700 : 400, textAlign: "left" }}>
                     <span>{item.icon}</span>
                     <span>{t(lang, item.key)}</span>
                   </button>
@@ -529,9 +529,9 @@ export default function Navbar() {
               else { haptic(); setActivePage(item.page); if (item.page === "chat") resetChatUnread(); }
             }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.15rem", padding: "0.3rem 0.6rem", position: "relative", minWidth: 52, borderRadius: 12 }}>
               {/* iOS pill highlight behind active item */}
-              {isActive && <span style={{ position: "absolute", inset: "0.15rem 0.2rem", borderRadius: 10, background: isDark ? "rgba(37,99,235,0.22)" : "rgba(37,99,235,0.12)", border: "1px solid rgba(37,99,235,0.20)" }} />}
+              {isActive && <span style={{ position: "absolute", inset: "0.15rem 0.2rem", borderRadius: 10, background: isDark ? "rgba(232,121,160,0.22)" : "rgba(232,121,160,0.12)", border: "1px solid rgba(232,121,160,0.25)" }} />}
               <span style={{ fontSize: "1.25rem", position: "relative" }}>{item.icon}</span>
-              <span style={{ fontSize: "0.58rem", color: isActive ? "#2563eb" : text2, fontWeight: isActive ? 700 : 400, position: "relative" }}>{t(lang, item.labelKey)}</span>
+              <span style={{ fontSize: "0.58rem", color: isActive ? "var(--primary)" : text2, fontWeight: isActive ? 700 : 400, position: "relative" }}>{t(lang, item.labelKey)}</span>
               {item.badge > 0 && <span style={{ position: "absolute", top: 2, right: 6, background: "#ef4444", color: "white", borderRadius: "50%", width: 16, height: 16, fontSize: "0.55rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.badge > 9 ? "9+" : item.badge}</span>}
             </button>
           );
@@ -558,7 +558,7 @@ export default function Navbar() {
                   if (r.ok) { showToast(t(lang, "password_changed"), "success"); setPwOpen(false); setOldPw(""); setNewPw(""); }
                   else { const e = await r.json(); showToast(e.error || t(lang, "error_generic"), "error"); }
                 } finally { setPwSaving(false); }
-              }} style={{ padding: "0.6rem 1.25rem", background: "#2563eb", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: "0.9rem", opacity: (pwSaving || !oldPw || newPw.length < 6) ? 0.6 : 1 }}>
+              }} style={{ padding: "0.6rem 1.25rem", background: "var(--primary)", color: "white", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: "0.9rem", opacity: (pwSaving || !oldPw || newPw.length < 6) ? 0.6 : 1 }}>
                 {pwSaving ? "..." : t(lang, "save")}
               </button>
             </div>
