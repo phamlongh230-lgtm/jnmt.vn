@@ -111,9 +111,44 @@
   border-radius: 100px;
   cursor: pointer;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
+  position: relative;
+  overflow: hidden;
 }
 .glass-btn:hover  { transform: translateY(-1px); }
 .glass-btn:active { transform: scale(0.97); }
+
+/* ── Glass Input ──────────────────────────────────────────── */
+.glass-input {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55),
+              inset 0 -1px 0 rgba(0,0,0,0.04),
+              0 2px 8px rgba(0,0,0,0.05);
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+.glass-input::placeholder { color: var(--text2); opacity: 0.7; }
+.glass-input:focus {
+  border-color: rgba(37,99,235,0.55);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55),
+              0 0 0 3px rgba(37,99,235,0.14),
+              0 2px 8px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] .glass-input {
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12),
+              inset 0 -1px 0 rgba(0,0,0,0.12),
+              0 2px 8px rgba(0,0,0,0.18);
+}
+[data-theme="dark"] .glass-input:focus {
+  border-color: rgba(96,165,250,0.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12),
+              0 0 0 3px rgba(96,165,250,0.16),
+              0 2px 8px rgba(0,0,0,0.22);
+}
 
 /* ═══════════════════════════════════════════════════════════
    Base
@@ -189,11 +224,35 @@ body {
   100% { transform: translateX(220%)  skewX(-18deg); opacity: 0; }
 }
 
-.glass, .glass-panel {
+.glass, .glass-panel, .glass-btn {
   position: relative;
   overflow: hidden;
 }
-.glass::after, .glass-panel::after {
+
+/* ── Noise grain — frosted texture overlay (::before) ────────
+   SVG feTurbulence grain makes glass look physically frosted
+   rather than just blurred. Opacity is intentionally very low.
+────────────────────────────────────────────────────────────── */
+.glass::before, .glass-panel::before, .glass-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+[data-theme="dark"] .glass::before,
+[data-theme="dark"] .glass-panel::before,
+[data-theme="dark"] .glass-btn::before { opacity: 0.045; }
+
+/* ── Water-shine sweep (::after) ─────────────────────────────
+   NOTE: box-shadow NOT animated — causes full repaint on
+   backdrop-filter elements. Only transform+opacity animated.
+────────────────────────────────────────────────────────────── */
+.glass::after, .glass-panel::after, .glass-btn::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -209,6 +268,7 @@ body {
   will-change: transform, opacity;
   animation: water-shine 8s cubic-bezier(0.4,0,0.6,1) infinite;
   border-radius: inherit;
+  z-index: 1;
 }
 
 /* stagger so cards don't all flash at the same moment */
@@ -216,10 +276,14 @@ body {
 .glass:nth-child(3n)::after       { animation-delay: 3.2s; }
 .glass:nth-child(5n)::after       { animation-delay: 4.8s; }
 .glass-panel:nth-child(2n)::after { animation-delay: 2.4s; }
+.glass-btn::after                 { animation-duration: 5s; animation-delay: 0.8s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .glass::after, .glass-panel::after { animation: none; display: none; }
+  .glass::after, .glass-panel::after, .glass-btn::after { animation: none; display: none; }
 }
+
+/* ensure glass card children render above noise/shine pseudo-layers */
+.glass > *, .glass-panel > *, .glass-btn > * { position: relative; z-index: 2; }
 
 .animate-fade-in {
   animation: fadeIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards;
