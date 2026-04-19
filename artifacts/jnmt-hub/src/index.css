@@ -165,26 +165,9 @@ body {
   line-height: 1.6;
   min-height: 100vh;
 
-  /* ── iOS 26.5 mesh background — vivid 6-blob gradient ── */
-  background-image:
-    radial-gradient(ellipse 130% 90% at  8% -8%,  rgba( 37, 99,235,0.40) 0%, transparent 52%),
-    radial-gradient(ellipse  90% 75% at 92% 108%, rgba(124, 58,237,0.32) 0%, transparent 48%),
-    radial-gradient(ellipse  70% 60% at 52%  52%, rgba( 16,185,129,0.20) 0%, transparent 44%),
-    radial-gradient(ellipse  60% 50% at 84%  10%, rgba( 14,165,233,0.28) 0%, transparent 40%),
-    radial-gradient(ellipse  55% 45% at 16%  88%, rgba(245,158, 11,0.18) 0%, transparent 42%),
-    radial-gradient(ellipse  80% 60% at 68%  96%, rgba(236, 72,153,0.20) 0%, transparent 48%);
-  background-attachment: fixed;
+  /* mesh blobs are rendered by <MeshBackground /> component (animated) */
 }
 
-[data-theme="dark"] body {
-  background-image:
-    radial-gradient(ellipse 130% 90% at  8% -8%,  rgba( 37, 99,235,0.55) 0%, transparent 52%),
-    radial-gradient(ellipse  90% 75% at 92% 108%, rgba(124, 58,237,0.48) 0%, transparent 48%),
-    radial-gradient(ellipse  70% 60% at 52%  52%, rgba( 16,185,129,0.22) 0%, transparent 44%),
-    radial-gradient(ellipse  60% 50% at 84%  10%, rgba( 14,165,233,0.35) 0%, transparent 40%),
-    radial-gradient(ellipse  55% 45% at 16%  88%, rgba(245,158, 11,0.18) 0%, transparent 42%),
-    radial-gradient(ellipse  80% 60% at 68%  96%, rgba(236, 72,153,0.24) 0%, transparent 48%);
-}
 
 /* ── Scrollbar ────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
@@ -207,6 +190,43 @@ body {
   0%, 100% { transform: scale(1)    translateY(0px); }
   40%       { transform: scale(1.03) translateY(-6px); }
   70%       { transform: scale(0.97) translateY(4px); }
+}
+
+/* ── Mesh blob drift animations ───────────────────────────── */
+@keyframes blob-drift-1 {
+  0%,100% { transform: translate(0px,   0px)   scale(1); }
+  25%     { transform: translate(40px, -30px)  scale(1.06); }
+  50%     { transform: translate(20px,  50px)  scale(0.94); }
+  75%     { transform: translate(-30px, 20px)  scale(1.03); }
+}
+@keyframes blob-drift-2 {
+  0%,100% { transform: translate(0px,   0px)   scale(1); }
+  30%     { transform: translate(-50px, 35px)  scale(1.08); }
+  60%     { transform: translate(30px,  -40px) scale(0.92); }
+  80%     { transform: translate(10px,  25px)  scale(1.04); }
+}
+@keyframes blob-drift-3 {
+  0%,100% { transform: translate(0px,  0px)   scale(1); }
+  35%     { transform: translate(25px, 45px)  scale(1.05); }
+  65%     { transform: translate(-20px,-35px) scale(0.96); }
+}
+@keyframes blob-drift-4 {
+  0%,100% { transform: translate(0px, 0px)    scale(1); }
+  40%     { transform: translate(-35px,-25px) scale(1.07); }
+  70%     { transform: translate(45px,  30px) scale(0.93); }
+}
+
+/* ── Mesh blob base styles ────────────────────────────────── */
+.mesh-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform;
+  z-index: -1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mesh-blob { animation: none !important; }
 }
 
 /* ── Liquid water-shine sweep ─────────────────────────────────
