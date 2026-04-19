@@ -59,12 +59,35 @@ The API server validates request bodies with `@workspace/api-zod`; the frontend 
 
 ## Frontend conventions
 
-- **Styling**: Tailwind 4 + custom CSS variables (`--primary`, `--bg`, `--text`, …) in `index.css`. This is **not** the shadcn/HSL theme system even though `components.json` and many Radix primitives are present — don't assume `hsl(var(--foreground))` patterns work.
-- **Dark mode**: toggled via `[data-theme="dark"]` attribute on `<html>` (not Tailwind's `dark:` class strategy).
-- **Router**: `wouter` (not react-router).
-- **i18n**: all UI text goes through `t(lang, "key")`; six locales. Don't hardcode user-facing strings.
-- **Data fetching**: use the generated hooks from `@workspace/api-client-react` — don't write ad-hoc `fetch` calls for endpoints already in the OpenAPI spec.
+### Routing
+There is **no URL router** (wouter is not used). Page navigation is handled entirely by `activePage` state in `AppContext` (`src/context/AppContext.tsx`). To navigate: call `setActivePage("pagename")`. New pages must be registered in the `CurrentPage` switch in `App.tsx`.
+
+### Styling
+- **Design system**: iOS-style Liquid Glass (`src/index.css`). Glass utility classes: `glass`, `glass-panel`, `glass-nav`, `glass-btn`, `glass-input`, `glass-bottom`, `glass-hero`.
+- **Color palette**: Primary `#e879a0` (pink), Secondary `#38bdf8` (sky blue). CSS variables: `--primary`, `--primary-dark`, `--secondary`, `--bg`, `--bg-secondary`, `--text`, `--text2`, `--border`.
+- **Tailwind 4** + custom CSS variables — this is **not** the shadcn/HSL theme system. Don't use `hsl(var(--foreground))` patterns.
+- **Dark mode**: toggled via `[data-theme="dark"]` attribute on `<html>`.
+
+### i18n
+All UI text goes through `t(lang, "key")`. Six locales: `vi` (preloaded), `ko`, `en`, `mn`, `kk`, `ru` (lazy-loaded). Translation files live in `src/lib/translations/`. When adding a new feature, add keys to **all 6** translation files — the `t()` function falls back to `vi` if a key is missing, which silently hides missing translations.
+
+### Data fetching
+Use the generated hooks from `@workspace/api-client-react` — don't write ad-hoc `fetch` calls for endpoints already in the OpenAPI spec.
+
+### Global animation components
+Two components are mounted globally in `AppContent` (`App.tsx`):
+- `MeshBackground` — 6 animated floating blobs (the coloured background)
+- `AnimationEffects` — ripple on click, 3D card tilt, cursor glow, scroll reveal
+
+These use CSS classes `mesh-blob` and `ripple-ring` defined in `index.css`.
+
+### Adding a new page
+1. Create `src/pages/MyPage.tsx`
+2. Lazy-import it in `App.tsx` and add a `case "mypage"` to `CurrentPage`
+3. Add `{ page: "mypage", icon: "…", key: "mykey", color: "…" }` to `ALL_PINNABLE` in `HomePage.tsx`
+4. Optionally add to a `TOOL_GROUPS` group in `Navbar.tsx`
+5. Add i18n keys for all 6 locales
 
 ## Auth
 
-JWT-based (bcryptjs + jsonwebtoken, cookie-parser on the server). Users/messages tables live in `lib/db/src/schema`. The frontend has login/register modals driven by the generated hooks.
+JWT-based (bcryptjs + jsonwebtoken, cookie-parser on the server). Users/messages tables live in `lib/db/src/schema`. The frontend has login/register modals driven by the generated hooks. Token is stored via `src/lib/auth.ts` and injected into API calls via `setAuthTokenGetter`.
