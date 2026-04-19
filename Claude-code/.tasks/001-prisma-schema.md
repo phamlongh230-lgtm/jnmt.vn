@@ -1,14 +1,14 @@
 ---
 id: "001"
 title: "Thiết kế Prisma schema cho jnmt.vn"
-status: "todo"
+status: "completed"
 area: "database"
 agent: "@database-expert"
 priority: "high"
 created_at: "2026-04-19"
 due_date: null
-started_at: null
-completed_at: null
+started_at: "2026-04-19"
+completed_at: "2026-04-19"
 prd_refs: ["FR-001", "FR-010", "FR-011", "FR-012", "FR-020", "FR-021", "FR-030", "FR-031"]
 blocks: ["005", "006", "007", "008"]
 blocked_by: []
@@ -39,3 +39,4 @@ Thiết kế và viết Prisma schema cho toàn bộ domain của jnmt.vn: thôn
 | Date | Agent / Human | Event |
 |------|--------------|-------|
 | 2026-04-19 | human | Task created during onboarding |
+| 2026-04-19 | @database-expert | Schema designed and written; seed data created; DATABASE.md updated |

@@ -8,28 +8,23 @@ Read by: @backend-developer (to write queries), @systems-architect (for scaling 
 
 # Database Reference
 
-> **Engine**: [PostgreSQL 15]
-> **ORM / Query layer**: [e.g., Prisma / Drizzle / raw SQL]
+> **Engine**: PostgreSQL 15+
+> **ORM / Query layer**: Prisma (v7)
 > **Connection**: Via `DATABASE_URL` environment variable (see `.env.example`)
-> **Last updated**: [YYYY-MM-DD]
+> **Last updated**: 2026-04-19
 
 ---
 
 ## Schema Overview
 
-[Entity-relationship description. Describe the main entities and how they relate to each other.]
+Four independent content models. No cross-model foreign keys in v1 — each model is self-contained. The `School` model is a singleton in practice (one record per deployment). `Document` and `Exam` are filtered primarily by `subject`. `Announcement` is ordered by `publishedAt` descending.
 
 ```
-[ASCII ERD]
-
-users ──< sessions
-  │
-  └──< [resource] ──< [child resource]
+School          (singleton — one school per deployment)
+Document        (filtered by subject)
+Exam            (filtered by subject and date)
+Announcement    (ordered by publishedAt DESC)
 ```
-
-**Key relationships**:
-- `users` → `sessions`: one user can have many sessions
-- `users` → `[resource]`: [description]
 
 ---
 
@@ -37,105 +32,164 @@ users ──< sessions
 
 ---
 
-### users
+### School
 
-**Purpose**: Stores all user accounts. Core authentication entity.
+**Purpose**: Stores information about the school. Treated as a singleton — one record per deployment. Both the Vietnamese name and Korean name are stored to support bilingual display.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| id | uuid | PK, NOT NULL, DEFAULT gen_random_uuid() | Primary key |
-| email | text | NOT NULL, UNIQUE | User's email address (login identifier) |
-| password_hash | text | NOT NULL | bcrypt hash of the password — never store plaintext |
-| name | text | NOT NULL | Display name |
-| role | text | NOT NULL, DEFAULT 'user' | User role: 'user' or 'admin' |
-| email_verified_at | timestamptz | NULL | NULL until email is verified |
-| created_at | timestamptz | NOT NULL, DEFAULT now() | Record creation time |
-| updated_at | timestamptz | NOT NULL, DEFAULT now() | Last modification time |
+| id | String (cuid) | PK, NOT NULL, DEFAULT cuid() | Primary key |
+| name | String | NOT NULL | Vietnamese school name |
+| nameKo | String | NOT NULL | Korean school name (전남미래국제고등학교) |
+| address | String | NOT NULL | Full mailing address |
+| phone | String | NULL | Contact phone number |
+| email | String | NULL | Contact email address |
+| description | String | NULL | School description / about text |
+| createdAt | DateTime | NOT NULL, DEFAULT now() | Record creation time |
+| updatedAt | DateTime | NOT NULL, auto-updated | Last modification time |
 
-**Indexes**:
-- `idx_users_email` on `(email)` — frequent lookup by email at login
+**Indexes**: None (singleton table — no filtering needed)
 
-**Notes**: Soft deletes not used — accounts are hard-deleted. Ensure all related records are cascade-deleted.
+**Relationships**: None
+
+**Notes**: No soft delete. If school data needs to be updated, update the single record in place. Admin API will expose a PATCH endpoint for this record.
 
 ---
 
-### sessions
+### Document
 
-**Purpose**: Active authentication sessions for logged-in users.
+**Purpose**: Stores learning materials (study guides, past exams, vocabulary sheets) uploaded by teachers. Files are hosted externally (Google Drive, S3, etc.) — only the URL is stored.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| id | uuid | PK, NOT NULL, DEFAULT gen_random_uuid() | Session token (used as Bearer token) |
-| user_id | uuid | NOT NULL, FK → users.id ON DELETE CASCADE | The authenticated user |
-| expires_at | timestamptz | NOT NULL | Session expiry time |
-| created_at | timestamptz | NOT NULL, DEFAULT now() | Session creation time |
-| user_agent | text | NULL | Browser/client identifier |
-| ip_address | inet | NULL | Client IP at session creation |
+| id | String (cuid) | PK, NOT NULL, DEFAULT cuid() | Primary key |
+| title | String | NOT NULL | Document title (displayed in UI) |
+| subject | String | NOT NULL | Subject code — see Subject Enum below |
+| fileUrl | String | NOT NULL | External URL to the file (Google Drive, S3, etc.) |
+| description | String | NULL | Optional description or notes about the document |
+| createdAt | DateTime | NOT NULL, DEFAULT now() | Upload time |
+| updatedAt | DateTime | NOT NULL, auto-updated | Last modification time |
 
 **Indexes**:
-- `idx_sessions_user_id` on `(user_id)` — list sessions per user
-- `idx_sessions_expires_at` on `(expires_at)` — efficient cleanup of expired sessions
+- `Document_subject_idx` on `(subject)` — primary filter for listing documents by subject
 
-**Relationships**:
-- `user_id` → `users.id` (ON DELETE CASCADE — deleting a user removes all their sessions)
+**Relationships**: None
+
+**Notes**: `fileUrl` stores the external URL of the file. In v1 there is no internal file storage — files are hosted on an external service (Google Drive or similar). This is an acknowledged Open Question in the PRD; the `fileUrl` field is flexible enough to point to any storage provider without a schema change.
 
 ---
 
-### [table_name]
+### Exam
 
-**Purpose**: [What this table stores and why]
+**Purpose**: Stores the exam schedule. Each record is one exam session for one subject. Students filter by subject or browse by date.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| id | uuid | PK, NOT NULL, DEFAULT gen_random_uuid() | Primary key |
-| [column] | [type] | [constraints] | [description] |
-| created_at | timestamptz | NOT NULL, DEFAULT now() | |
-| updated_at | timestamptz | NOT NULL, DEFAULT now() | |
+| id | String (cuid) | PK, NOT NULL, DEFAULT cuid() | Primary key |
+| subject | String | NOT NULL | Subject code — see Subject Enum below |
+| date | DateTime | NOT NULL | Exam date (stored as timestamptz; time component ignored for date-only queries) |
+| startTime | String | NOT NULL | Exam start time as "HH:MM" string (e.g., "07:30") |
+| room | String | NULL | Room/location (e.g., "Phòng 101") |
+| notes | String | NULL | Additional instructions for students |
+| createdAt | DateTime | NOT NULL, DEFAULT now() | Record creation time |
+| updatedAt | DateTime | NOT NULL, auto-updated | Last modification time |
 
-**Indexes**: [None / list with reason for each]
+**Indexes**:
+- `Exam_subject_idx` on `(subject)` — filter exams by subject
+- `Exam_date_idx` on `(date)` — filter/sort exams by date (upcoming exams, monthly view)
 
-**Relationships**: [None / list FK relationships]
+**Relationships**: None
 
-**Notes**: [Denormalization decisions, soft-delete patterns, business rules in constraints]
+**Notes**: `startTime` is stored as a string ("07:30") rather than a `Time` type because PostgreSQL `time` types lose timezone context and the display format is fixed. If scheduling logic becomes complex in a future version, migrate to a `timestamptz` combining `date` and `startTime`. `date` is `DateTime` (timestamptz) — when querying for exams on a specific calendar day, use a range query: `date >= day_start AND date < day_end`.
+
+---
+
+### Announcement
+
+**Purpose**: Stores school announcements and notices. Displayed to students in reverse chronological order by `publishedAt`.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | String (cuid) | PK, NOT NULL, DEFAULT cuid() | Primary key |
+| title | String | NOT NULL | Announcement headline |
+| content | String | NOT NULL | Full announcement body text (plain text or markdown) |
+| publishedAt | DateTime | NOT NULL, DEFAULT now() | Publication timestamp — controls display order and can be scheduled |
+| createdAt | DateTime | NOT NULL, DEFAULT now() | Record creation time |
+| updatedAt | DateTime | NOT NULL, auto-updated | Last modification time |
+
+**Indexes**:
+- `Announcement_publishedAt_idx` on `(publishedAt)` — ORDER BY publishedAt DESC for the announcement list
+
+**Relationships**: None
+
+**Notes**: `publishedAt` is separate from `createdAt` to support scheduled announcements (set `publishedAt` in the future, filter `WHERE publishedAt <= now()` in the API). Content format is plain text in v1; if rich text is needed in v2, migrate to storing markdown and render on the frontend.
+
+---
+
+## Subject Enum
+
+Subject codes used in `Document.subject` and `Exam.subject`:
+
+| Code | Subject (Vietnamese) |
+|------|----------------------|
+| `toan` | Toán học |
+| `ly` | Vật lý |
+| `hoa` | Hóa học |
+| `anh` | Tiếng Anh |
+| `van` | Ngữ văn |
+| `sinh` | Sinh học |
+| `su` | Lịch sử |
+| `dia` | Địa lý |
+
+These are enforced at the application layer (API validation), not as a PostgreSQL enum type. This avoids the operational cost of `ALTER TYPE` when a new subject is added — adding a subject only requires updating the validation list, not a schema migration.
+
+---
+
+## File Storage (v1)
+
+`Document.fileUrl` stores an external URL to the file. There is no internal file storage in v1. Files are expected to be hosted on Google Drive or a similar service and shared with a public or link-accessible URL.
+
+When a dedicated file storage service is added (S3, Cloudflare R2), the `fileUrl` field remains compatible — it will simply point to the new storage URL. No schema change is needed for that transition.
 
 ---
 
 ## Migrations Log
 
-| Migration File | Date | Description | Reversible | Deployment Risk |
-|----------------|------|-------------|------------|-----------------|
-| `001_create_users.sql` | [YYYY-MM-DD] | Create users table | Yes | None |
-| `002_create_sessions.sql` | [YYYY-MM-DD] | Create sessions table | Yes | None |
+| Migration | Date | Description | Reversible | Deployment Risk |
+|-----------|------|-------------|------------|-----------------|
+| Initial schema (Prisma migrate) | 2026-04-19 | Create School, Document, Exam, Announcement tables with indexes | Yes | None — new tables only |
 
 ---
 
 ## Query Patterns
 
-### Common Patterns
-
-**Get user by email (login)**:
+### List documents filtered by subject
 ```sql
-SELECT id, email, password_hash, role
-FROM users
-WHERE email = $1
-LIMIT 1;
+SELECT id, title, subject, "fileUrl", description, "createdAt"
+FROM "Document"
+WHERE subject = $1
+ORDER BY "createdAt" DESC;
 ```
-Uses `idx_users_email` index — fast.
+Uses `Document_subject_idx`.
 
-**Validate session token**:
+### Upcoming exams (from today, ordered by date)
 ```sql
-SELECT s.user_id, u.email, u.role
-FROM sessions s
-JOIN users u ON u.id = s.user_id
-WHERE s.id = $1
-  AND s.expires_at > now();
+SELECT id, subject, date, "startTime", room, notes
+FROM "Exam"
+WHERE date >= now()
+ORDER BY date ASC;
 ```
+Uses `Exam_date_idx`.
 
-**Cleanup expired sessions** (run as scheduled job):
+### Latest announcements (published, most recent first)
 ```sql
-DELETE FROM sessions
-WHERE expires_at < now();
+SELECT id, title, content, "publishedAt"
+FROM "Announcement"
+WHERE "publishedAt" <= now()
+ORDER BY "publishedAt" DESC
+LIMIT 20;
 ```
+Uses `Announcement_publishedAt_idx`.
 
 ---
 
@@ -143,4 +197,6 @@ WHERE expires_at < now();
 
 | Issue | Impact | Plan |
 |-------|--------|------|
-| [e.g., No soft deletes on users] | [Hard deletes lose audit trail] | [Consider adding `deleted_at` in v2] |
+| No internal file storage — `fileUrl` is external | Files can go dead if the external host removes them | Evaluate Cloudflare R2 / S3 in v2 (tracked in PRD Open Questions) |
+| Subject is a free-text string, not a constrained enum | Invalid subject codes can be inserted via direct DB access | Add CHECK constraint or move validation to DB level in v2 |
+| `Exam.startTime` stored as string "HH:MM" | No time arithmetic possible without parsing | Acceptable for v1 display-only use; migrate to `timestamptz` if scheduling logic is added |
