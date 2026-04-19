@@ -11,14 +11,14 @@
 
 **Version**: 1.0
 **Status**: Draft
-**Last updated by human**: [YYYY-MM-DD]
-**Product owner**: [Name]
+**Last updated by human**: 2026-04-19
+**Product owner**: [TBD]
 
 ---
 
 ## 1. Executive Summary
 
-[3–5 sentences. What is this product? What core problem does it solve? Who are the primary users? What is the intended outcome after using it?]
+jnmt.vn là nền tảng hỗ trợ học sinh THPT tại trường 전남미래국제고등학교 (Jeonnam Future International High School), cung cấp tra cứu thông tin trường, tài liệu học tập, lịch thi và thông báo — tất cả tại một nơi. Hiện tại, học sinh phải tìm kiếm tài nguyên rải rác trên nhiều nguồn khác nhau, gây mất thời gian và dễ bỏ lỡ thông tin quan trọng. jnmt.vn giải quyết vấn đề này bằng cách tập trung mọi thứ vào một nền tảng web tối ưu cho mobile, hỗ trợ tiếng Việt và cài đặt được như PWA.
 
 ---
 
@@ -26,15 +26,15 @@
 
 ### 2.1 Current Situation
 
-[Describe the world as it is today — what are users doing now without this product? What tools, workarounds, or manual processes do they rely on?]
+Học sinh THPT hiện phải truy cập nhiều nguồn khác nhau để tìm tài liệu học tập, kiểm tra lịch thi, và nhận thông báo từ trường. Thông tin bị phân tán qua các nhóm chat, website riêng lẻ và thông báo giấy.
 
 ### 2.2 The Problem
 
-[Precisely define the problem. What friction, inefficiency, or unmet need exists? Be specific.]
+Không có một điểm tập trung thông tin học tập, khiến học sinh mất thời gian tìm kiếm, dễ bỏ lỡ thông báo quan trọng và không có chỗ lưu trữ tài liệu ôn tập có tổ chức.
 
 ### 2.3 Why Now
 
-[Why is this the right time to build this? Market conditions, user demand, technology availability, business opportunity.]
+Đây là dự án đầu tay của học sinh trường — thời điểm lý tưởng để xây dựng một công cụ thiết thực ngay cho cộng đồng học sinh trong trường, vừa học được kỹ năng lập trình vừa tạo ra giá trị thực.
 
 ---
 
@@ -42,37 +42,29 @@
 
 ### 3.1 Business Goals
 
-- [Goal 1: e.g., "Reduce customer support tickets related to onboarding by 40%"]
-- [Goal 2]
-- [Goal 3]
+- Tạo ra một nền tảng học tập hữu ích cho học sinh trong trường
+- Hoàn thành v1 và deploy thành công lên production
+- Học được Next.js, PostgreSQL, Prisma qua dự án thực tế
 
 ### 3.2 Success Metrics
 
 | Metric | Baseline | Target | How Measured |
 |--------|----------|--------|--------------|
-| [e.g., Onboarding completion rate] | [0%] | [80%] | [Analytics event] |
-| [e.g., Time to first value] | [N/A] | [< 5 min] | [Session recording] |
-| [e.g., Weekly active users] | [0] | [500 in 3 months] | [Analytics] |
+| Deploy thành công v1 | — | ✅ Live trên Render | Manual check |
+| Thời gian load trang | — | < 3s trên 4G | Lighthouse |
+| PWA installable | — | ✅ | Lighthouse PWA audit |
 
 ---
 
 ## 4. User Personas
 
-### Persona: [Name, e.g., "Alex the Admin"]
+### Persona: Học sinh THPT
 
-- **Role**: [Job title or user type]
-- **Goals**: [What they want to accomplish]
-- **Pain points**: [Current frustrations this product addresses]
-- **Technical level**: [Non-technical / Moderate / Developer]
-- **Usage frequency**: [Daily / Weekly / Occasional]
-
-### Persona: [Name, e.g., "Sam the End User"]
-
-- **Role**: [Job title or user type]
-- **Goals**: [What they want to accomplish]
-- **Pain points**: [Current frustrations]
-- **Technical level**: [Non-technical / Moderate / Developer]
-- **Usage frequency**: [Daily / Weekly / Occasional]
+- **Role**: Học sinh tại trường 전남미래국제고등학교
+- **Goals**: Tìm tài liệu học tập nhanh, xem lịch thi, không bỏ lỡ thông báo trường
+- **Pain points**: Thông tin rải rác, phải hỏi bạn bè hoặc tìm kiếm nhiều nơi
+- **Technical level**: Non-technical — dùng điện thoại là chủ yếu
+- **Usage frequency**: Daily
 
 ---
 
@@ -80,69 +72,79 @@
 
 > Requirements are numbered FR-XXX for unambiguous cross-referencing by agents and in tests.
 
-### 5.1 [Feature Area: e.g., Authentication]
+### 5.1 Tra cứu thông tin trường học
 
-- **FR-001**: [Users must be able to register with email and password]
-- **FR-002**: [Users must be able to log in with existing credentials]
-- **FR-003**: [Users must be able to reset their password via email]
-- **FR-004**: [Sessions must expire after 30 days of inactivity]
+- **FR-001**: Người dùng có thể xem thông tin cơ bản về trường (địa chỉ, liên hệ, cơ cấu tổ chức)
+- **FR-002**: Người dùng có thể tìm kiếm thông tin trường theo từ khóa
+- **FR-003**: Thông tin trường được hiển thị rõ ràng trên mobile
 
-### 5.2 [Feature Area: e.g., Dashboard]
+### 5.2 Tài liệu học tập
 
-- **FR-010**: [...]
-- **FR-011**: [...]
+- **FR-010**: Người dùng có thể duyệt tài liệu học tập theo môn học
+- **FR-011**: Người dùng có thể tải xuống hoặc xem trực tiếp tài liệu
+- **FR-012**: Tài liệu được tổ chức theo danh mục/môn học
+- **FR-013**: Người dùng có thể tìm kiếm tài liệu theo tên hoặc môn học
 
-### 5.3 [Feature Area: e.g., Settings]
+### 5.3 Lịch thi
 
-- **FR-020**: [...]
+- **FR-020**: Người dùng có thể xem lịch thi theo tháng/tuần
+- **FR-021**: Lịch thi hiển thị tên môn, ngày, giờ, phòng thi
+- **FR-022**: Người dùng có thể lọc lịch thi theo môn học
+
+### 5.4 Thông báo trường
+
+- **FR-030**: Người dùng có thể xem danh sách thông báo từ trường
+- **FR-031**: Mỗi thông báo có tiêu đề, ngày đăng, nội dung đầy đủ
+- **FR-032**: Thông báo mới nhất hiển thị trước
+
+### 5.5 PWA & Mobile
+
+- **FR-040**: Ứng dụng có thể được cài đặt như PWA trên điện thoại
+- **FR-041**: Ứng dụng hoạt động đúng trên màn hình 375px trở lên
+- **FR-042**: Giao diện hỗ trợ đầy đủ tiếng Việt
 
 ---
 
 ## 6. Non-Functional Requirements
 
 ### Performance
-- [e.g., API response time < 200ms at p95 under normal load]
-- [e.g., Page initial load < 3s on 4G connection]
+- Trang tải < 3s trên kết nối 4G
+- Lighthouse Performance score ≥ 80
 
 ### Security
-- [e.g., Authentication required for all non-public endpoints]
-- [e.g., All user data encrypted at rest]
-- [e.g., OWASP Top 10 mitigations in place]
-
-### Scalability
-- [e.g., System must support up to 10,000 concurrent users without degradation]
+- Không expose thông tin nhạy cảm
+- HTTPS bắt buộc trên production
 
 ### Accessibility
-- [e.g., WCAG 2.1 AA compliance for all user-facing interfaces]
+- Hỗ trợ đọc màn hình cơ bản
+- Contrast ratio đạt WCAG AA
 
 ### Browser / Platform Support
-- [e.g., Modern browsers: Chrome 110+, Firefox 110+, Safari 16+, Edge 110+]
-- [e.g., Mobile-responsive down to 375px width]
+- Chrome, Safari, Firefox (mobile và desktop) — phiên bản 2 năm gần nhất
+- Mobile-responsive từ 375px
 
 ### Reliability
-- [e.g., 99.5% uptime SLA]
-- [e.g., Automated backups every 24 hours]
+- Deploy tự động qua Render khi merge vào `main`
 
 ---
 
 ## 7. Out of Scope (v1.0)
 
-The following will **not** be built in the initial version. This list prevents scope creep and helps agents avoid building features that aren't required yet.
-
-- [Feature A — reason: too complex for v1, planned for v2]
-- [Feature B — reason: requires third-party integration not yet evaluated]
-- [Feature C — reason: low user demand, deprioritized]
+- **AI Tutor** — quá phức tạp cho v1, dự kiến v2
+- **Forum học sinh** — cần moderation, scope lớn, để sau
+- **Hệ thống điểm số cá nhân** — cần tích hợp với hệ thống trường
+- **Push notifications** — có thể xem xét v1.5
+- **Đăng nhập/tài khoản người dùng** — [TBD, cân nhắc nếu cần quản lý tài liệu cá nhân]
 
 ---
 
 ## 8. Open Questions
 
-> These are unresolved decisions that require human input before implementation can proceed.
-
 | # | Question | Owner | Status |
 |---|----------|-------|--------|
-| 1 | [e.g., Which payment provider: Stripe or Paddle?] | [Product Owner] | Open |
-| 2 | [e.g., Will we support SSO in v1?] | [CTO] | Open |
+| 1 | Auth provider nào cho admin upload tài liệu? | Product Owner | Open |
+| 2 | Tài liệu lưu trữ ở đâu? (Render disk, S3, Google Drive?) | Product Owner | Open |
+| 3 | Ai có quyền đăng thông báo/tài liệu? Cần admin panel không? | Product Owner | Open |
 
 ---
 
@@ -152,4 +154,4 @@ The following will **not** be built in the initial version. This list prevents s
 
 | Date | Author | Change Description |
 |------|--------|--------------------|
-| [YYYY-MM-DD] | [Name] | Initial draft |
+| 2026-04-19 | Onboarding | Initial draft từ onboarding session |

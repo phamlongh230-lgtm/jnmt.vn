@@ -1,13 +1,13 @@
-# [Project Name] — Claude Instructions
+# jnmt.vn — Claude Instructions
 
-> Stack: [e.g., Next.js 14 · TypeScript · PostgreSQL · Prisma · Railway]
-> Last updated: [YYYY-MM-DD]
+> Stack: Next.js · TypeScript · PostgreSQL · Prisma · Render
+> Last updated: 2026-04-19
 
 ## Project Context
 
-[2–3 sentences: what this product does, who it serves, and the core problem it solves.]
+jnmt.vn là nền tảng hỗ trợ học sinh THPT tại trường 전남미래국제고등학교 (Jeonnam Future International High School). Nền tảng cung cấp tra cứu thông tin trường học, tài liệu học tập, lịch thi và thông báo trường. Học sinh hiện phải tìm kiếm tài nguyên học tập rải rác nhiều nơi — jnmt.vn tập trung tất cả vào một chỗ, hỗ trợ tiếng Việt và tối ưu cho mobile.
 
-**Tech stack summary**: [Frontend] · [Backend] · [Database] · [Hosting]
+**Tech stack summary**: Next.js (App Router) · PostgreSQL · Prisma · Render
 
 ---
 
@@ -175,12 +175,10 @@ refactor/<description>
 
 ## Code Style
 
-> Fill in when project tooling is set up.
-
 - **Language**: TypeScript (strict mode)
-- **Formatter**: [Prettier — config in `.prettierrc`]
-- **Linter**: [ESLint — config in `.eslintrc`]
-- **Import style**: [absolute imports from `src/`]
+- **Formatter**: Prettier — config in `.prettierrc`
+- **Linter**: ESLint — config in `.eslintrc`
+- **Import style**: absolute imports from `src/`
 - **No `console.log`** in production code — use the project logger utility
 - **No commented-out code** committed — delete it or track it in TODO.md
 
@@ -188,12 +186,10 @@ refactor/<description>
 
 ## Testing Conventions
 
-> Fill in when test infrastructure is set up.
-
-- **Unit tests**: [Vitest — colocated as `*.test.ts` next to source files]
-- **E2E tests**: [Playwright — in `tests/e2e/*.spec.ts`]
-- **Run unit**: `[npm test]`
-- **Run E2E**: `[npm run test:e2e]`
+- **Unit tests**: Vitest — colocated as `*.test.ts` next to source files
+- **E2E tests**: Playwright — in `tests/e2e/*.spec.ts`
+- **Run unit**: `pnpm test`
+- **Run E2E**: `pnpm test:e2e`
 - **Coverage target**: 80% for new features
 - E2E tests use Page Object Model pattern and `data-testid` selectors
 
@@ -201,16 +197,14 @@ refactor/<description>
 
 ## Environment & Commands
 
-> Fill in when project is initialized.
-
-- **Node**: [x.x.x] (see `.nvmrc`)
-- **Package manager**: [npm / pnpm / yarn]
-- `[npm run dev]` — start dev server
-- `[npm run build]` — production build
-- `[npm test]` — unit tests
-- `[npm run test:e2e]` — E2E tests
-- `[npm run lint]` — lint check
-- `[npm run typecheck]` — TypeScript check
+- **Node**: [TBD]
+- **Package manager**: pnpm
+- `pnpm dev` — start dev server
+- `pnpm build` — production build
+- `pnpm test` — unit tests
+- `pnpm test:e2e` — E2E tests
+- `pnpm lint` — lint check
+- `pnpm typecheck` — TypeScript check
 
 ---
 
