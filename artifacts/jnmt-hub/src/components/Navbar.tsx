@@ -43,6 +43,7 @@ const TOOL_GROUPS = [
     tools: [
       { page: "announcements",icon: "📢", key: "announcements" },
       { page: "links",        icon: "🔗", key: "links_page" },
+      { page: "social",       icon: "🌐", key: "social" },
       { page: "admin",        icon: "⚙️", key: "admin_page" },
     ],
   },
@@ -464,6 +465,36 @@ export default function Navbar() {
                     style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.5rem 0.75rem", background: activePage === item.page ? "#eff6ff" : (isDark ? "#0f172a" : "#f8fafc"), border: `1px solid ${activePage === item.page ? "#bfdbfe" : border}`, borderRadius: 8, cursor: "pointer", color: activePage === item.page ? "#2563eb" : textCol, fontSize: "0.82rem", fontWeight: activePage === item.page ? 700 : 400, textAlign: "left" }}>
                     <span>{item.icon}</span>
                     <span>{t(lang, item.key)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick share */}
+            <div style={{ padding: "0 1.25rem 1rem" }}>
+              <div style={{ fontSize: "0.72rem", color: text2, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: "0.5rem" }}>
+                🌐 {t(lang, "social_share_jnmt")}
+              </div>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {[
+                  { name: "Telegram", icon: "✈️", bg: "#2AABEE", url: `https://t.me/share/url?url=https%3A%2F%2Fjnmt.kr&text=JNMT%20-%20C%E1%BB%95ng%20h%E1%BB%8Dc%20t%E1%BA%ADp` },
+                  { name: "Zalo",     icon: "🇻🇳", bg: "#0068FF", url: `https://zalo.me/` },
+                  { name: "WhatsApp", icon: "💬", bg: "#25D366", url: `https://wa.me/?text=JNMT%20https%3A%2F%2Fjnmt.kr` },
+                  { name: "Kakao",    icon: "🟡", bg: "#FEE500", url: `kakaotalk://send?text=JNMT%20https%3A%2F%2Fjnmt.kr` },
+                  { name: "Facebook", icon: "📘", bg: "#1877F2", url: `https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjnmt.kr` },
+                  { name: "More",     icon: "🌐", bg: "var(--primary)", url: null },
+                ].map((s) => (
+                  <button key={s.name}
+                    onClick={() => {
+                      if (!s.url) { setSidebarOpen(false); setActivePage("social"); return; }
+                      window.open(s.url, "_blank", "noopener,noreferrer,width=600,height=500");
+                    }}
+                    title={s.name}
+                    style={{ width: 36, height: 36, borderRadius: 10, background: s.bg, border: "none", cursor: "pointer", fontSize: "1rem", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 6px rgba(0,0,0,0.15)", transition: "transform 0.12s ease" }}
+                    onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.12)")}
+                    onMouseLeave={e => (e.currentTarget.style.transform = "")}
+                  >
+                    {s.icon}
                   </button>
                 ))}
               </div>
