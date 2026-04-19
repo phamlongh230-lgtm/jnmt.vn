@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import MeshBackground from "@/components/MeshBackground";
+import AnimationEffects from "@/components/AnimationEffects";
 import LoginPage from "@/pages/LoginPage";
 import { getToken } from "@/lib/auth";
 
@@ -115,6 +116,7 @@ function AppContent() {
   return (
     <div style={{ minHeight: "100vh", color: "var(--text)" }}>
       <MeshBackground />
+      <AnimationEffects />
       <Navbar />
       <main style={{ paddingBottom: "env(safe-area-inset-bottom)" }} className="main-content">
         <style>{`@media (max-width: 639px) { .main-content { padding-bottom: 64px !important; } }`}</style>
