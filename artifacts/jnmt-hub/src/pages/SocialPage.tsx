@@ -104,8 +104,18 @@ const PLATFORMS: Platform[] = [
 
 export default function SocialPage() {
   const { lang, isDark } = useApp();
-  const [ytQuery, setYtQuery] = useState("한국어 배우기");
-  const [ytSearch, setYtSearch] = useState("한국어 배우기");
+  const [ytQuery, setYtQuery] = useState("");
+  const [ytVideoId, setYtVideoId] = useState("");
+
+  const extractVideoId = (input: string) => {
+    try {
+      const url = new URL(input);
+      if (url.hostname.includes("youtu.be")) return url.pathname.slice(1);
+      return url.searchParams.get("v") || "";
+    } catch {
+      return input.trim(); // assume raw video ID
+    }
+  };
   const [copied, setCopied] = useState(false);
 
   const handleShare = (p: Platform) => {
@@ -216,33 +226,51 @@ export default function SocialPage() {
       {/* YouTube Learning */}
       {section(t(lang, "social_youtube"), (
         <>
+          <p style={{ fontSize: "0.82rem", color: "var(--text2)", marginBottom: "0.75rem" }}>
+            {t(lang, "social_yt_desc")}
+          </p>
           <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1rem" }}>
             <input
               value={ytQuery}
               onChange={e => setYtQuery(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && setYtSearch(ytQuery)}
+              onKeyDown={e => { if (e.key === "Enter") { const id = extractVideoId(ytQuery); if (id) setYtVideoId(id); } }}
               placeholder={t(lang, "social_yt_placeholder")}
               className="glass-input"
               style={{ flex: 1, padding: "0.55rem 0.85rem", borderRadius: 10, fontSize: "0.85rem" }}
             />
             <button
               className="glass-btn"
-              onClick={() => setYtSearch(ytQuery)}
+              onClick={() => { const id = extractVideoId(ytQuery); if (id) setYtVideoId(id); }}
               style={{ padding: "0.55rem 1rem", borderRadius: 10, fontSize: "0.85rem", fontWeight: 600, color: "var(--primary)" }}
             >
-              ▶️ {t(lang, "social_search")}
+              ▶️ {t(lang, "social_play")}
+            </button>
+            <button
+              className="glass-btn"
+              onClick={() => window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(ytQuery || "한국어 배우기")}`, "_blank", "noopener,noreferrer")}
+              style={{ padding: "0.55rem 1rem", borderRadius: 10, fontSize: "0.85rem", fontWeight: 600, color: "#FF0000" }}
+            >
+              🔍 {t(lang, "social_search")}
             </button>
           </div>
-          <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "16/9" }}>
-            <iframe
-              src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(ytSearch)}&autoplay=0`}
-              title="YouTube"
-              width="100%"
-              height="100%"
-              style={{ border: "none", display: "block" }}
-              allowFullScreen
-            />
-          </div>
+          {ytVideoId ? (
+            <div style={{ borderRadius: 14, overflow: "hidden", aspectRatio: "16/9" }}>
+              <iframe
+                src={`https://www.youtube.com/embed/${ytVideoId}?autoplay=0`}
+                title="YouTube"
+                width="100%"
+                height="100%"
+                style={{ border: "none", display: "block" }}
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              />
+            </div>
+          ) : (
+            <div style={{ borderRadius: 14, aspectRatio: "16/9", background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "0.5rem", color: "var(--text2)", fontSize: "0.85rem" }}>
+              <span style={{ fontSize: "2.5rem" }}>▶️</span>
+              <span>{t(lang, "social_yt_hint")}</span>
+            </div>
+          )}
         </>
       ))}
 
