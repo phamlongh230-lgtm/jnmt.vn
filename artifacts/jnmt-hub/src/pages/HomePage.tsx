@@ -26,6 +26,7 @@ const ALL_PINNABLE = [
   { page: "timezone",      icon: "🌍", key: "timezone_tool", color: "#0891b2" },
   { page: "announcements", icon: "📢", key: "announcements", color: "#2563eb" },
   { page: "links",         icon: "🔗", key: "links_page",    color: "#7c3aed" },
+  { page: "social",        icon: "🌐", key: "social",         color: "#e879a0" },
 ];
 
 const DEFAULT_PINNED = ["dictionary", "schedule", "chat", "map", "notes"];

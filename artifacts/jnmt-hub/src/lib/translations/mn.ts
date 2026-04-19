@@ -554,6 +554,7 @@ const mn: Record<string, string> = {
   expense_empty: "Зардал байхгүй", expense_currency: "Валют",
   korean_keyboard: "Солонгос гар", korean_type_here: "Солонгосоор бич...", korean_copy: "Хуулах", korean_clear: "Цэвэрлэх", korean_copied: "Хуулагдлаа!",
   study_sounds: "Сурлагын дуу", study_sounds_desc: "Анхаарлаа төвлөрүүлэх дуу", sound_rain: "Бороо", sound_cafe: "Кафе", sound_forest: "Ой", sound_white: "Цагаан чимээ", sound_lofi: "Lo-fi", sound_ocean: "Далай", sound_playing: "Тоглуулж байна", sound_volume: "Дуу хэмжээ",
+  social: "Сошиал медиа", social_title: "Сошиал медиа & Хуваалцах", social_share_jnmt: "JNMT хуваалцах", social_share_desc: "JNMT-г найзуудтайгаа хуваалцаарай", social_copy: "Хуулах", social_copied: "Хуулагдлаа", social_share: "Хуваалцах", social_youtube: "YouTube Сургалт", social_yt_placeholder: "Видео хайх...", social_search: "Хайх", social_community: "Спилка",
 };
 
 export default mn;

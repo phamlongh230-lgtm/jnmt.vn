@@ -554,6 +554,7 @@ const ru: Record<string, string> = {
   expense_empty: "Расходов нет", expense_currency: "Валюта",
   korean_keyboard: "Корейская клавиатура", korean_type_here: "Введите текст по-корейски...", korean_copy: "Копировать", korean_clear: "Очистить", korean_copied: "Скопировано!",
   study_sounds: "Звуки для учёбы", study_sounds_desc: "Фоновые звуки для концентрации", sound_rain: "Дождь", sound_cafe: "Кафе", sound_forest: "Лес", sound_white: "Белый шум", sound_lofi: "Lo-fi", sound_ocean: "Океан", sound_playing: "Воспроизводится", sound_volume: "Громкость",
+  social: "Соцсети", social_title: "Соцсети & Поделиться", social_share_jnmt: "Поделиться JNMT", social_share_desc: "Расскажи друзьям о JNMT", social_copy: "Копировать", social_copied: "Скопировано", social_share: "Поделиться", social_youtube: "YouTube Обучение", social_yt_placeholder: "Поиск видео...", social_search: "Найти", social_community: "Сообщество",
 };
 
 export default ru;

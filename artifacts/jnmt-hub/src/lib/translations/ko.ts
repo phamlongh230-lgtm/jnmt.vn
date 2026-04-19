@@ -554,6 +554,7 @@ const ko: Record<string, string> = {
   expense_empty: "지출 내역이 없습니다", expense_currency: "통화",
   korean_keyboard: "한글 키보드", korean_type_here: "여기에 한글을 입력하세요...", korean_copy: "복사", korean_clear: "지우기", korean_copied: "복사됨!",
   study_sounds: "학습 사운드", study_sounds_desc: "집중력 향상을 위한 배경음", sound_rain: "빗소리", sound_cafe: "카페", sound_forest: "숲속", sound_white: "화이트 노이즈", sound_lofi: "Lo-fi", sound_ocean: "파도소리", sound_playing: "재생 중", sound_volume: "볼륨",
+  social: "소셜미디어", social_title: "소셜미디어 & 공유", social_share_jnmt: "JNMT 공유", social_share_desc: "친구들에게 JNMT 소개하기", social_copy: "복사", social_copied: "복사됨", social_share: "공유", social_youtube: "YouTube 학습", social_yt_placeholder: "영상 검색...", social_search: "검색", social_community: "커뮤니티",
 };
 
 export default ko;

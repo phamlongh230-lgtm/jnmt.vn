@@ -44,6 +44,7 @@ const CalculatorPage    = lazy(() => import("@/pages/CalculatorPage"));
 const ExpensePage       = lazy(() => import("@/pages/ExpensePage"));
 const KoreanKeyboardPage = lazy(() => import("@/pages/KoreanKeyboardPage"));
 const StudySoundsPage   = lazy(() => import("@/pages/StudySoundsPage"));
+const SocialPage        = lazy(() => import("@/pages/SocialPage"));
 
 setAuthTokenGetter(() => getToken());
 
@@ -97,6 +98,7 @@ function CurrentPage({ page }: { page: string }) {
     case "expense":       return <ExpensePage />;
     case "koreankey":     return <KoreanKeyboardPage />;
     case "studysounds":   return <StudySoundsPage />;
+    case "social":        return <SocialPage />;
     default:              return <HomePage />;
   }
 }

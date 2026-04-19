@@ -554,6 +554,7 @@ const kk: Record<string, string> = {
   expense_empty: "Шығын жоқ", expense_currency: "Валюта",
   korean_keyboard: "Кәріс пернетақта", korean_type_here: "Кәрісше жазыңыз...", korean_copy: "Көшіру", korean_clear: "Тазалау", korean_copied: "Көшірілді!",
   study_sounds: "Оқу дыбыстары", study_sounds_desc: "Зейінді арттыру үшін фон дыбыстары", sound_rain: "Жаңбыр", sound_cafe: "Кафе", sound_forest: "Орман", sound_white: "Ақ шу", sound_lofi: "Lo-fi", sound_ocean: "Мұхит", sound_playing: "Ойнатылуда", sound_volume: "Дыбыс",
+  social: "Әлеуметтік медиа", social_title: "Әлеуметтік медиа & Бөлісу", social_share_jnmt: "JNMT бөлісу", social_share_desc: "JNMT достарыңызға таныстырыңыз", social_copy: "Көшіру", social_copied: "Көшірілді", social_share: "Бөлісу", social_youtube: "YouTube Оқыту", social_yt_placeholder: "Бейне іздеу...", social_search: "Іздеу", social_community: "Қауымдастық",
 };
 
 export default kk;

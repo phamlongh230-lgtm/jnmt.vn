@@ -554,6 +554,7 @@ const en: Record<string, string> = {
   expense_empty: "No expenses yet", expense_currency: "Currency",
   korean_keyboard: "Korean Keyboard", korean_type_here: "Type Korean here...", korean_copy: "Copy", korean_clear: "Clear", korean_copied: "Copied!",
   study_sounds: "Study Sounds", study_sounds_desc: "Background sounds to help focus", sound_rain: "Rain", sound_cafe: "Cafe", sound_forest: "Forest", sound_white: "White Noise", sound_lofi: "Lo-fi", sound_ocean: "Ocean", sound_playing: "Playing", sound_volume: "Volume",
+  social: "Social Media", social_title: "Social Media & Share", social_share_jnmt: "Share JNMT", social_share_desc: "Introduce JNMT to your friends", social_copy: "Copy", social_copied: "Copied", social_share: "Share", social_youtube: "YouTube Learning", social_yt_placeholder: "Search videos...", social_search: "Search", social_community: "Community",
 };
 
 export default en;

@@ -625,6 +625,7 @@ const vi: Record<string, string> = {
   sound_ocean: "Biển cả",
   sound_playing: "Đang phát",
   sound_volume: "Âm lượng",
+  social: "Mạng xã hội", social_title: "Mạng xã hội & Chia sẻ", social_share_jnmt: "Chia sẻ JNMT", social_share_desc: "Giới thiệu JNMT đến bạn bè", social_copy: "Sao chép", social_copied: "Đã sao chép", social_share: "Chia sẻ", social_youtube: "YouTube Học tập", social_yt_placeholder: "Tìm video học...", social_search: "Tìm", social_community: "Cộng đồng",
 };
 
 export default vi;
