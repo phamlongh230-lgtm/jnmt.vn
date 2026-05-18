@@ -1,7 +1,7 @@
 {
   "version": 1,
   "_comment": "Lockfile for skills bundled with this template. Run `.claude/scripts/verify-skills-lock.sh` to detect drift. Regenerate with `.claude/scripts/update-skills-lock.sh` after intentional updates.",
-  "yamtam_version": "1.3.13",
+  "yamtam_version": "1.3.14",
   "skills": {
     "gitnexus-cli": {
       "source": "abhigyanpatwari/GitNexus",
