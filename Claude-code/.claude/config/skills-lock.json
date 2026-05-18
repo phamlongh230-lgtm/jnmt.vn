@@ -1,7 +1,6 @@
 {
   "version": 1,
   "_comment": "Lockfile for skills bundled with this template. Run `.claude/scripts/verify-skills-lock.sh` to detect drift. Regenerate with `.claude/scripts/update-skills-lock.sh` after intentional updates.",
-  "yamtam_version": "1.3.13",
   "skills": {
     "gitnexus-cli": {
       "source": "abhigyanpatwari/GitNexus",
@@ -43,7 +42,7 @@
       "sourceType": "github",
       "sourcePath": "gitnexus-claude-plugin/skills/gitnexus-pr-review",
       "localPath": ".claude/skills/gitnexus/gitnexus-pr-review",
-      "computedHash": "883cc857f268d065f9553a06d6e40548dc81f43793b50e312abd9663eb930030"
+      "computedHash": "883cc857f266d065f9553a06d6e40548dc81f43793b50e312abd9663eb930030"
     },
     "gitnexus-refactoring": {
       "source": "abhigyanpatwari/GitNexus",
@@ -53,44 +52,11 @@
       "computedHash": "7bca02970355f8176e157ddd6cca11d111949886407cf1382ccaaf1ca309694a"
     },
     "karpathy-guidelines": {
-      "source": "yamtam-engine-v1.3.13",
+      "source": "local-template",
       "sourceType": "local",
-      "localPath": ".claude/skills/karpathy-guidelines"
-    },
-    "git-lessons": {
-      "source": "yamtam-engine-v1.3.13",
-      "sourceType": "local",
-      "localPath": ".claude/skills/git-lessons"
-    },
-    "plan-first": {
-      "source": "yamtam-engine-v1.3.13/superpowers-v5.1.0",
-      "sourceType": "local",
-      "localPath": ".claude/skills/plan-first"
-    },
-    "verify-before-done": {
-      "source": "yamtam-engine-v1.3.13/superpowers-v5.1.0",
-      "sourceType": "local",
-      "localPath": ".claude/skills/verify-before-done"
-    },
-    "debug-protocol": {
-      "source": "yamtam-engine-v1.3.13/superpowers-v5.1.0",
-      "sourceType": "local",
-      "localPath": ".claude/skills/debug-protocol"
-    },
-    "branch-finish": {
-      "source": "yamtam-engine-v1.3.13/superpowers-v5.1.0",
-      "sourceType": "local",
-      "localPath": ".claude/skills/branch-finish"
-    },
-    "worktree-safety": {
-      "source": "yamtam-engine-v1.3.13/superpowers-v5.1.0",
-      "sourceType": "local",
-      "localPath": ".claude/skills/worktree-safety"
-    },
-    "tdd": {
-      "source": "yamtam-engine-v1.3.13/glebis-claude-skills",
-      "sourceType": "local",
-      "localPath": ".claude/skills/tdd"
+      "sourcePath": ".claude/skills/karpathy-guidelines",
+      "localPath": ".claude/skills/karpathy-guidelines",
+      "computedHash": "6e22cc54cb02a5e98ae42d06d9d7292db0c1b43894831b32879beb0166b2aea7"
     }
   }
 }

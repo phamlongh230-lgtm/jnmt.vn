@@ -7,6 +7,8 @@ dist/
 *.d.ts.map
 .bash_history
 .claude/
+!Claude-code/.claude/
+!Claude-code/.claude/**
 .claude.json
 .config/
 .local/share/applications/
