@@ -6,7 +6,7 @@ dist/
 *.tsbuildinfo
 *.d.ts.map
 .bash_history
-.claude/
+!.claude/
 !Claude-code/.claude/
 !Claude-code/.claude/**
 .claude.json

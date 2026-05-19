@@ -1,0 +1,2 @@
+2026-05-19T04:53:39Z | tool=Read | agent=manual | suspicion=secret/token reference | target=.env.production
+2026-05-19T04:53:39Z | tool=Grep | agent=manual | suspicion=secret/token reference | target=RAILWAY_TOKEN .
